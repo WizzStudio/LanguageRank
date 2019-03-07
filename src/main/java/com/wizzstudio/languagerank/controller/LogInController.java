@@ -14,6 +14,6 @@ public class LogInController {
 
     @PostMapping("/login/{openId}")
     public ResponseEntity logIn(@PathVariable("openId") Integer openId) {
-
+        return null;
     }
 }

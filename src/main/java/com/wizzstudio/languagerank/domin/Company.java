@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-public class company {
+public class Company {
 
     @Id
     @GeneratedValue

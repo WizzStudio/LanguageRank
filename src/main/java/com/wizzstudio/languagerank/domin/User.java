@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-public class user {
+public class User {
 
 //    设置主键、自增
     @Id

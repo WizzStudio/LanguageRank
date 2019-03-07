@@ -1,26 +1,25 @@
 package com.wizzstudio.languagerank.domin;
 
-
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-@Data
 @Entity
-public class languagePost {
+@Data
+public class FixedRank {
 
     @Id
     @GeneratedValue
     private Integer id;
 
-    @NotNull
-    private String languagename;
+//    TOBLE榜单数据
+    private String rankStr;
 
-//      相关语言岗位
-    @NotNull
-    private String languagePost;
+    private Date createTime;
+
+    private Date updateTime;
 
 }

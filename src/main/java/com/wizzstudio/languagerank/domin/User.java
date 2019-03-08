@@ -23,17 +23,16 @@ public class User {
 //     个人主页上学习的语言
     private String myLanguage;
 
-
-//     学习天数
+//      学习天数
     @NotNull
     private Integer accomplishedDay;
-
 
 //      个性签名
     @Column(length = 64)
     private String motto;
 
-//      个人介绍
+
+//          个人介绍
     @Column(length = 64)
     private String intro;
 

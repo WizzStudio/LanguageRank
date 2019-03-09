@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domin;
+package com.wizzstudio.languagerank.domain;
 
 
 import lombok.Data;
@@ -22,17 +22,21 @@ public class Company {
     @NotNull
     private String companyName;
 
-//      平均薪资
+    // 平均薪资
     private Integer companyOrdSalary;
-//      最高薪资
-    private Integer companyMaxSalary;
-//      最低薪资
-    private Integer companyMinSalary;
-//      岗位人数
-    private Integer companyPostNumber;
-//      薪资最高的岗位
-    private String companyMaxSalaryPost;
-//      薪资最低的岗位
-    private String companyMinSalaryPost;
 
+    // 最高薪资
+    private Integer companyMaxSalary;
+
+    // 最低薪资
+    private Integer companyMinSalary;
+
+    // 岗位人数
+    private Integer companyPostNumber;
+
+    // 薪资最高的岗位
+    private String companyMaxSalaryPost;
+
+    // 薪资最低的岗位
+    private String companyMinSalaryPost;
 }

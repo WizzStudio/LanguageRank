@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domin;
+package com.wizzstudio.languagerank.domain;
 
 import lombok.Data;
 
@@ -15,7 +15,7 @@ public class FixedRank {
     @GeneratedValue
     private Integer id;
 
-//    TOBLE榜单数据
+    // TOBLE榜单数据
     private String rankStr;
 
     private Date createTime;

@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domin;
+package com.wizzstudio.languagerank.domain;
 
 
 import lombok.Data;
@@ -8,23 +8,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-@Entity
 @Data
-public class EmployeeRank {
+@Entity
+public class LanguagePost {
 
     @Id
     @GeneratedValue
     private Integer id;
 
     @NotNull
-    private String languageNmae;
+    private String languageName;
 
-//      语言图标的url
+    // 相关语言岗位
     @NotNull
-    private String languageSymbol;
-
-//      语言热度指数
-    @NotNull
-    private Integer languageNumber;
+    private String languagePost;
 
 }

@@ -1,5 +1,9 @@
 package com.wizzstudio.languagerank.domain;
 
+/*
+Created by Ben Wen on 2019/3/12.
+*/
+
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -9,20 +13,15 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-public class User {
-
+public class Language {
     @Id
     @GeneratedValue
     private Integer id;
 
     @NotNull
-    private String openId;
+    private String languageName;
 
-    // 个人主页上学习的语言
-    private String myLanguage;
-
-    // 即将进行第几天的计划
     @NotNull
-    private Integer studyPlanDay;
+    private String languageSymbol;
 
 }

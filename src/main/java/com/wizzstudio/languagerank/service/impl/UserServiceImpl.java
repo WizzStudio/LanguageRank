@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
         return wxLogInDTO;
     }
 
-    // 只通过openId新增用户，myLanguage默认为空，accomplishedDay默认为NO_START
+    // 只通过openId新增用户，myLanguage默认为空，studyPlanDay默认为FIRST_DAY
     @Override
     public void saveUser(String openId) {
     }

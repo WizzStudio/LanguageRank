@@ -22,8 +22,8 @@ public class User {
     // 个人主页上学习的语言
     private String myLanguage;
 
-    // 学习天数
+    // 已完成七日计划天数
     @NotNull
-    private Integer accomplishedDay;
+    private Integer studyPlanDay;
 
 }

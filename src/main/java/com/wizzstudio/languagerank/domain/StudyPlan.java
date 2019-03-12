@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.domain;
 Created by Ben Wen on 2019/3/9.
 */
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -15,10 +16,16 @@ import javax.validation.constraints.NotNull;
 @Data
 public class StudyPlan {
 
-//    @Id
-//    @GeneratedValue
-//    private Integer id;
-//
-//    @NotNull
-//    private
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    @NotNull
+    private Integer studyPlanDay;
+
+    @NotNull
+    private String contentOne;
+
+    @NotNull
+    private String contentTwo;
 }

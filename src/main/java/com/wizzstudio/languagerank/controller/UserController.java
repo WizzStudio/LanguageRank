@@ -13,12 +13,14 @@ import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
+
 
     @Autowired
     UserService userService;
@@ -29,12 +31,12 @@ public class UserController {
 
     @PostMapping("/userinfo/{openId}")
     public ResponseEntity getUserInfo(@PathVariable("openId") String openId) {
-        User user =  userService.findUserByOpenId(openId);
+        User user =  userService.findByOpenId(openId);
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setMyLanguage(user.getMyLanguage());
-            userDTO.setJoinedNumber(languageService.findJoinedNumberByLanguage());
-            userDTO.setJoinedToday(languageService.findJoinedTodayByLanguage());
+            userDTO.setJoinedNumber(languageService.findJoinedNumberByLanguage(user.getMyLanguage()));
+            userDTO.setJoinedToday(languageService.findJoinedTodayByLanguage(user.getMyLanguage()));
 
             // 当用户已完成学习计划时返回false，反之返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay())) {
@@ -42,9 +44,25 @@ public class UserController {
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsStudyPlan(true);
-                userDTO.setStudyPlan(studyPlanService.findStudyPlanByStudyPlanDay(user.getStudyPlanDay()));
+                userDTO.setStudyPlan(studyPlanService.findStudyPlanByStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay()));
             }
             return ResultUtil.success(userDTO);
         } else return ResultUtil.error();
+    }
+
+    @GetMapping("/myaward")
+    public ResponseEntity getMyAward() {
+        Map<String, Object> myAward = null;
+        try {
+            myAward = new HashMap<>();
+//            myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()));
+//            myAward.put("awardOne", studyPlanService.findStudyPlanByStudyPlanDay(languageName, StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()).getContentOne());
+//            myAward.put("awarcTwo", studyPlanService.findStudyPlanByStudyPlanDay(languageName, StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()).getContentTwo());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+
+        return ResultUtil.success(myAward);
     }
 }

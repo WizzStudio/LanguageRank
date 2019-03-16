@@ -1,9 +1,8 @@
 package com.wizzstudio.languagerank.aspect;
 
 
+import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.domain.LanguageCount;
-import com.wizzstudio.languagerank.service.LanguageService;
-import com.wizzstudio.languagerank.service.impl.LanguageServiceImpl;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,26 +10,27 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Aspect
 @Component
 public class StatisticAspect {
 
     @Autowired
-    private LanguageServiceImpl languageService;
+    private LanguageDAO languageDAO;
 
-    @Pointcut("execution(public * com.wizzstudio.languagerank.controller.(..))")
+//    @Pointcut("execution(public * com.wizzstudio.languagerank.controller.(..))")
 //    未写完 controller...
     public void newLanguageNumber() {
     }
 
-    @AfterReturning("newLanguageNumber()")
+//    @AfterReturning("newLanguageNumber()")
+    @Transactional(rollbackFor = Exception.class)
     public void addLanguageNumber(JoinPoint joinPoint){
 
-        LanguageCount languageCount = languageService.findByLanguageName((String) joinPoint.getArgs()[0]);
-        languageService.update(languageCount.getNumber()+1, languageCount.getLanguageName());
+        LanguageCount languageCount = languageDAO.findByLanguageName((String) joinPoint.getArgs()[0]);
+        // increaseNumber加1
+//        languageDAO.update(languageCount.getIncreaseNumber()+1, languageCount.getLanguageName());
 
     }
-
 }

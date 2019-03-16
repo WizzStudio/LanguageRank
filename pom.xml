@@ -12,7 +12,7 @@
     <artifactId>languagerank</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>languagerank</name>
-    <description>Demo project for Spring Boot</description>
+    <description>编程语言排行榜</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -23,6 +23,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -58,6 +64,12 @@
             <version>3.3.0</version>
         </dependency>
 
+        <!--@ConfigurationProperties注解读取配置文件需要-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
 

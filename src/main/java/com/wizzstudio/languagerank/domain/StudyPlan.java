@@ -20,8 +20,12 @@ public class StudyPlan {
     @GeneratedValue
     private Integer id;
 
+    // 学习计划第八天的内容即为最终的奖励
     @NotNull
     private Integer studyPlanDay;
+
+    @NotNull
+    private String languageName;
 
     @NotNull
     private String contentOne;

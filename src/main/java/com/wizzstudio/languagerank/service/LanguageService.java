@@ -12,21 +12,18 @@ public interface LanguageService {
     /**
      *查找已加入学习计划人数
      */
-    Integer findJoinedNumberByLanguage();
+    Integer findJoinedNumberByLanguage(String languageName);
 
     /**
      *查找今日加入学习计划人数
      */
-    Integer findJoinedTodayByLanguage();
+    Integer findJoinedTodayByLanguage(String languageName);
 
-    /**
-     * 更新学习计划人数
-     */
-    void update(Integer number, String languageName);
+    // 这里还有问题，暂时注释
 
-    /**
-     *查询当前学习语言人数
-     */
-    LanguageCount findByLanguageName(String languageName);
+//    /**
+//     * 每日更新该语言学习人总数
+//     */
+//    void update(Integer increaseNumber, String languageName);
 
 }

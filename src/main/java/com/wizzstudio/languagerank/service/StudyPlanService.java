@@ -10,5 +10,5 @@ public interface StudyPlanService {
     /**
      * 查找某一日的学习计划
      */
-    StudyPlan findStudyPlanByStudyPlanDay(Integer studyPlanDay);
+    StudyPlan findStudyPlanByStudyPlanDay(String languageName ,Integer studyPlanDay);
 }

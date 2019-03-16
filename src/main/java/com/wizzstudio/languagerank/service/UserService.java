@@ -23,17 +23,17 @@ public interface UserService {
      *
      * @param openId 用户openId
      */
-    void saveUser(String openId);
+    User saveUser(String openId);
 
     /**
      * 通过openId获取用户信息
      *
      * @param openid 用户openid
      */
-    User findUserByOpenId(String openid);
+    User findByOpenId(String openid);
 
-    /**
-     * 通过Id获取用户信息
-     */
-    User findUserById(String id);
+//    /**
+//     * 通过Id获取用户信息
+//     */
+//    User findUserById(String id);
 }

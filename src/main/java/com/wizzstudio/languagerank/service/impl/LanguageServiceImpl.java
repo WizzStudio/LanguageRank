@@ -30,16 +30,8 @@ public class LanguageServiceImpl implements LanguageService {
         return languageDAO.findByLanguageName(languageName).getIncreaseNumber();
     }
 
-//    @Override
-//    @Query("select o from LanguageCount o where  languageName = :languageName")
-//    public LanguageCount findByLanguageName(@Param("languageName") String languageName){
-//        return null;
-////      return的返回值
-//    }
+    @Override
+    public void updateNumber(Integer increaseNumber, String languageName) {
 
-//    @Override
-//    @Modifying
-//    @Query("update LanguageCount o set o.number = :number where o.languageName = :languageName")
-//    public void update(@Param("number")Integer number, @Param("languageName")String languageName){
-//    }
+    }
 }

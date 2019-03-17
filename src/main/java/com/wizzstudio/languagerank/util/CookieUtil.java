@@ -21,6 +21,7 @@ public class CookieUtil {
      */
     public static void setCookie(HttpServletResponse response, String key, String value, Integer expire) {
         Cookie cookie = new Cookie(key, value);
+        // 设置应用服务器存放应用的文件夹的根目录下所有的应用均能访问到该cookie，此处意思为整个项目中都能访问到cookie
         cookie.setPath("/");
         cookie.setMaxAge(expire);
         response.addCookie(cookie);

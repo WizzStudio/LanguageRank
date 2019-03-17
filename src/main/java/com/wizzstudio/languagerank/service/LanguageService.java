@@ -19,11 +19,9 @@ public interface LanguageService {
      */
     Integer findJoinedTodayByLanguage(String languageName);
 
-    // 这里还有问题，暂时注释
-
-//    /**
-//     * 每日更新该语言学习人总数
-//     */
-//    void update(Integer increaseNumber, String languageName);
+    /**
+     * 每日更新该语言学习总人数
+     */
+    void updateNumber(Integer increaseNumber, String languageName);
 
 }

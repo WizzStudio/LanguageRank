@@ -14,7 +14,11 @@ public interface LanguageDAO extends JpaRepository<LanguageCount,Integer> {
 
     LanguageCount findByLanguageName(String languageName);
 
-//    @Modifying
-//    @Query("update LanguageCount o set o.number = :number where o.languageName = :languageName")
-//    void update(@Param("number")Integer number, @Param("languageName")String languageName);
+    // 更新新增人数，由aspect调用
+    @Modifying
+    @Query("update LanguageCount o set o.increaseNumber = :increaseNumber where o.languageName = :languageName")
+    void updateIncreaseNumber(@Param("increaseNumber")Integer increaseNumber, @Param("languageName")String languageName);
+
+    // 更新总人数，由service调用
+
 }

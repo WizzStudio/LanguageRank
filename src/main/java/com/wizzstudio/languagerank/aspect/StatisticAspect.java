@@ -30,7 +30,7 @@ public class StatisticAspect {
 
         LanguageCount languageCount = languageDAO.findByLanguageName((String) joinPoint.getArgs()[0]);
         // increaseNumber加1
-//        languageDAO.update(languageCount.getIncreaseNumber()+1, languageCount.getLanguageName());
+        languageDAO.updateIncreaseNumber(languageCount.getIncreaseNumber()+1, languageCount.getLanguageName());
 
     }
 }

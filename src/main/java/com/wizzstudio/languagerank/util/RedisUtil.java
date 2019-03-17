@@ -18,6 +18,7 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    // 以cookie值为key，userId值为value存入redis中，Constant.TOKEN_EXPIRED时间后过期，时间单位为TimeUnit.SECONDS
     public void storeNewCookie(String cookie, String userId) {
         redisTemplate.opsForValue().set(cookie, userId, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
     }
@@ -30,7 +31,7 @@ public class RedisUtil {
     }
 
     /**
-     * 存储key，value，在expire分钟后过期
+     * 存储key，value，在expire（单位待传）时间后过期
      */
     public void store(String key, String value, Integer expire, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, expire, timeUnit);

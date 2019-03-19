@@ -6,8 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+// 语言热度榜
+// 该表由爬虫爬取，因数据更新频率不同，第一版小程序暂不保存过期数据
 @Entity
 @Data
 public class FixedRank {
@@ -16,11 +19,15 @@ public class FixedRank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // TOBLE榜单数据
-    private String rankStr;
+    @NotNull
+    private String languageName;
 
-    private Date createTime;
+    @NotNull
+    private Double TIOBEExponent;
 
-    private Date updateTime;
+    @NotNull
+    private Double IEEEExponent;
 
+    @NotNull
+    private Double GoogleExponent;
 }

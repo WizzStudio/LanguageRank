@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+// 雇主需求详情页面第一部分
 @Data
 @Entity
 public class LanguagePost {
@@ -19,6 +20,9 @@ public class LanguagePost {
 
     @NotNull
     private String languageName;
+
+    @NotNull
+    private String postSalary;
 
     // 相关语言岗位
     @NotNull

@@ -1,5 +1,8 @@
 package com.wizzstudio.languagerank.domain;
 
+/*
+Created by Ben Wen on 2019/3/18.
+*/
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -12,37 +15,23 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-// 雇主需求榜
-@Entity
+// 语言热度榜最终指数表
 @Data
-public class EmployeeRank {
-
+@Entity
+public class FixedFinalExponent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private String languageName;
+    private String LanguageName;
 
-    // 薪资指数
-    @NotNull
-    private Double salaryExponent;
-
-    // 语言需求量指数
-    @NotNull
-    private Double languagePostExponent;
-
-    // 城市需求量指数
-    @NotNull
-    private Double cityPostExponent;
-
-    // 最终指数
-    @NotNull
-    private Double EmployeeFinalExponent;
-
-    // 更新时间
     @NotNull
     @DateTimeFormat(pattern="yyyy-MM-dd")
     @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date updateTime;
+
+    @NotNull
+    private Double FixedFinalExponent;
+
 }

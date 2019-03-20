@@ -22,7 +22,7 @@ public class LanguagePost {
     private String languageName;
 
     @NotNull
-    private String postSalary;
+    private Integer postSalary;
 
     // 相关语言岗位
     @NotNull

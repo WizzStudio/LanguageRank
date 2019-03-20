@@ -39,12 +39,13 @@ public class UserController {
             userDTO.setJoinedToday(languageService.findJoinedTodayByLanguage(user.getMyLanguage()));
 
             // 当用户已完成学习计划时返回false，反之返回true及具体学习计划
-            if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay())) {
+            if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED.toString())) {
                 userDTO.setIsStudyPlan(false);
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsStudyPlan(true);
                 userDTO.setStudyPlan(studyPlanService.findStudyPlanByStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay()));
+
             }
             return ResultUtil.success(userDTO);
         } else return ResultUtil.error();
@@ -57,7 +58,7 @@ public class UserController {
             myAward = new HashMap<>();
 //            myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()));
 //            myAward.put("awardOne", studyPlanService.findStudyPlanByStudyPlanDay(languageName, StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()).getContentOne());
-//            myAward.put("awarcTwo", studyPlanService.findStudyPlanByStudyPlanDay(languageName, StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()).getContentTwo());
+//            myAward.put("awardTwo", studyPlanService.findStudyPlanByStudyPlanDay(languageName, StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()).getContentTwo());
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtil.error();

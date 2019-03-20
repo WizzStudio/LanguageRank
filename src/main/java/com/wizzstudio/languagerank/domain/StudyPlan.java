@@ -7,10 +7,7 @@ Created by Ben Wen on 2019/3/9.
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -23,14 +20,19 @@ public class StudyPlan {
 
     // 学习计划第八天的内容即为最终的奖励
     @NotNull
-    private Integer studyPlanDay;
+    @Enumerated(value = EnumType.STRING)
+    private String studyPlanDay;
 
     @NotNull
     private String languageName;
 
     @NotNull
+    private String imageOne;
+
     private String contentOne;
 
     @NotNull
+    private String imageTwo;
+
     private String contentTwo;
 }

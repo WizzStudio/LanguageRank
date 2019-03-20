@@ -31,9 +31,4 @@ public interface UserService {
      * @param openid 用户openid
      */
     User findByOpenId(String openid);
-
-//    /**
-//     * 通过Id获取用户信息
-//     */
-//    User findUserById(String id);
 }

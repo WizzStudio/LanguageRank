@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService{
     public User saveUser(String openId) {
         User user = new User();
         user.setOpenId(openId);
-        user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY.getStudyPlanDay());
+        user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY.toString());
         return userDAO.save(user);
     }
 

@@ -55,11 +55,11 @@ public class LogInController {
         }
     }
 
-    @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Cookie cookie = CookieUtil.getCookie(request);
-        if (cookie != null) redisUtil.delete(cookie.getValue());
-        response.sendRedirect("/login/admin");
-        log.info("用户已退出登录");
-    }
+//    @PostMapping("/logout")
+//    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        Cookie cookie = CookieUtil.getCookie(request);
+//        if (cookie != null) redisUtil.delete(cookie.getValue());
+//        response.sendRedirect("/login/admin");
+//        log.info("用户已退出登录");
+//    }
 }

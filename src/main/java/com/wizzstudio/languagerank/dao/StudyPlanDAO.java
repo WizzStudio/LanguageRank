@@ -8,5 +8,5 @@ import com.wizzstudio.languagerank.domain.StudyPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StudyPlanDAO extends JpaRepository<StudyPlan, Integer> {
-    StudyPlan findByLanguageNameAndStudyPlanDay(String languageName, Integer studyPlanDay);
+    StudyPlan findByLanguageNameAndStudyPlanDay(String languageName, String studyPlanDay);
 }

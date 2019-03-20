@@ -2,10 +2,7 @@ package com.wizzstudio.languagerank.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -28,5 +25,6 @@ public class User implements Serializable {
 
     // 即将进行第几天的计划
     @NotNull
-    private Integer studyPlanDay;
+    @Enumerated(value = EnumType.STRING)
+    private String studyPlanDay;
 }

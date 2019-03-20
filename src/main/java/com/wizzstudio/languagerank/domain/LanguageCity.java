@@ -25,4 +25,7 @@ public class LanguageCity {
 
     @NotNull
     private String languageCity;
+
+    @NotNull
+    private Integer postNumber;
 }

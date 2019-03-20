@@ -17,7 +17,7 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     private StudyPlanDAO studyPlanDAO;
 
     @Override
-    public StudyPlan findStudyPlanByStudyPlanDay(String languageName ,Integer studyPlanDay) {
+    public StudyPlan findStudyPlanByStudyPlanDay(String languageName ,String studyPlanDay) {
         return studyPlanDAO.findByLanguageNameAndStudyPlanDay(languageName, studyPlanDay);
     }
 }

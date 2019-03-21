@@ -10,7 +10,7 @@ public class FinalRankDTO {
     private Language language;
 
     // 语言热度指数
-    private Integer FinalExponent;
+    private Double FinalExponent;
 
     // 语言热度变化趋势(值在LanguageTendEnum类中列出)
     private Integer languageTend;

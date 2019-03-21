@@ -1,12 +1,5 @@
 package com.wizzstudio.languagerank.service;
 
-/*
-Created by Ben Wen on 2019/3/12.
-*/
-
-import com.wizzstudio.languagerank.domain.LanguageCount;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface LanguageService {
     /**

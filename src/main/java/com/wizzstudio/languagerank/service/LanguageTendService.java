@@ -2,7 +2,11 @@ package com.wizzstudio.languagerank.service;
 
 public interface LanguageTendService {
 
-//    语言变化趋势的差值
-    void findLanguageTendNumber(String languageName);
+    /**
+     * 判断某一种语言的热度发展趋势
+     * @param languageName
+     * @return LanguageTendEnum
+     */
+    Integer findLanguageTendNumber(String languageName);
 
 }

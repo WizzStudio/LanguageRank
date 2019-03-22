@@ -1,8 +1,8 @@
 package com.wizzstudio.languagerank.service.impl;
 
 
-import com.wizzstudio.languagerank.dao.EmployeeRankDAO;
-import com.wizzstudio.languagerank.dao.SalaryExponentDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.domain.CompanySalary;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.service.SalaryExponentService;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class SalaryExponentServiceImpl implements SalaryExponentService {
 
     @Autowired
-    SalaryExponentDAO salaryExponentDAO;
+    CompanySalaryDAO companySalaryDAO;
 
     @Autowired
     EmployeeRankDAO employeeRankDAO;
@@ -34,7 +34,7 @@ public class SalaryExponentServiceImpl implements SalaryExponentService {
 
 //          获取前十的语言名
           String languageNameRank = employeeRank.getLanguageName();
-          List<CompanySalary> companySalaries = salaryExponentDAO.findByLanguageName(languageNameRank);
+          List<CompanySalary> companySalaries = companySalaryDAO.findByLanguageName(languageNameRank);
 
 //        取前五公司的平均薪资
           for(CompanySalary companySalary : companySalaries){

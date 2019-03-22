@@ -1,0 +1,30 @@
+server:
+  port: 8101
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+    username: "root"
+    password: "000326"
+
+#    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+#    username: "pgrk"
+#    password: "wizz.pgrk"
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+#    timeout: 0
+    database: 0
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+#        max-wait: -1
+        min-idle: 0

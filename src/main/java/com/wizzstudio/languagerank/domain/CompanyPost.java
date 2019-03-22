@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 // 雇主需求详情页面第三部分
 @Data
 @Entity
-public class CompanyPostNumber {
+public class CompanyPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -24,5 +24,8 @@ public class CompanyPostNumber {
     private String languageName;
 
     @NotNull
-    private Integer postNumber;
+    private String companyName;
+
+    @NotNull
+    private Integer companyPostNumber;
 }

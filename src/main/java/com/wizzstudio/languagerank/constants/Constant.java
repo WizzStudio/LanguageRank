@@ -5,8 +5,8 @@ Created by Ben Wen on 2019/3/16.
 */
 
 public interface Constant {
-    // cookie过期时间
-    Integer TOKEN_EXPIRED = 7200;
+    // cookie过期时间24小时
+    Integer TOKEN_EXPIRED = 24;
 
     String TOKEN = "token";
 }

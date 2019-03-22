@@ -1,5 +1,6 @@
 package com.wizzstudio.languagerank.domain;
 
+import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,5 +27,5 @@ public class User implements Serializable {
     // 即将进行第几天的计划
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private String studyPlanDay;
+    private StudyPlanDayEnum studyPlanDay;
 }

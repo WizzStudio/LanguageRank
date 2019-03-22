@@ -24,6 +24,10 @@ public class LanguagePost {
     @NotNull
     private Integer postSalary;
 
+    // 岗位需求量
+    @NotNull
+    private Integer postNumber;
+
     // 相关语言岗位
     @NotNull
     private String languagePost;

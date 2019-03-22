@@ -30,20 +30,16 @@ import java.io.IOException;
 public class LogInController {
 
     @Autowired
-    RedisUtil redisUtil;
-
-    @Autowired
     UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity logIn(@RequestBody WxInfo loginData, HttpServletRequest request, HttpServletResponse response) {
         try {
-           WxLogInDTO wxLogInDTO = userService.userLogin(loginData);
-
            // 生成cookie
             String cookie = CookieUtil.tokenGenerate();
-            // 以cookie值为key，openId值为value存入redis
-            redisUtil.storeNewCookie(cookie, wxLogInDTO.getOpenId());
+
+            WxLogInDTO wxLogInDTO = userService.userLogin(loginData, cookie);
+
             // 将cookie写入response中返回給前端
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             log.info("微信登录成功");

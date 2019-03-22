@@ -13,7 +13,7 @@ public class UserDTO {
 
     private String myLanguage;
 
-    private Boolean isStudyPlan;
+    private Boolean isViewedStudyPlan;
 
     private StudyPlan studyPlan;
 

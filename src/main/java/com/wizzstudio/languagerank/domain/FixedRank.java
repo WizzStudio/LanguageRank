@@ -29,5 +29,5 @@ public class FixedRank {
     private Double IEEEExponent;
 
     @NotNull
-    private Double GoogleExponent;
+    private Double BaiduExponent;
 }

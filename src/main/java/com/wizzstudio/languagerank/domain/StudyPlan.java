@@ -5,6 +5,7 @@ Created by Ben Wen on 2019/3/9.
 */
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class StudyPlan {
     // 学习计划第八天的内容即为最终的奖励
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private String studyPlanDay;
+    private StudyPlanDayEnum studyPlanDay;
 
     @NotNull
     private String languageName;

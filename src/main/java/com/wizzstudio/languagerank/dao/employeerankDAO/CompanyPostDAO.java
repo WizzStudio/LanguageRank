@@ -12,6 +12,11 @@ import java.util.List;
 
 public interface CompanyPostDAO extends JpaRepository<CompanyPost, Integer> {
 
-    @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName order by company_post_number DESC limit 5")
+    // 查询使用该语言的公司岗位需求量排行前五名
+    @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName order by company_post_number DESC limit 4")
+    List<CompanyPost> findCompanyPostTopFiveByLanguageName(String languageName);
+
+    // 查询使用该语言的公司岗位需求量排行
+    @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName")
     List<CompanyPost> findCompanyPostByLanguageName(String languageName);
 }

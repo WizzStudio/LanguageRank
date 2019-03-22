@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface CompanySalaryDAO extends JpaRepository<CompanySalary, Integer> {
 
-    @Query(nativeQuery = true, value = "select * from company_salary where language_name = :languageName order by company_ord_salary DESC limit 5")
+    // 查询使用该语言的公司薪资排行前五名
+    @Query(nativeQuery = true, value = "select * from company_salary where language_name = :languageName order by company_ord_salary DESC limit 4")
     List<CompanySalary> findByLanguageName(@Param("languageName")String LanguageName);
 
 }

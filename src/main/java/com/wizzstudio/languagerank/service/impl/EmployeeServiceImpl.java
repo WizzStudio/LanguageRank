@@ -45,7 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<CompanyPost> getCompanyPost(String languageName) {
-        return companyPostDAO.findCompanyPostByLanguageName(languageName);
+        return companyPostDAO.findCompanyPostTopFiveByLanguageName(languageName);
     }
 
     @Override

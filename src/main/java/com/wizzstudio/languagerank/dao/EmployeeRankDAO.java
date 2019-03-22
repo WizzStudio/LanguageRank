@@ -10,7 +10,7 @@ import java.util.List;
 public interface EmployeeRankDAO extends JpaRepository<EmployeeRank, Integer> {
 
 //      排序前十语言
-    @Query(nativeQuery = true,value = "select o from  EmployeeRank  o order by o.employeeFinalExponent ASC limit 10")
+    @Query(nativeQuery = true,value = "select o from  EmployeeRank  o order by o.employeeFinalExponent ASC limit 9")
     List<EmployeeRank> languageEmployeeRank();
 
 }

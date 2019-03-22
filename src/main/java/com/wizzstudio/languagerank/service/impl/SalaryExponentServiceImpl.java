@@ -18,7 +18,6 @@ public class SalaryExponentServiceImpl implements SalaryExponentService {
 
     @Autowired
     SalaryExponentDAO salaryExponentDAO;
-
     @Autowired
     EmployeeRankDAO employeeRankDAO;
 

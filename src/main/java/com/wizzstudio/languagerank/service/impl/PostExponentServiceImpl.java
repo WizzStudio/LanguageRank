@@ -21,6 +21,8 @@ public class PostExponentServiceImpl implements PostExponentService {
     @Autowired
     EmployeeRankDAO employeeRankDAO;
 
+    int number = 0;
+    int size = 0;
     double a = 0.0;
     Map<String, Integer> map = new HashMap<>();
 
@@ -28,16 +30,21 @@ public class PostExponentServiceImpl implements PostExponentService {
     public void findOrdPostNumber(List<String> languageName) {
 
         List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
+
+//        取排名前十的语言名
         for (EmployeeRank employeeRank : employeeRanks){
             String languageNameRank = employeeRank.getLanguageName();
+            size = companyPostDAO.findCompanyPostByLanguageName(languageNameRank).size();
 
-            // 你这里代码逻辑我看不懂，返回值变为List后你看看怎么改吧
-            CompanyPost companyPostNumber = companyPostDAO.findCompanyPostByLanguageName(languageNameRank);
-            Integer number = companyPostNumber.getCompanyPostNumber();
-            map.put(languageNameRank,number);
-            a = number + a;
+//            取该语言所有公司的岗位数之和，求其平均为a
+            List<CompanyPost> companyPosts = companyPostDAO.findCompanyPostByLanguageName(languageNameRank);
+            for (CompanyPost companyPost : companyPosts){
+                number = companyPost.getCompanyPostNumber();
+                map.put(languageNameRank,number);
+                a = number + a;
+            }
         }
-        a = a/10;
+        a = a/size;
     }
 
     @Override

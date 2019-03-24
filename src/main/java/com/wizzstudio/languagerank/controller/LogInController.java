@@ -43,11 +43,11 @@ public class LogInController {
             // 将cookie写入response中返回給前端
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             log.info("微信登录成功");
-           return ResultUtil.success(wxLogInDTO);
+           return ResultUtil.success("微信登录成功", wxLogInDTO);
         } catch (WxErrorException e) {
             log.error("微信登录失败，e={}",e);
             e.printStackTrace();
-            return ResultUtil.error();
+            return ResultUtil.error("微信登录失败");
         }
     }
 

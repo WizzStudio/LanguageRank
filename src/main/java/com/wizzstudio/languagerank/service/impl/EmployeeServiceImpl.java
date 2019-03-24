@@ -40,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<CompanySalary> getCompanySalary(String languageName) {
-        return companySalaryDAO.findByLanguageName(languageName);
+        return companySalaryDAO.findTopFiveByLanguageName(languageName);
     }
 
     @Override

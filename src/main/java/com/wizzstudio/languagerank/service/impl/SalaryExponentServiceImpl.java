@@ -34,7 +34,7 @@ public class SalaryExponentServiceImpl implements SalaryExponentService {
 
 //          获取前十的语言名
           String languageNameRank = employeeRank.getLanguageName();
-          List<CompanySalary> companySalaries = companySalaryDAO.findByLanguageName(languageNameRank);
+          List<CompanySalary> companySalaries = companySalaryDAO.findTopFiveByLanguageName(languageNameRank);
 
 //        取前五公司的平均薪资
           for(CompanySalary companySalary : companySalaries){

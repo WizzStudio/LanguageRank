@@ -16,7 +16,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer userId;
 
     @NotNull
     private String openId;
@@ -28,4 +28,7 @@ public class User implements Serializable {
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private StudyPlanDayEnum studyPlanDay;
+
+    @Transient
+    private Boolean isLoginToday;
 }

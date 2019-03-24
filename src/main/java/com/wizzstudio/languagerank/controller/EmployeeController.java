@@ -30,11 +30,11 @@ public class EmployeeController {
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
         List<LanguagePost> list =  employeeService.getLanguagePost(languageName);
         if (list != null) {
-            log.info("获取与该语言相关的热门岗位排行成功");
-            return ResultUtil.success(list);
+            log.info("获取与"+ languageName + "相关的热门岗位排行成功");
+            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", list);
         } else {
-            log.error("获取与该语言相关的热门岗位排行失败");
-            return ResultUtil.error("获取与该语言相关的热门岗位排行失败");
+            log.error("获取与"+ languageName + "相关的热门岗位排行失败");
+            return ResultUtil.error("获取与"+ languageName + "相关的热门岗位排行失败");
         }
     }
 
@@ -42,11 +42,11 @@ public class EmployeeController {
     public ResponseEntity getCompanySalary(@PathVariable("languageName")String languageName) {
         List<CompanySalary> list = employeeService.getCompanySalary(languageName);
         if (list != null) {
-            log.info("获取使用该语言的公司薪资排行成功");
-            return ResultUtil.success(list);
+            log.info("获取使用"+ languageName +"的公司薪资排行成功");
+            return ResultUtil.success("获取使用"+ languageName +"的公司薪资排行成功", list);
         } else {
-            log.error("获取使用该语言的公司薪资排行失败");
-            return ResultUtil.error("获取使用该语言的公司薪资排行失败");
+            log.error("获取使用"+ languageName +"的公司薪资排行失败");
+            return ResultUtil.error("获取使用"+ languageName +"的公司薪资排行失败");
         }
     }
 
@@ -54,11 +54,11 @@ public class EmployeeController {
     public ResponseEntity getCompanyPost(@PathVariable("languageName")String languageName) {
         List<CompanyPost> list = employeeService.getCompanyPost(languageName);
         if (list != null) {
-            log.info("获取使用该语言的公司岗位需求量排行成功");
-            return ResultUtil.success(list);
+            log.info("获取使用"+ languageName +"的公司岗位需求量排行成功");
+            return ResultUtil.success("获取使用"+ languageName +"的公司岗位需求量排行成功", list);
         } else {
-            log.error("获取使用该语言的公司岗位需求量排行失败");
-            return ResultUtil.error("获取使用该语言的公司岗位需求量排行失败");
+            log.error("获取使用"+ languageName +"的公司岗位需求量排行失败");
+            return ResultUtil.error("获取使用"+ languageName +"的公司岗位需求量排行失败");
         }
     }
 
@@ -66,11 +66,11 @@ public class EmployeeController {
     public ResponseEntity getLanguageCity(@PathVariable("languageName")String languageName) {
         List<LanguageCity> list = employeeService.getLanguageCity(languageName);
         if (list != null) {
-            log.info("查询几大城市对该语言的需求量成功");
-            return ResultUtil.success(list);
+            log.info("查询几大城市对"+ languageName +"的需求量成功");
+            return ResultUtil.success("查询几大城市对"+ languageName +"的需求量成功", list);
         } else {
-            log.error("查询几大城市对该语言的需求量失败");
-            return ResultUtil.error("查询几大城市对该语言的需求量失败");
+            log.error("查询几大城市对"+ languageName +"的需求量失败");
+            return ResultUtil.error("查询几大城市对"+ languageName +"的需求量失败");
         }
     }
 }

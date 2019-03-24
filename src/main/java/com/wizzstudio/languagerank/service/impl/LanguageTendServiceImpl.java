@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedLanguageTendDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeLanguageTend;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeLanguageTendDAO;
+import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.enums.LanguageTendEnum;
@@ -15,14 +15,14 @@ import java.util.List;
 public class LanguageTendServiceImpl implements LanguageTendService {
 
     @Autowired
-    FixedLanguageTendDAO languageTendDAO;
+    FixedFinalExponentDAO fixedFinalExponentDAO;
     @Autowired
-    EmployeeLanguageTend employeeLanguageTend;
+    EmployeeLanguageTendDAO employeeLanguageTendDAO;
 
     @Override
     public Integer findFixedLanguageTendNumber(String languageName){
 
-        List<FixedFinalExponent> fixedFinalExponents = languageTendDAO.findByLanguageName(languageName);
+        List<FixedFinalExponent> fixedFinalExponents = fixedFinalExponentDAO.findByLanguageName(languageName);
         double fixedLanguageTendNumber = fixedFinalExponents.get(1).getFixedFinalExponent()
                 - fixedFinalExponents.get(2).getFixedFinalExponent();
 
@@ -36,7 +36,7 @@ public class LanguageTendServiceImpl implements LanguageTendService {
 
     @Override
     public Integer findEmployeeLanguageTendNumber(String languageName) {
-        List<EmployeeRank> employeeRanks = employeeLanguageTend.findByLanguageName(languageName);
+        List<EmployeeRank> employeeRanks = employeeLanguageTendDAO.findByLanguageName(languageName);
         double employeeLanguageTendNumber = employeeRanks.get(1).getEmployeeFinalExponent()
                 - employeeRanks.get(2).getEmployeeFinalExponent();
 

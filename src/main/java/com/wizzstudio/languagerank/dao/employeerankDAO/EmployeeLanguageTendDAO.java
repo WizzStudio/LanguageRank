@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface EmployeeLanguageTend extends JpaRepository<EmployeeRank, Integer > {
+public interface EmployeeLanguageTendDAO extends JpaRepository<EmployeeRank, Integer > {
 
 
     @Query(nativeQuery = true,value = "select * from employee_rank where language_name = :languageName  " +

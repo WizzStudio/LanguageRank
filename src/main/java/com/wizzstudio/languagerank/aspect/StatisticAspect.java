@@ -19,8 +19,7 @@ public class StatisticAspect {
     @Autowired
     private LanguageCountDAO languageCountDAO;
 
-    @Pointcut("execution(public * com.wizzstudio.languagerank.controller.(..))")
-//    未写完 controller...
+    @Pointcut("execution(public * com.wizzstudio.languagerank.controller.UserController.updateLanguage(..))")
     public void newLanguageNumber() {
     }
 

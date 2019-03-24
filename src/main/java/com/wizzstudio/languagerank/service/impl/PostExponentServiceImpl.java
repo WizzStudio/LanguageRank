@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.service.impl;
 
 import com.wizzstudio.languagerank.dao.employeerankDAO.CompanyPostDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankLanguageNameDAO;
 import com.wizzstudio.languagerank.domain.CompanyPost;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.service.PostExponentService;
@@ -19,7 +19,7 @@ public class PostExponentServiceImpl implements PostExponentService {
     @Autowired
     CompanyPostDAO companyPostDAO;
     @Autowired
-    EmployeeRankDAO employeeRankDAO;
+    EmployeeRankLanguageNameDAO employeeRankDAO;
 
     int number = 0;
     int size = 0;

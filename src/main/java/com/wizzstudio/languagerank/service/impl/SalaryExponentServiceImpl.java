@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.service.impl;
 
 
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankLanguageNameDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.domain.CompanySalary;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
@@ -20,7 +20,7 @@ public class SalaryExponentServiceImpl implements SalaryExponentService {
     CompanySalaryDAO companySalaryDAO;
 
     @Autowired
-    EmployeeRankDAO employeeRankDAO;
+    EmployeeRankLanguageNameDAO employeeRankDAO;
 
     Map<String,Integer> map = new HashMap<String, Integer>();
     int m = 0;

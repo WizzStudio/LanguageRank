@@ -7,6 +7,8 @@ public interface LanguageTendService {
      * @param languageName
      * @return LanguageTendEnum
      */
-    Integer findLanguageTendNumber(String languageName);
+    Integer findFixedLanguageTendNumber(String languageName);
+
+    Integer findEmployeeLanguageTendNumber(String languageName);
 
 }

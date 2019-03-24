@@ -7,6 +7,6 @@ public interface FinalRankService {
      * @param languageName
      * @return fixedFinalExponent
      */
-    Double findFixedFinalExponent(String languageName);
+    Double getFixedFinalExponent(String languageName);
 
 }

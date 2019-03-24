@@ -6,7 +6,8 @@ import lombok.Data;
 @Data
 public class EmployeeRankDTO {
 
-    private Language language;
+    private String languageName;
+    private String languageSymbol;
 
     // 雇主热度指数
     private Double employeeFinalExponent;

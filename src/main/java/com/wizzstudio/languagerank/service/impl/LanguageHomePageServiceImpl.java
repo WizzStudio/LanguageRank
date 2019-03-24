@@ -9,9 +9,11 @@ import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class LanguageHomePageServiceImpl implements LanguageHomePageService {
 
     @Autowired

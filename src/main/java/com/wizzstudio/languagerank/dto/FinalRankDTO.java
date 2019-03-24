@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class FinalRankDTO {
 
-//    语言名，语言图标
-    private Language language;
+    private String languageName;
+    private String languageSymbol;
 
     // 语言热度指数
     private Double fixedFinalExponent;

@@ -4,13 +4,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
-    username: "root"
-    password: "000326"
+#    url: jdbc:mysql://localhost:3306/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+#    username: "root"
+#    password: "000326"
 
-#    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
-#    username: "pgrk"
-#    password: "wizz.pgrk"
+    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+    username: "pgrk"
+    password: "wizz.pgrk"
 
   jpa:
     hibernate:

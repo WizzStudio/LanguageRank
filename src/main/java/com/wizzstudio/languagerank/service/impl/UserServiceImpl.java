@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +34,11 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserDAO userDAO;
 
-    @Autowired
-    RedisUtil redisUtil;
-
-    @Autowired
-    private RedisTemplate<String, User> redisTemplate;
+//    @Autowired
+//    RedisUtil redisUtil;
+//
+//    @Autowired
+//    private RedisTemplate<String, User> redisTemplate;
 
     @Autowired
     private StudyPlanService studyPlanService;
@@ -52,22 +53,25 @@ public class UserServiceImpl implements UserService{
         if (user == null) {
             user = saveUser(sessionResult.getOpenid());
         }
-        // 以cookie值为key，user对象为value存入redis
-        redisUtil.storeNewUser(cookie, user);
+//        // 以cookie值为key，user对象为value存入redis
+//        redisUtil.storeNewUser(cookie, user);
 
         WxLogInDTO wxLogInDTO = new WxLogInDTO();
         wxLogInDTO.setOpenId(sessionResult.getOpenid());
         wxLogInDTO.setSession_key(sessionResult.getSessionKey());
+        wxLogInDTO.setUserId(user.getUserId());
 
         return wxLogInDTO;
     }
 
     // 只通过openId新增用户，myLanguage默认为空，studyPlanDay默认为FIRST_DAY
+    // 只在login中调用，调用时表示正在注册，isLoginToday设置为true
     @Override
     public User saveUser(String openId) {
         User user = new User();
         user.setOpenId(openId);
         user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY);
+        user.setIsLogInToday(true);
         return userDAO.save(user);
     }
 
@@ -76,21 +80,31 @@ public class UserServiceImpl implements UserService{
         return userDAO.findByOpenId(openid);
     }
 
-    // 还没有使用过
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateStudyPlanDay(String cookie) throws NullPointerException{
-        StudyPlan studyPlan = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(
-                redisTemplate.opsForValue().get(cookie).getMyLanguage(),
-                redisTemplate.opsForValue().get(cookie).getStudyPlanDay());
-        // 如果用户已完成所有学习计划
-        if (studyPlan.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
-            log.info("用户已完成"+ redisTemplate.opsForValue().get(cookie).getMyLanguage() + "所有学习计划");
-        } else {
-            userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger
-                            (studyPlan.getStudyPlanDay().getStudyPlanDay() + 1),
-                    redisTemplate.opsForValue().get(cookie).getOpenId());
-        }
+    public User findByUserId(Integer userId) {
+        return userDAO.findByUserId(userId);
+    }
+
+//    @Override
+//    @Transactional(rollbackFor = Exception.class)
+//    public void updateStudyPlanDay(String cookie) throws NullPointerException{
+//        StudyPlan studyPlan = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(
+//                redisTemplate.opsForValue().get(cookie).getMyLanguage(),
+//                redisTemplate.opsForValue().get(cookie).getStudyPlanDay());
+//        // 如果用户已完成所有学习计划
+//        if (studyPlan.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
+//            log.info("用户已完成"+ redisTemplate.opsForValue().get(cookie).getMyLanguage() + "所有学习计划");
+//        } else {
+//            userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger
+//                            (studyPlan.getStudyPlanDay().getStudyPlanDay() + 1),
+//                    redisTemplate.opsForValue().get(cookie).getOpenId());
+//        }
+//    }
+
+
+    @Override
+    public void updateStudyPlanDay() {
+
     }
 
     @Override
@@ -101,5 +115,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public void updateMyLanguage(User user, String myLanguage) {
         userDAO.updateMyLanguage(myLanguage, user.getOpenId());
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAllIsLogInToDay() {
+        userDAO.updateAllIsLogInToday();
+    }
+
+    @Override
+    public void updateIsLogInToday(Integer userId) {
+        userDAO.updateIsLogInToday(userId);
     }
 }

@@ -30,5 +30,5 @@ public class User implements Serializable {
     private StudyPlanDayEnum studyPlanDay;
 
     @Transient
-    private Boolean isLoginToday;
+    private Boolean isLogInToday;
 }

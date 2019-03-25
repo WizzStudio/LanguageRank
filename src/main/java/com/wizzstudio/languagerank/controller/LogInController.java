@@ -40,8 +40,8 @@ public class LogInController {
 
             WxLogInDTO wxLogInDTO = userService.userLogin(loginData, cookie);
 
-            // 将cookie写入response中返回給前端
-            CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
+//            // 将cookie写入response中返回給前端
+//            CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             log.info("微信登录成功");
            return ResultUtil.success("微信登录成功", wxLogInDTO);
         } catch (WxErrorException e) {

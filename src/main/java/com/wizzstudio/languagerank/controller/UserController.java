@@ -34,14 +34,14 @@ public class UserController {
     LanguageService languageService;
     @Autowired
     StudyPlanService studyPlanService;
-    @Autowired
-    RedisUtil redisUtil;
-    @Autowired
-    private RedisTemplate<String, User> redisTemplate;
+//    @Autowired
+//    RedisUtil redisUtil;
+//    @Autowired
+//    private RedisTemplate<String, User> redisTemplate;
 
-    @PostMapping("/userinfo/{openId}")
-    public ResponseEntity getUserInfo(HttpServletRequest request, @PathVariable("openId") String openId) {
-        User user =  userService.findByOpenId(openId);
+    @PostMapping("/userinfo")
+    public ResponseEntity getUserInfo(@RequestBody Integer userId ,HttpServletRequest request) {
+        User user =  userService.findByUserId(userId);
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setMyLanguage(user.getMyLanguage());
@@ -50,21 +50,29 @@ public class UserController {
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
-                    || redisTemplate.opsForValue().get(CookieUtil.getCookie(request)) != null) {
+                    || user.getIsLogInToday() == true) {
                 userDTO.setIsViewedStudyPlan(false);
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsViewedStudyPlan(true);
                 userDTO.setStudyPlan(studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay()));
+
+                // 用户今天已登录
+
+                //计划将这个接口拆成两个
+                userService.updateIsLogInToday(userId);
+                userService.updateStudyPlanDay();
             }
             return ResultUtil.success(userDTO);
         } else return ResultUtil.error();
     }
 
     // 还没有实现将用户以前学完过的语言也传给前端的功能
-    @GetMapping("/myaward")
-    public ResponseEntity getMyAward(HttpServletRequest request) {
-        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
+    @PostMapping("/myaward")
+    public ResponseEntity getMyAward(@RequestBody Integer userId ,HttpServletRequest request) {
+//        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
+
+        User user = userService.findByUserId(userId);
         Map<String, Object> myAward = null;
         Map<String, String> mySpecificAward = null;
         try {
@@ -88,9 +96,10 @@ public class UserController {
         return ResultUtil.success("获取我的奖励成功", myAward);
     }
 
-    @GetMapping("/update/{languageName}")
-    public void updateLanguage(@PathVariable("languageName")String languageName, HttpServletRequest request){
-        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
+    @PostMapping("/updatelanguage")
+    public void updateLanguage(@RequestBody String languageName,@RequestBody Integer userId, HttpServletRequest request){
+//        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
+        User user = userService.findByUserId(userId);
         userService.updateMyLanguage(user, languageName);
         userService.resetStudyPlanDay(user);
     }

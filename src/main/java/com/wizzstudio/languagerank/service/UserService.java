@@ -29,15 +29,21 @@ public interface UserService {
     /**
      * 通过openId获取用户信息
      *
-     * @param openid 用户openid
+     * @param openId 用户openId
      */
-    User findByOpenId(String openid);
+    User findByOpenId(String openId);
+
+    /**
+     * 通过openId获取用户信息
+     *
+     * @param userId 用户userId
+     */
+    User findByUserId(Integer userId);
 
     /**
      * 当用户已完成今天学习计划(已登录过)后更新studyPlanDay
-     * @param cookie 用户登录时用cookie标识
      */
-    void updateStudyPlanDay(String cookie);
+    void updateStudyPlanDay();
 
     /**
      * 用户更换所学语言后重置用户七日学习计划
@@ -51,4 +57,14 @@ public interface UserService {
      * @param myLanguage
      */
     void updateMyLanguage(User user, String myLanguage);
+
+    /**
+     * 每天零点更新用户今天是否登录
+     */
+    void updateAllIsLogInToDay();
+
+    /**
+     * 更新某用户今日登录情况
+     */
+    void updateIsLogInToday(Integer userId);
 }

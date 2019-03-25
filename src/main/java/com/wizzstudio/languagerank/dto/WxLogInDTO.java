@@ -12,5 +12,7 @@ public class WxLogInDTO {
 
     private String openId;
 
+    private Integer userId;
+
     private String session_key;
 }

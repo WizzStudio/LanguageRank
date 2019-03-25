@@ -14,6 +14,16 @@ import org.springframework.data.repository.query.Param;
 public interface UserDAO extends JpaRepository<User, Integer> {
     User findByOpenId(String openId);
 
+    User findByUserId(Integer userId);
+
+    @Modifying
+    @Query("update User u set u.isLogInToday = false")
+    void updateAllIsLogInToday();
+
+    @Modifying
+    @Query("update User u set u.isLogInToday = true where u.userId = :userId")
+    void updateIsLogInToday(@Param("userId") Integer userId);
+
     @Modifying
     @Query("update User u set u.studyPlanDay = :studyPlanDay where u.openId = :openId")
     void updateStudyPlanDay(@Param("studyPlanDay") StudyPlanDayEnum studyPlanDay, @Param("openId") String openId);

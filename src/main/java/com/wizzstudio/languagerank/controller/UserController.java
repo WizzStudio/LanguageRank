@@ -4,23 +4,24 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/9.
 */
 
+import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.LanguageService;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
-import com.wizzstudio.languagerank.util.CookieUtil;
-import com.wizzstudio.languagerank.util.RedisUtil;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -59,35 +60,26 @@ public class UserController {
                         user.getStudyPlanDay()));
 
                 // 用户今天已登录
-
-                //计划将这个接口拆成两个
                 userService.updateIsLogInToday(userId);
-                userService.updateStudyPlanDay();
+                userService.updateStudyPlanDay(user);
             }
             return ResultUtil.success(userDTO);
         } else return ResultUtil.error();
     }
 
-    // 还没有实现将用户以前学完过的语言也传给前端的功能
     @PostMapping("/myaward")
     public ResponseEntity getMyAward(@RequestBody Integer userId ,HttpServletRequest request) {
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
 
         User user = userService.findByUserId(userId);
-        Map<String, Object> myAward = null;
-        Map<String, String> mySpecificAward = null;
+        Map<String, Object> myAward = new HashMap<>();
+        StudyPlan studyingLanguage = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED);
+        List<StudyPlan> studyedLanguage = userService.findStudyedLanguageByUserId(userId);
+
         try {
-            myAward = new HashMap<>();
             myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED));
-
-            mySpecificAward.put("imageOne", studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED).getImageOne());
-            mySpecificAward.put("contentOne", studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED).getContentOne());
-            myAward.put("awardOne", mySpecificAward);
-
-            mySpecificAward = null;
-            mySpecificAward.put("imageTwo", studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED).getImageOne());
-            mySpecificAward.put("contentTwo", studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED).getContentOne());
-            myAward.put("awardTwo", mySpecificAward);
+            myAward.put("studyingLanguage", studyingLanguage);
+            myAward.put("studyedLanguage", studyedLanguage);
         } catch (NullPointerException e) {
             log.error("获取我的奖励失败");
             e.printStackTrace();
@@ -100,9 +92,9 @@ public class UserController {
     @PostMapping("/updatelanguage")
     public void updateLanguage(@RequestBody String languageName,@RequestBody Integer userId, HttpServletRequest request){
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
-        User user = userService.findByUserId(userId);
-        userService.updateMyLanguage(user, languageName);
-        userService.resetStudyPlanDay(user);
+//        User user = userService.findByUserId(userId);
+        userService.updateMyLanguage(userId, languageName);
+        userService.resetStudyPlanDay(userId);
     }
 
     @PostMapping("/studyplan")

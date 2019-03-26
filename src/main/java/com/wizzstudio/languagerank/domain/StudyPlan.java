@@ -30,10 +30,15 @@ public class StudyPlan {
     @NotNull
     private String imageOne;
 
+    // content与link只有最终奖励才有
     private String contentOne;
+
+    private String linkOne;
 
     @NotNull
     private String imageTwo;
 
     private String contentTwo;
+
+    private String linkTwo;
 }

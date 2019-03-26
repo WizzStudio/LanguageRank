@@ -4,10 +4,13 @@ package com.wizzstudio.languagerank.service;
 Created by Ben Wen on 2019/3/9.
 */
 
+import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import me.chanjar.weixin.common.error.WxErrorException;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -43,20 +46,20 @@ public interface UserService {
     /**
      * 当用户已完成今天学习计划(已登录过)后更新studyPlanDay
      */
-    void updateStudyPlanDay();
+    void updateStudyPlanDay(User user);
 
     /**
      * 用户更换所学语言后重置用户七日学习计划
-     * @param user
+     * @param userId
      */
-    void resetStudyPlanDay(User user);
+    void resetStudyPlanDay(Integer userId);
 
     /**
      * 更新用户个人主页上的语言
-     * @param user
+     * @param userId
      * @param myLanguage
      */
-    void updateMyLanguage(User user, String myLanguage);
+    void updateMyLanguage(Integer userId, String myLanguage);
 
     /**
      * 每天零点更新用户今天是否登录
@@ -67,4 +70,9 @@ public interface UserService {
      * 更新某用户今日登录情况
      */
     void updateIsLogInToday(Integer userId);
+
+    /**
+     * 查询用户已学完的语言并返回其奖励
+     */
+    List<StudyPlan> findStudyedLanguageByUserId(Integer userId);
 }

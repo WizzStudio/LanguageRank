@@ -25,10 +25,10 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     void updateIsLogInToday(@Param("userId") Integer userId);
 
     @Modifying
-    @Query("update User u set u.studyPlanDay = :studyPlanDay where u.openId = :openId")
-    void updateStudyPlanDay(@Param("studyPlanDay") StudyPlanDayEnum studyPlanDay, @Param("openId") String openId);
+    @Query("update User u set u.studyPlanDay = :studyPlanDay where u.openId = :userId")
+    void updateStudyPlanDay(@Param("studyPlanDay") StudyPlanDayEnum studyPlanDay, @Param("userId") Integer userId);
 
     @Modifying
-    @Query("update User u set u.myLanguage = :myLanguage where u.openId = :openId")
-    void updateMyLanguage(@Param("myLanguage")String myLanguage, @Param("openId") String openId);
+    @Query("update User u set u.myLanguage = :myLanguage where u.openId = :userId")
+    void updateMyLanguage(@Param("myLanguage")String myLanguage, @Param("userId") Integer userId);
 }

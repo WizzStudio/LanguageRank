@@ -1,7 +1,5 @@
 package com.wizzstudio.languagerank.controller;
 
-
-import com.wizzstudio.languagerank.domain.FixedRank;
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.FinalRankService;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;

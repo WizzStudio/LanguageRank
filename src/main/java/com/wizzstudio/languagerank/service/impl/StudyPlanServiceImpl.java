@@ -11,6 +11,8 @@ import com.wizzstudio.languagerank.service.StudyPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudyPlanServiceImpl implements StudyPlanService {
 
@@ -20,5 +22,12 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     @Override
     public StudyPlan findStudyPlanByLanguageNameAndStudyPlanDay(String languageName ,StudyPlanDayEnum studyPlanDay) {
         return studyPlanDAO.findByLanguageNameAndStudyPlanDay(languageName, studyPlanDay);
+    }
+
+
+    @Override
+    public List<StudyPlan> getAllStudyPlanDay(String languageName, Integer studyPlanDay) {
+
+        return studyPlanDAO.getAllStudyPlanDay(languageName, studyPlanDay);
     }
 }

@@ -55,7 +55,8 @@ public class UserController {
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsViewedStudyPlan(true);
-                userDTO.setStudyPlan(studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay()));
+                userDTO.setStudyPlan(studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(),
+                        user.getStudyPlanDay()));
 
                 // 用户今天已登录
 
@@ -103,4 +104,18 @@ public class UserController {
         userService.updateMyLanguage(user, languageName);
         userService.resetStudyPlanDay(user);
     }
+
+    @PostMapping("/studyplan")
+    public ResponseEntity getStudyAllPlan(@RequestBody Integer userId ,HttpServletRequest request){
+        User user =  userService.findByUserId(userId);
+        if (user != null) {
+            UserDTO userDTO = new UserDTO();
+            String languageName = user.getMyLanguage();
+            Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
+
+            return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay));
+        }else
+            return ResultUtil.error();
+    }
+
 }

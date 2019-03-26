@@ -7,6 +7,7 @@ Created by Ben Wen on 2019/3/22.
 import com.wizzstudio.languagerank.domain.CompanyPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

@@ -6,9 +6,12 @@ Created by Ben Wen on 2019/3/9.
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.wizzstudio.languagerank.dao.StudyPlanDAO;
 import com.wizzstudio.languagerank.dao.UserDAO;
+import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
@@ -23,6 +26,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
@@ -33,6 +39,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserDAO userDAO;
+
+    @Autowired
+    UserStudyedLanguageDAO userStudyedLanguageDAO;
+
+    @Autowired
+    StudyPlanDAO studyPlanDAO;
 
 //    @Autowired
 //    RedisUtil redisUtil;
@@ -103,18 +115,29 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public void updateStudyPlanDay() {
-
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStudyPlanDay(User user) {
+        Integer studyPlanDayEnumByInteger = user.getStudyPlanDay().getStudyPlanDay() + 1;
+        userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), user.getUserId());
+        // 如果用户已完成该种语言全部计划的学习，将其加入用户已完成语言表
+        if (studyPlanDayEnumByInteger == 8) {
+            UserStudyedLanguage u = new UserStudyedLanguage();
+            u.setUserId(user.getUserId());
+            u.setStudyedLanguage(user.getMyLanguage());
+            userStudyedLanguageDAO.save(u);
+        }
     }
 
     @Override
-    public void resetStudyPlanDay(User user) {
-        userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, user.getOpenId());
+    @Transactional(rollbackFor = Exception.class)
+    public void resetStudyPlanDay(Integer userId) {
+        userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, userId);
     }
 
     @Override
-    public void updateMyLanguage(User user, String myLanguage) {
-        userDAO.updateMyLanguage(myLanguage, user.getOpenId());
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMyLanguage(Integer userId, String myLanguage) {
+        userDAO.updateMyLanguage(myLanguage, userId);
     }
 
     @Override
@@ -125,7 +148,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateIsLogInToday(Integer userId) {
         userDAO.updateIsLogInToday(userId);
+    }
+
+    @Override
+    public List<StudyPlan> findStudyedLanguageByUserId(Integer userId) {
+        List<UserStudyedLanguage> list =  userStudyedLanguageDAO.findStudyedLanguageByUserId(userId);
+        List<StudyPlan> studyedLanguage = new ArrayList<>();
+        for (UserStudyedLanguage u : list) {
+            studyedLanguage.add(studyPlanDAO.findByLanguageNameAndStudyPlanDay(u.getStudyedLanguage(), StudyPlanDayEnum.ACCOMPLISHED));
+        }
+
+        return studyedLanguage;
     }
 }

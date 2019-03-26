@@ -20,7 +20,7 @@ public class UserStudyedLanguage {
     private Integer id;
 
     @NotNull
-    private String userId;
+    private Integer userId;
 
     private String studyedLanguage;
 }

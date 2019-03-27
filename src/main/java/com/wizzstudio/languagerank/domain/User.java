@@ -29,6 +29,6 @@ public class User implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private StudyPlanDayEnum studyPlanDay;
 
-    @Transient
+//    @Transient
     private Boolean isLogInToday;
 }

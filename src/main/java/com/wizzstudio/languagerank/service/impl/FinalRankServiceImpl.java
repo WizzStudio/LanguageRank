@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FinalRankExponentDAO;
+import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedRankDAO;
 import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.service.FinalRankService;
@@ -13,7 +13,7 @@ import java.util.Date;
 public class FinalRankServiceImpl implements FinalRankService {
 
     @Autowired
-    FinalRankExponentDAO finalRankExponentDAO;
+    FixedRankDAO fixedRankDAO;
     @Autowired
     FixedFinalExponentDAO fixedRankLanguageNameDAO;
 
@@ -23,9 +23,9 @@ public class FinalRankServiceImpl implements FinalRankService {
     @Override
     public Double getFixedFinalExponent(String languageName){
 
-        exponent = finalRankExponentDAO.findByLanguageName(languageName).getTIOBEExponent()*240
-                + finalRankExponentDAO.findByLanguageName(languageName).getIEEEExponent()*0.5
-                + finalRankExponentDAO.findByLanguageName(languageName).getBaiduExponent()*0.001;;
+        exponent = fixedRankDAO.findByLanguageName(languageName).getTIOBEExponent()*240
+                + fixedRankDAO.findByLanguageName(languageName).getIEEEExponent()*0.5
+                + fixedRankDAO.findByLanguageName(languageName).getBaiduExponent()*0.001;;
         return exponent;
     }
 

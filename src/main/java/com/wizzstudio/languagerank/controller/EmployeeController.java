@@ -8,6 +8,7 @@ import com.wizzstudio.languagerank.domain.CompanyPost;
 import com.wizzstudio.languagerank.domain.CompanySalary;
 import com.wizzstudio.languagerank.domain.LanguageCity;
 import com.wizzstudio.languagerank.domain.LanguagePost;
+import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    EmployeeRankService employeeRankService;
 
     @GetMapping("/{languageName}/post")
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
@@ -72,5 +77,11 @@ public class EmployeeController {
             log.error("查询几大城市对"+ languageName +"的需求量失败");
             return ResultUtil.error("查询几大城市对"+ languageName +"的需求量失败");
         }
+    }
+
+    @PostMapping("/employerdemandrank")
+    public ResponseEntity getEmployeeRank(){
+
+        return ResultUtil.success(employeeRankService.getEmployeeRank());
     }
 }

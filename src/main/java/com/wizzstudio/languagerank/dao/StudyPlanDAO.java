@@ -23,4 +23,9 @@ public interface StudyPlanDAO extends JpaRepository<StudyPlan, Integer> {
             " order by study_plan_day limit :studyPlanDay")
     List<StudyPlan> getAllStudyPlanDay(@Param("languageName") String languageName,
                                        @Param("studyPlanDay")Integer studyPlanDay);
+
+    //    获取某语言的全部学习计划
+    @Query(nativeQuery = true, value = "select * from study_plan where language_name = :languageName" +
+            " order by study_plan_day")
+    List<StudyPlan> getAllStudyPlanDay(@Param("languageName") String languageName);
 }

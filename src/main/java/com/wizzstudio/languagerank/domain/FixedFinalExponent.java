@@ -34,4 +34,7 @@ public class FixedFinalExponent {
     @NotNull
     private Double FixedFinalExponent;
 
+    //    后台修改指数，可以为null
+    private Double FArtificialExponent;
+
 }

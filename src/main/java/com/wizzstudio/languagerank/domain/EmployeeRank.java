@@ -40,6 +40,9 @@ public class EmployeeRank {
     @NotNull
     private Double EmployeeFinalExponent;
 
+//    后台修改指数，可以为null
+    private Double EArtificialExponent;
+
     // 更新时间
     @NotNull
     @DateTimeFormat(pattern="yyyy-MM-dd")

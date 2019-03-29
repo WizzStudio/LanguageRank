@@ -2,6 +2,7 @@ package com.wizzstudio.languagerank.controller;
 
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.FinalRankService;
+import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
 import com.wizzstudio.languagerank.service.impl.FixedRankServiceImpl;
@@ -28,7 +29,7 @@ public class FixedRankController {
     @Autowired
     LanguageHomePageService languageHomePageService;
     @Autowired
-    FixedRankServiceImpl fixedRankService;
+    FixedRankService fixedRankService;
 
     @PostMapping("/languageRank")
     public ResponseEntity getFixedRank(){

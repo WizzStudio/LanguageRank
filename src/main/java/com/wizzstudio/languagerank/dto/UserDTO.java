@@ -7,6 +7,8 @@ Created by Ben Wen on 2019/3/9.
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import lombok.Data;
 
+import java.util.List;
+
 // 获取用户信息接口返回的数据
 @Data
 public class UserDTO {
@@ -15,7 +17,7 @@ public class UserDTO {
 
     private Boolean isViewedStudyPlan;
 
-    private StudyPlan studyPlan;
+    private List<StudyPlan> studyPlan;
 
     private Integer joinedNumber;
 

@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/9.
 */
 
+import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
@@ -41,7 +42,9 @@ public class UserController {
 //    private RedisTemplate<String, User> redisTemplate;
 
     @PostMapping("/userinfo")
-    public ResponseEntity getUserInfo(@RequestBody Integer userId ,HttpServletRequest request) {
+    public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+        Integer userId = jsonObject.getInteger("userId");
+
         User user =  userService.findByUserId(userId);
         if (user != null) {
             UserDTO userDTO = new UserDTO();
@@ -51,13 +54,12 @@ public class UserController {
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
-                    || user.getIsLogInToday() == true) {
+                    || user.getIsLogInToday().equals(true)) {
                 userDTO.setIsViewedStudyPlan(false);
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsViewedStudyPlan(true);
-                userDTO.setStudyPlan(studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(),
-                        user.getStudyPlanDay()));
+                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay().getStudyPlanDay()));
 
                 // 用户今天已登录
                 userService.updateIsLogInToday(userId);
@@ -68,8 +70,10 @@ public class UserController {
     }
 
     @PostMapping("/myaward")
-    public ResponseEntity getMyAward(@RequestBody Integer userId ,HttpServletRequest request) {
+    public ResponseEntity getMyAward(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
+
+        Integer userId = jsonObject.getInteger("userId");
 
         User user = userService.findByUserId(userId);
         Map<String, Object> myAward = new HashMap<>();
@@ -90,7 +94,10 @@ public class UserController {
     }
 
     @PostMapping("/updatelanguage")
-    public void updateLanguage(@RequestBody String languageName,@RequestBody Integer userId, HttpServletRequest request){
+    public void updateLanguage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
+        Integer userId = jsonObject.getInteger("userId");
+        String languageName = jsonObject.getString("languageName");
+
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
 //        User user = userService.findByUserId(userId);
         userService.updateMyLanguage(userId, languageName);
@@ -98,10 +105,12 @@ public class UserController {
     }
 
     @PostMapping("/studyplan")
-    public ResponseEntity getStudyAllPlan(@RequestBody Integer userId ,HttpServletRequest request){
+    public ResponseEntity getStudyAllPlan(@RequestBody JSONObject jsonObject,HttpServletRequest request){
+        Integer userId = jsonObject.getInteger("userId");
+
         User user =  userService.findByUserId(userId);
         if (user != null) {
-            UserDTO userDTO = new UserDTO();
+//            UserDTO userDTO = new UserDTO();
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
 

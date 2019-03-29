@@ -12,7 +12,7 @@ public interface EmployeeLanguageTendDAO extends JpaRepository<EmployeeRank, Int
 
 
     @Query(nativeQuery = true,value = "select * from employee_rank where language_name = :languageName  " +
-            "order by employee_final_exponent DESC limit 1")
+            "order by employee_final_exponent DESC limit 2")
     List<EmployeeRank> findByLanguageName(@Param("languageName")String languageName);
 
 }

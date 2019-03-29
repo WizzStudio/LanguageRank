@@ -7,11 +7,10 @@ import com.wizzstudio.languagerank.service.impl.AdminStudyPlanServiceImpl;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/cms")
+@RestController
+@RequestMapping("/cms")
 public class AdminController {
 
     @Autowired
@@ -36,11 +35,13 @@ public class AdminController {
     }
 
 //    返回给后台学习计划页面
-    @PostMapping("/study")
-    public ResponseEntity getStudyPlan(){ return ResultUtil.success(adminStudyPlanService.getAdminStudyPlan()); }
+    @GetMapping("/study")
+    public ResponseEntity getStudyPlan(){
+        return ResultUtil.success(adminStudyPlanService.getAdminStudyPlan());
+    }
 
 //    返回给后台某语言的所有的学习计划
-    @PostMapping("/study/{languageName}")
+    @GetMapping("/study/{languageName}")
     public ResponseEntity getStudyAllPlan(@PathVariable("languageName")String languageName) {
         return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName));
     }

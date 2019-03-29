@@ -17,7 +17,7 @@ public class FinalRankServiceImpl implements FinalRankService {
     @Autowired
     FixedFinalExponentDAO fixedRankLanguageNameDAO;
 
-    double exponent = 0.0;
+    private double exponent = 0.0;
 
     //    TIOBE指数*100*6*0.4+IEEE指数*0.5+百度指数/100*0.1
     @Override

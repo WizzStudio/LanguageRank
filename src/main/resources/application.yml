@@ -1,33 +1,37 @@
 #服务器配置
-#server:
-#  port: 8101
-#
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#
-#    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
-#    username: "pgrk"
-#    password: "wizz.pgrk"
-
-
-#本地配置
 server:
-  port: 8080
+  port: 8101
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
-    username: "root"
-    password: "000326"
+
+    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+    username: "pgrk"
+    password: "wizz.pgrk"
 
 
-
+#本地配置
+#server:
+#  port: 8080
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+#    username: "root"
+#    password: "000326"
+#
+#
+#
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: com.wizzstudio.languagerank.config.MysqlConfig
+
 
 #  redis:
 #    host: 127.0.0.1

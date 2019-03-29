@@ -21,8 +21,9 @@ public class LanguagePost {
     @NotNull
     private String languageName;
 
+    // 岗位薪资（区间）
     @NotNull
-    private Integer postSalary;
+    private String postSalary;
 
     // 岗位需求量
     @NotNull

@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    FixedFinalExponent fixedFinalExponent;
-    EmployeeRank employeeRank;
+    // 有问题
+    private FixedFinalExponent fixedFinalExponent;
+    private EmployeeRank employeeRank;
 
     @Override
     public void updateFixedExponent(String languageName, Double FArtificialExponent) {

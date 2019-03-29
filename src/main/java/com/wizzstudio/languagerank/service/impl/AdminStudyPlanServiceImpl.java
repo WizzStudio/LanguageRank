@@ -18,8 +18,8 @@ public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
     LanguageService languageService;
     @Autowired
     EmployeeRankLanguageNameDAO employeeRankLanguageNameDAO;
-    List<AdminStudyPlanDTO> adminStudyPlanDTOS = new ArrayList<>();
 
+    private List<AdminStudyPlanDTO> adminStudyPlanDTOList = new ArrayList<>();
 
     @Override
     public List<AdminStudyPlanDTO> getAdminStudyPlan() {
@@ -30,12 +30,12 @@ public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
             String languageNa = employeeRank.getLanguageName();
 
             adminStudyPlanDTO.setLanguageName(languageNa);
-            adminStudyPlanDTO.setIncreasenumber(languageService.findJoinedTodayByLanguage(languageNa));
+            adminStudyPlanDTO.setIncreaseNumber(languageService.findJoinedTodayByLanguage(languageNa));
             adminStudyPlanDTO.setNumber(languageService.findJoinedNumberByLanguage(languageNa));
 
-            adminStudyPlanDTOS.add(adminStudyPlanDTO);
+            adminStudyPlanDTOList.add(adminStudyPlanDTO);
         }
 
-        return adminStudyPlanDTOS;
+        return adminStudyPlanDTOList;
     }
 }

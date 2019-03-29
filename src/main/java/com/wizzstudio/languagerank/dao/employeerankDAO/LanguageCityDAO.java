@@ -18,7 +18,7 @@ public interface LanguageCityDAO extends JpaRepository<LanguageCity, Integer> {
     List<LanguageCity> findLanguageCityByLanguageName(@Param("languageName")String LanguageName);
 
     // 查询该语言相关岗位数前五的城市
-    @Query(nativeQuery = true, value = "select * from language_city where language_name = :languageName order by city_post_number DESC limit 4")
+    @Query(nativeQuery = true, value = "select * from language_city where language_name = :languageName order by city_post_number DESC limit 5")
     List<LanguageCity> findLanguageCityTopFiveByLanguageName(@Param("languageName")String LanguageName);
 
     // 由数据库计算该语言的全部岗位数

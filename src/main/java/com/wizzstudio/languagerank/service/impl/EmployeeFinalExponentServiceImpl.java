@@ -21,7 +21,7 @@ public class EmployeeFinalExponentServiceImpl implements EmployeeFinalExponentSe
     @Autowired
     EmployeeRankLanguageNameDAO employeeRankLanguageNameDAO;
 
-    double exponent = 0.0;
+    private double exponent = 0.0;
 
     @Override
     public Double getEmployeeFinalExponent(String languageName) {

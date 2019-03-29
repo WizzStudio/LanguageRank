@@ -1,5 +1,6 @@
 package com.wizzstudio.languagerank.service.impl;
 
+import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankLanguageNameDAO;
 import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
@@ -24,10 +25,10 @@ public class FixedRankServiceImpl implements FixedRankService {
     LanguageTendService languageTendService;
     @Autowired
     FixedFinalExponentDAO fixedFinalExponentDAO;
+    @Autowired
+    LanguageDAO languageDAO;
 
-    Language language;
-//    FinalRankDTO finalRankDTO;
-    List<FinalRankDTO> finalRankDTOS = new ArrayList<>();
+    private List<FinalRankDTO> finalRankDTOList = new ArrayList<>();
 
     @Override
     public List<FinalRankDTO> getFinalRank() {
@@ -37,16 +38,16 @@ public class FixedRankServiceImpl implements FixedRankService {
 
             FinalRankDTO finalRankDTO = new FinalRankDTO();
 //            获取前十的语言名称
-            String languageNameRank = fixedFinalExponent.getLanguageName();
+            String languageName = fixedFinalExponent.getLanguageName();
 
 //            语言热度榜四个字段
-            finalRankDTO.setLanguageName(languageNameRank);
-            finalRankDTO.setLanguageSymbol(language.getLanguageSymbol());
-            finalRankDTO.setFixedFinalExponent(finalRankService.getFixedFinalExponent(languageNameRank));
-            finalRankDTO.setLanguageTend(languageTendService.findFixedLanguageTendNumber(languageNameRank));
+            finalRankDTO.setLanguageName(languageName);
+            finalRankDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            finalRankDTO.setFixedFinalExponent(finalRankService.getFixedFinalExponent(languageName));
+            finalRankDTO.setLanguageTend(languageTendService.findFixedLanguageTendNumber(languageName));
 
-            finalRankDTOS.add(finalRankDTO);
+            finalRankDTOList.add(finalRankDTO);
         }
-        return finalRankDTOS;
+        return finalRankDTOList;
     }
 }

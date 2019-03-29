@@ -1,5 +1,6 @@
 package com.wizzstudio.languagerank.service.impl;
 
+import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankLanguageNameDAO;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
@@ -24,9 +25,10 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     LanguageTendService languageTendService;
     @Autowired
     EmployeeRankLanguageNameDAO employeeRankLanguageNameDAO;
+    @Autowired
+    LanguageDAO languageDAO;
 
-    Language language;
-    List<EmployeeRankDTO> employeeRankDTOS = new ArrayList<>();
+    private List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
 
     @Override
     public List<EmployeeRankDTO> getEmployeeRank() {
@@ -36,17 +38,17 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
             EmployeeRankDTO employeeRankDTO = new EmployeeRankDTO();
 //            获取前十的语言名称
-            String languageNameRank = employeeRank.getLanguageName();
+            String languageName = employeeRank.getLanguageName();
 
 //            雇主需求榜四个字段
-            employeeRankDTO.setLanguageName(languageNameRank);
-            employeeRankDTO.setLanguageSymbol(language.getLanguageSymbol());
-            employeeRankDTO.setLanguageTend(languageTendService.findEmployeeLanguageTendNumber(languageNameRank));
-            employeeRankDTO.setEmployeeFinalExponent(employeeFinalExponentService.getEmployeeFinalExponent(languageNameRank));
+            employeeRankDTO.setLanguageName(languageName);
+            employeeRankDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            employeeRankDTO.setLanguageTend(languageTendService.findEmployeeLanguageTendNumber(languageName));
+            employeeRankDTO.setEmployeeFinalExponent(employeeFinalExponentService.getEmployeeFinalExponent(languageName));
 
-            employeeRankDTOS.add(employeeRankDTO);
+            employeeRankDTOList.add(employeeRankDTO);
         }
-        return employeeRankDTOS;
+        return employeeRankDTOList;
     }
 
 }

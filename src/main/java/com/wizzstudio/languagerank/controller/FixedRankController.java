@@ -31,7 +31,7 @@ public class FixedRankController {
     @Autowired
     FixedRankService fixedRankService;
 
-    @PostMapping("/languageRank")
+    @GetMapping("/languageRank")
     public ResponseEntity getFixedRank(){
         return ResultUtil.success(fixedRankService.getFinalRank());
     }

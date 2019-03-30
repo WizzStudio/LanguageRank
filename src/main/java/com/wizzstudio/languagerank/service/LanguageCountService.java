@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.service;
 
 
-public interface LanguageService {
+public interface LanguageCountService {
     /**
      *查找已加入学习计划人数
      */

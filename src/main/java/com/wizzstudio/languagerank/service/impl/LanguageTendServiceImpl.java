@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeLanguageTendDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
@@ -17,32 +17,43 @@ public class LanguageTendServiceImpl implements LanguageTendService {
     @Autowired
     FixedFinalExponentDAO fixedFinalExponentDAO;
     @Autowired
-    EmployeeLanguageTendDAO employeeLanguageTendDAO;
+    EmployeeRankDAO employeeRankDAO;
 
     @Override
     public Integer findFixedLanguageTendNumber(String languageName){
 
-        List<FixedFinalExponent> fixedFinalExponents = fixedFinalExponentDAO.findByLanguageName(languageName);
-        double fixedLanguageTendNumber = fixedFinalExponents.get(1).getFixedFinalExponent()
-                - fixedFinalExponents.get(2).getFixedFinalExponent();
-
-        if (fixedLanguageTendNumber > 0){
-            return LanguageTendEnum.INCREASE.getLanguageTend();
-        }else if (fixedLanguageTendNumber < 0){
-            return LanguageTendEnum.DECREASE.getLanguageTend();
-        }else
+        List<FixedFinalExponent> fixedFinalExponents = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
+        double fixedLanguageTendNumber = 0;
+        try {
+            fixedLanguageTendNumber = fixedFinalExponents.get(0).getFixedFinalExponent()
+                    - fixedFinalExponents.get(1).getFixedFinalExponent();
+        } catch (IndexOutOfBoundsException e) {
+            // 若抛出空指针异常，则为第一天，设置Tend值为不变
             return LanguageTendEnum.NO_CHANGE.getLanguageTend();
+        }
+
+        return compareTwoDouble(fixedLanguageTendNumber);
     }
 
     @Override
     public Integer findEmployeeLanguageTendNumber(String languageName) {
-        List<EmployeeRank> employeeRanks = employeeLanguageTendDAO.findByLanguageName(languageName);
-        double employeeLanguageTendNumber = employeeRanks.get(1).getEmployeeFinalExponent()
-                - employeeRanks.get(2).getEmployeeFinalExponent();
+        List<EmployeeRank> employeeRanks = employeeRankDAO.findTwoByLanguageName(languageName);
+        double employeeLanguageTendNumber = 0;
+        try {
+            employeeLanguageTendNumber = employeeRanks.get(0).getEmployeeFinalExponent()
+                    - employeeRanks.get(1).getEmployeeFinalExponent();
+        } catch (IndexOutOfBoundsException e) {
+            // 若抛出空指针异常，则为第一个星期，设置Tend值为不变
+            return LanguageTendEnum.NO_CHANGE.getLanguageTend();
+        }
 
-        if (employeeLanguageTendNumber > 0){
+        return compareTwoDouble(employeeLanguageTendNumber);
+    }
+
+    private Integer compareTwoDouble(Double languageTendNumber) {
+        if (languageTendNumber > 0){
             return LanguageTendEnum.INCREASE.getLanguageTend();
-        }else if (employeeLanguageTendNumber < 0){
+        }else if (languageTendNumber < 0){
             return LanguageTendEnum.DECREASE.getLanguageTend();
         }else
             return LanguageTendEnum.NO_CHANGE.getLanguageTend();

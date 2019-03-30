@@ -6,7 +6,7 @@ Created by Ben Wen on 2019/3/12.
 
 import com.wizzstudio.languagerank.dao.LanguageCountDAO;
 import com.wizzstudio.languagerank.domain.LanguageCount;
-import com.wizzstudio.languagerank.service.LanguageService;
+import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageCountServiceImpl implements LanguageCountService {
 
     @Autowired
     LanguageCountDAO languageCountDAO;

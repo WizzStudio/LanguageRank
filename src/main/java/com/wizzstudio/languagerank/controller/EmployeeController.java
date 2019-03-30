@@ -27,7 +27,6 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-
     @Autowired
     EmployeeRankService employeeRankService;
 
@@ -79,9 +78,8 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/employerdemandrank")
+    @GetMapping("/employerdemandrank")
     public ResponseEntity getEmployeeRank(){
-
         return ResultUtil.success(employeeRankService.getEmployeeRank());
     }
 }

@@ -24,10 +24,8 @@ public class StudyPlanServiceImpl implements StudyPlanService {
         return studyPlanDAO.findByLanguageNameAndStudyPlanDay(languageName, studyPlanDay);
     }
 
-
     @Override
     public List<StudyPlan> getAllStudyPlanDay(String languageName, Integer studyPlanDay) {
-
         return studyPlanDAO.getAllStudyPlanDay(languageName, studyPlanDay);
     }
 

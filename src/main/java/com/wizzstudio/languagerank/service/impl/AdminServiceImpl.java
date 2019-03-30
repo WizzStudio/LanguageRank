@@ -12,6 +12,7 @@ public class AdminServiceImpl implements AdminService {
     private FixedFinalExponent fixedFinalExponent;
     private EmployeeRank employeeRank;
 
+    // 将持久化对象从数据库中拿出再set是可以的
     @Override
     public void updateFixedExponent(String languageName, Double FArtificialExponent) {
         fixedFinalExponent.setFArtificialExponent(FArtificialExponent);

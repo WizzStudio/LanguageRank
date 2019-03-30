@@ -1,10 +1,10 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankLanguageNameDAO;
+import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.dto.AdminStudyPlanDTO;
 import com.wizzstudio.languagerank.service.AdminStudyPlanService;
-import com.wizzstudio.languagerank.service.LanguageService;
+import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,23 +15,23 @@ import java.util.List;
 public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
 
     @Autowired
-    LanguageService languageService;
+    LanguageCountService languageCountService;
     @Autowired
-    EmployeeRankLanguageNameDAO employeeRankLanguageNameDAO;
+    EmployeeRankDAO employeeRankDAO;
 
     private List<AdminStudyPlanDTO> adminStudyPlanDTOList = new ArrayList<>();
 
     @Override
     public List<AdminStudyPlanDTO> getAdminStudyPlan() {
 
-        List<EmployeeRank> employeeRanks = employeeRankLanguageNameDAO.languageEmployeeRank();
+        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
         for (EmployeeRank employeeRank : employeeRanks){
             AdminStudyPlanDTO adminStudyPlanDTO  =  new AdminStudyPlanDTO();
             String languageNa = employeeRank.getLanguageName();
 
             adminStudyPlanDTO.setLanguageName(languageNa);
-            adminStudyPlanDTO.setIncreaseNumber(languageService.findJoinedTodayByLanguage(languageNa));
-            adminStudyPlanDTO.setNumber(languageService.findJoinedNumberByLanguage(languageNa));
+            adminStudyPlanDTO.setIncreaseNumber(languageCountService.findJoinedTodayByLanguage(languageNa));
+            adminStudyPlanDTO.setNumber(languageCountService.findJoinedNumberByLanguage(languageNa));
 
             adminStudyPlanDTOList.add(adminStudyPlanDTO);
         }

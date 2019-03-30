@@ -3,18 +3,18 @@ package com.wizzstudio.languagerank.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 // 雇主需求榜
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class EmployeeRank {
 
     @Id
@@ -38,10 +38,11 @@ public class EmployeeRank {
 
     // 最终指数
     @NotNull
-    private Double EmployeeFinalExponent;
+    @Size(max = 100)
+    private Double employeeFinalExponent;
 
 //    后台修改指数，可以为null
-    private Double EArtificialExponent;
+    private Double eArtificialExponent;
 
     // 更新时间
     @NotNull

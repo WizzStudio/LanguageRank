@@ -11,7 +11,7 @@ import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.dto.CompanyMaxSalaryDTO;
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
-import com.wizzstudio.languagerank.service.LanguageService;
+import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,22 +28,22 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     private CompanySalaryDAO companySalaryDAO;
 
     @Autowired
-    private LanguageService languageService;
+    private LanguageCountService languageCountService;
 
     @Override
     public LanguageHomePageDTO getLanguageHomePage(String languageName) {
         LanguageHomePageDTO languageHomePageDTO = new LanguageHomePageDTO();
 
-        List<FixedFinalExponent> list = fixedFinalExponentDAO.findByLanguageName(languageName);
-        languageHomePageDTO.setJoinedNumber(languageService.findJoinedNumberByLanguage(languageName));
+        List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
+        languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
         languageHomePageDTO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
         languageHomePageDTO.setFixedFinalExponentIncreasing(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent());
 
-        List<Double> fixedFinalExpontentList = new ArrayList<>();
+        List<Double> fixedFinalExponentList = new ArrayList<>();
         for (FixedFinalExponent exponent : fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName)) {
-            fixedFinalExpontentList.add(exponent.getFixedFinalExponent());
+            fixedFinalExponentList.add(exponent.getFixedFinalExponent());
         }
-        languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExpontentList);
+        languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExponentList);
 
         List<CompanySalary> companySalaryList = companySalaryDAO.findTopTwoByLanguageName(languageName);
         CompanyMaxSalaryDTO companyOne = new CompanyMaxSalaryDTO();

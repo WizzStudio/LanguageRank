@@ -1,37 +1,29 @@
 package com.wizzstudio.languagerank.controller;
 
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
-import com.wizzstudio.languagerank.service.FinalRankService;
 import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
-import com.wizzstudio.languagerank.service.impl.FixedRankServiceImpl;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @Slf4j
 public class FixedRankController {
 
     @Autowired
-    FinalRankService finalRankService;
+    FixedRankService fixedRankService;
     @Autowired
     LanguageTendService languageTendService;
     @Autowired
     LanguageHomePageService languageHomePageService;
-    @Autowired
-    FixedRankService fixedRankService;
 
-    @GetMapping("/languageRank")
+    @GetMapping("/languagerank")
     public ResponseEntity getFixedRank(){
         return ResultUtil.success(fixedRankService.getFinalRank());
     }

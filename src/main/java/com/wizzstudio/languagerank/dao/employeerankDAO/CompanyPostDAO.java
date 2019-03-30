@@ -15,9 +15,9 @@ public interface CompanyPostDAO extends JpaRepository<CompanyPost, Integer> {
 
     // 查询使用该语言的公司岗位需求量排行前五名
     @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName order by company_post_number DESC limit 5")
-    List<CompanyPost> findCompanyPostTopFiveByLanguageName(String languageName);
+    List<CompanyPost> findCompanyPostTopFiveByLanguageName(@Param("languageName")String languageName);
 
     // 查询使用该语言的公司岗位需求量
-    @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName")
+//    @Query(nativeQuery = true, value = "select * from company_post where language_name = :languageName")
     List<CompanyPost> findCompanyPostByLanguageName(String languageName);
 }

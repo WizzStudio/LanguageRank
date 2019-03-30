@@ -9,7 +9,7 @@ import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
-import com.wizzstudio.languagerank.service.LanguageService;
+import com.wizzstudio.languagerank.service.LanguageCountService;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.ResultUtil;
@@ -29,11 +29,10 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-
     @Autowired
     UserService userService;
     @Autowired
-    LanguageService languageService;
+    LanguageCountService languageCountService;
     @Autowired
     StudyPlanService studyPlanService;
 //    @Autowired
@@ -49,8 +48,8 @@ public class UserController {
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setMyLanguage(user.getMyLanguage());
-            userDTO.setJoinedNumber(languageService.findJoinedNumberByLanguage(user.getMyLanguage()));
-            userDTO.setJoinedToday(languageService.findJoinedTodayByLanguage(user.getMyLanguage()));
+            userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(user.getMyLanguage()));
+            userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(user.getMyLanguage()));
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)

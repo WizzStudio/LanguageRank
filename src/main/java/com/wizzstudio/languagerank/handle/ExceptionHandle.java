@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+
 @ControllerAdvice
 public class ExceptionHandle {
 
-//    @ExceptionHandler(Exception.class)
-//    @ResponseBody
-//    public ResponseEntity exceptionHandle(Exception e) {
-//        return ResultUtil.error(-1,"...");
-//    }
+    @ExceptionHandler(IOException.class)
+    @ResponseBody
+    public ResponseEntity IOExceptionHandle(Exception e) {
+        return ResultUtil.error(-1,"上传图片失败");
+    }
 
 }

@@ -37,9 +37,6 @@ public class FixedRankServiceImpl implements FixedRankService {
     @Autowired
     LanguageDAO languageDAO;
 
-    private List<FinalRankDTO> finalRankDTOList = new ArrayList<>();
-
-
     // TIOBE指数*100*6*0.4+IEEE指数*0.5+百度指数/100*0.1
     @Override
     @Scheduled(cron = "0 0 0 * * ?")
@@ -60,16 +57,17 @@ public class FixedRankServiceImpl implements FixedRankService {
             DecimalFormat df = new DecimalFormat("#.#");
             exponent = Double.parseDouble(df.format(exponent));
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             FixedFinalExponent fixedFinalExponent = new FixedFinalExponent();
             fixedFinalExponent.setLanguageName(temporaryLanguageName);
             fixedFinalExponent.setFixedFinalExponent(exponent);
-            try {
-                fixedFinalExponent.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                fixedFinalExponent.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+            fixedFinalExponent.setUpdateTime(new Date());
 
             fixedRankLanguageNameDAO.save(fixedFinalExponent);
         }
@@ -80,7 +78,9 @@ public class FixedRankServiceImpl implements FixedRankService {
     public List<FinalRankDTO> getFinalRank() {
 
         // 测试用
-        saveExponent();
+//        saveExponent();
+
+        List<FinalRankDTO> finalRankDTOList = new ArrayList<>();
 
         List<FixedFinalExponent> fixedFinalExponents = fixedFinalExponentDAO.languageFixedRank();
         for (FixedFinalExponent fixedFinalExponent : fixedFinalExponents){

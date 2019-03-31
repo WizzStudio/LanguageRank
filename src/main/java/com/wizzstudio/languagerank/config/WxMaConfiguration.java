@@ -26,9 +26,9 @@ public class WxMaConfiguration {
         WxMaInMemoryConfig config = new WxMaInMemoryConfig();
         config.setAppid(this.properties.getAppid());
         config.setSecret(this.properties.getSecret());
-        config.setToken(this.properties.getToken());
-        config.setAesKey(this.properties.getAesKey());
-        config.setMsgDataFormat(this.properties.getMsgDataFormat());
+//        config.setToken(this.properties.getToken());
+//        config.setAesKey(this.properties.getAesKey());
+//        config.setMsgDataFormat(this.properties.getMsgDataFormat());
         return config;
     }
 

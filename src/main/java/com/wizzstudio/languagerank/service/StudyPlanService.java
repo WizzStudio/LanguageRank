@@ -5,6 +5,7 @@ Created by Ben Wen on 2019/3/12.
 */
 
 import com.wizzstudio.languagerank.domain.StudyPlan;
+import com.wizzstudio.languagerank.dto.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface StudyPlanService {
      * @return
      */
     List<StudyPlan> getAllStudyPlanDay(String languageName);
+
+    /**
+     * 新增/修改某语言某天的学习计划/奖励
+     */
+    void saveStudyPlan(String filePath, StudyPlanImageDTO studyPlanImageDTO);
 }

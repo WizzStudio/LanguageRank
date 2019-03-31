@@ -25,23 +25,23 @@ import java.util.Map;
          */
         private String secret;
 
-        /**
-         * 小程序令牌
-         */
-        private String token;
-
-        /**
-         * 加密密钥
-         */
-        private String aesKey;
-
-        /**
-         * 数据格式
-         */
-        private String msgDataFormat;
-
-        /**
-         * 微信模板ID
-         */
-        private Map<String, String> templateId;
+//        /**
+//         * 小程序令牌
+//         */
+//        private String token;
+//
+//        /**
+//         * 加密密钥
+//         */
+//        private String aesKey;
+//
+//        /**
+//         * 数据格式
+//         */
+//        private String msgDataFormat;
+//
+//        /**
+//         * 微信模板ID
+//         */
+//        private Map<String, String> templateId;
     }

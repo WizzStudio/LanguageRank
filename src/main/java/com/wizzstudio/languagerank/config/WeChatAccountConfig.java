@@ -18,12 +18,12 @@ import java.util.Map;
         /**
          * 小程序appId
          */
-        private String appid;
+        private String AppID;
 
         /**
          * 小程序appSecret
          */
-        private String secret;
+        private String AppSecret;
 
 //        /**
 //         * 小程序令牌

@@ -20,7 +20,7 @@ public interface UserService {
      * @param cookie 用户登录时用cookie标识
      * @return 用户openId与session_key
      */
-    WxLogInDTO userLogin(WxInfo loginData, String cookie) throws WxErrorException;
+    WxLogInDTO userLogin(WxInfo loginData) throws WxErrorException;
 
     /**
      * 新增用户信息

@@ -3,8 +3,8 @@ server:
   port: 8101
 
 wechat:
-  appid: wx65b4991350589e3b
-  secret: 2fea01e1e7e9739651cdd8a0c0026186
+  AppID: wx65b4991350589e3b
+  AppSecret: 2fea01e1e7e9739651cdd8a0c0026186
 
 qiniu:
   accesskey: w4oGfWxk1HCqIU3mvv91WQ09YwPe45S_nVLW2FJT

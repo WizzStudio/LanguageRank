@@ -1,6 +1,7 @@
 package com.wizzstudio.languagerank.aspect;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.dao.LanguageCountDAO;
 import com.wizzstudio.languagerank.domain.LanguageCount;
 import org.aspectj.lang.JoinPoint;
@@ -27,7 +28,7 @@ public class StatisticAspect {
     @Transactional(rollbackFor = Exception.class)
     public void addLanguageNumber(JoinPoint joinPoint){
 
-        LanguageCount languageCount = languageCountDAO.findByLanguageName((String) joinPoint.getArgs()[0]);
+        LanguageCount languageCount = languageCountDAO.findByLanguageName(((JSONObject)joinPoint.getArgs()[0]).getString("languageName"));
         // increaseNumber加1
         languageCountDAO.updateIncreaseNumber(languageCount.getIncreaseNumber()+1, languageCount.getLanguageName());
     }

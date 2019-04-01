@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
     private StudyPlanService studyPlanService;
 
     @Override
-    public WxLogInDTO userLogin(WxInfo loginData, String cookie) throws WxErrorException {
+    public WxLogInDTO userLogin(WxInfo loginData) throws WxErrorException {
 
         // 通过code获取用户openId与session_key
         WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService{
         User user = new User();
         user.setOpenId(openId);
         user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY);
+        user.setMyLanguage("???");
         user.setIsLogInToday(true);
         return userDAO.save(user);
     }

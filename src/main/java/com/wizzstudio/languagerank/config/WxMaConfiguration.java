@@ -24,8 +24,8 @@ public class WxMaConfiguration {
     @ConditionalOnMissingBean
     public WxMaConfig maConfig() {
         WxMaInMemoryConfig config = new WxMaInMemoryConfig();
-        config.setAppid(this.properties.getAppid());
-        config.setSecret(this.properties.getSecret());
+        config.setAppid(this.properties.getAppID());
+        config.setSecret(this.properties.getAppSecret());
 //        config.setToken(this.properties.getToken());
 //        config.setAesKey(this.properties.getAesKey());
 //        config.setMsgDataFormat(this.properties.getMsgDataFormat());

@@ -57,17 +57,17 @@ public class FixedRankServiceImpl implements FixedRankService {
             DecimalFormat df = new DecimalFormat("#.#");
             exponent = Double.parseDouble(df.format(exponent));
 
-//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             FixedFinalExponent fixedFinalExponent = new FixedFinalExponent();
             fixedFinalExponent.setLanguageName(temporaryLanguageName);
             fixedFinalExponent.setFixedFinalExponent(exponent);
-//            try {
-//                fixedFinalExponent.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-            fixedFinalExponent.setUpdateTime(new Date());
+            try {
+                fixedFinalExponent.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+//            fixedFinalExponent.setUpdateTime(new Date());
 
             fixedRankLanguageNameDAO.save(fixedFinalExponent);
         }

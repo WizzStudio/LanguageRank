@@ -9,6 +9,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.wizzstudio.languagerank.dao.StudyPlanDAO;
 import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
+import com.wizzstudio.languagerank.domain.Language;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
@@ -117,25 +118,63 @@ public class UserServiceImpl implements UserService{
     public void updateStudyPlanDay(User user) {
         Integer studyPlanDayEnumByInteger = user.getStudyPlanDay().getStudyPlanDay() + 1;
         userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), user.getUserId());
-        // 如果用户已完成该种语言全部计划的学习，将其加入用户已完成语言表
-        if (studyPlanDayEnumByInteger == 8) {
-            UserStudyedLanguage u = new UserStudyedLanguage();
-            u.setUserId(user.getUserId());
-            u.setStudyedLanguage(user.getMyLanguage());
-            userStudyedLanguageDAO.save(u);
+//        // 如果用户已完成该种语言全部计划的学习，将其加入用户已完成语言表
+//        if (studyPlanDayEnumByInteger == 8) {
+//            UserStudyedLanguage u = new UserStudyedLanguage();
+//            u.setUserId(user.getUserId());
+//            u.setStudyedLanguage(user.getMyLanguage());
+//            userStudyedLanguageDAO.save(u);
+//        }
+    }
+
+    /**
+     * 将用户正在学的语言与所选语言分开思考，当正在学的语言以前学过时，将该语言的学习进度更新，反之将该语言添加至
+     * 用户学过的语言表；当用户所选语言以前学过时，将该语言以前的进度取出来更新用户信息，反之则将用户信息初始化
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateMyLanguage(User user, String chosenLanguage) {
+        List<UserStudyedLanguage> userStudyedLanguageList = userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
+
+        // 用户曾经是否学过目前正在学的语言
+        Boolean isStudyedStudyingLanguage = false;
+        // 用户是否学过所选语言
+        Boolean isStudyedChosenLanguage = false;
+
+        for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList){
+            String myLanguage = user.getMyLanguage();
+            if (userStudyedLanguage.getStudyedLanguage().equals(myLanguage)) {
+                isStudyedStudyingLanguage = true;
+                // 如果用户曾经学过目前正在学的语言，则将该语言学习进度更新
+                userStudyedLanguageDAO.updateStudyedLanguageStudyPlanDay(user.getStudyPlanDay(), user.getMyLanguage());
+                break;
+            }
         }
-    }
+        // 如果用户没有学过目前正在学的语言，则将该语言添加至UserStudyedLanguage表
+        if (!isStudyedStudyingLanguage) {
+            UserStudyedLanguage userStudyedLanguage = new UserStudyedLanguage();
+            userStudyedLanguage.setStudyedLanguage(user.getMyLanguage());
+            userStudyedLanguage.setStudyPlanDay(user.getStudyPlanDay());
+            userStudyedLanguage.setUserId(user.getUserId());
+            userStudyedLanguageDAO.save(userStudyedLanguage);
+        }
+        // 更新用户所选语言
+        userDAO.updateMyLanguage(chosenLanguage, user.getUserId());
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void resetStudyPlanDay(Integer userId) {
-        userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, userId);
-    }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateMyLanguage(Integer userId, String myLanguage) {
-        userDAO.updateMyLanguage(myLanguage, userId);
+
+        for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList) {
+            // 如果用户曾经选择过所选语言，则将该语言的学习进度更新至user表
+            if (userStudyedLanguage.getStudyedLanguage().equals(chosenLanguage)) {
+                isStudyedChosenLanguage = true;
+                userDAO.updateStudyPlanDay(userStudyedLanguage.getStudyPlanDay(), user.getUserId());
+                break;
+            }
+        }
+        // 如果用户没有选择过所选语言，则将用户的学习进度初始化
+        if (!isStudyedChosenLanguage) {
+            userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, user.getUserId());
+        }
     }
 
     @Override

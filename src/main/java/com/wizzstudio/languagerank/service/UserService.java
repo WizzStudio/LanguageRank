@@ -17,7 +17,6 @@ public interface UserService {
     /**
      * 用户登录
      * @param loginData 用户登录临时凭证code
-     * @param cookie 用户登录时用cookie标识
      * @return 用户openId与session_key
      */
     WxLogInDTO userLogin(WxInfo loginData) throws WxErrorException;
@@ -49,17 +48,10 @@ public interface UserService {
     void updateStudyPlanDay(User user);
 
     /**
-     * 用户更换所学语言后重置用户七日学习计划
-     * @param userId
-     */
-    void resetStudyPlanDay(Integer userId);
-
-    /**
      * 更新用户个人主页上的语言
-     * @param userId
-     * @param myLanguage
+     * @param chosenLanguage 用户新选择的语言
      */
-    void updateMyLanguage(Integer userId, String myLanguage);
+    void updateMyLanguage(User user, String chosenLanguage);
 
     /**
      * 每天零点更新用户今天是否登录

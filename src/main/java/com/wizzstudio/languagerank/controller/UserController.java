@@ -98,9 +98,8 @@ public class UserController {
         String languageName = jsonObject.getString("languageName");
 
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
-//        User user = userService.findByUserId(userId);
-        userService.updateMyLanguage(userId, languageName);
-        userService.resetStudyPlanDay(userId);
+        User user = userService.findByUserId(userId);
+        userService.updateMyLanguage(user, languageName);
     }
 
     @PostMapping("/studyplan")

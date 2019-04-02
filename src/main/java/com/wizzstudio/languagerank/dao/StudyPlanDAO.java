@@ -17,14 +17,13 @@ public interface StudyPlanDAO extends JpaRepository<StudyPlan, Integer> {
 //    获取某天的学习计划
     StudyPlan findByLanguageNameAndStudyPlanDay(String languageName, StudyPlanDayEnum studyPlanDay);
 
-    //    获取该用户已学习全部天数的学习计划
-    @Query(nativeQuery = true, value = "select * from study_plan where language_name = :languageName" +
-            " order by study_plan_day limit :studyPlanDay")
-    List<StudyPlan> getAllStudyPlanDay(@Param("languageName") String languageName,
-                                       @Param("studyPlanDay")Integer studyPlanDay);
+    // 数据库中order by是按照String来进行排序的，故应将排序逻辑放至代码中
+//    @Query(nativeQuery = true, value = "select * from study_plan where language_name = :languageName" +
+//            " order by study_plan_day limit :studyPlanDay")
+//    List<StudyPlan> getAllStudyPlanDay(@Param("languageName") String languageName,
+//                                       @Param("studyPlanDay")Integer studyPlanDay);
 
     //    获取某语言的全部学习计划
-    @Query(nativeQuery = true, value = "select * from study_plan where language_name = :languageName" +
-            " order by study_plan_day")
+    @Query(nativeQuery = true, value = "select * from study_plan where language_name = :languageName")
     List<StudyPlan> getAllStudyPlanDay(@Param("languageName") String languageName);
 }

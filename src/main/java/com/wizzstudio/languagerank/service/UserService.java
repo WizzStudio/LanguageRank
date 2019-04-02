@@ -66,5 +66,5 @@ public interface UserService {
     /**
      * 查询用户已学完的语言并返回其奖励
      */
-    List<StudyPlan> findStudyedLanguageByUserId(Integer userId);
+    List<StudyPlan> findStudyedLanguageByUserId(User user);
 }

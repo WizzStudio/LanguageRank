@@ -18,7 +18,7 @@ public interface LanguageCountDAO extends JpaRepository<LanguageCount,Integer> {
     // 更新某种语言的今日新增人数，由aspect调用
     @Modifying
     @Query("update LanguageCount o set o.increaseNumber = :increaseNumber where o.languageName = :languageName")
-    void updateIncreaseNumber(@Param("increaseNumber")Integer increaseNumber, @Param("languageName")String languageName);
+    void updateIncreaseNumber(@Param("increaseNumber") Integer increaseNumber, @Param("languageName") String languageName);
 
     // 更新每种语言的总人数，由service调用
     @Modifying

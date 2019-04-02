@@ -16,6 +16,7 @@ import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -77,10 +78,17 @@ public class UserController {
         User user = userService.findByUserId(userId);
         Map<String, Object> myAward = new HashMap<>();
         StudyPlan studyingLanguage = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED);
-        List<StudyPlan> studyedLanguage = userService.findStudyedLanguageByUserId(userId);
+        // 将该语言的奖励返回，但只有完成了学习计划才能显示
+        if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
+            studyingLanguage.setIsViewed(true);
+        } else {
+            studyingLanguage.setIsViewed(false);
+        }
+
+        List<StudyPlan> studyedLanguage = userService.findStudyedLanguageByUserId(user);
 
         try {
-            myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED));
+//            myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED));
             myAward.put("studyingLanguage", studyingLanguage);
             myAward.put("studyedLanguage", studyedLanguage);
         } catch (NullPointerException e) {
@@ -93,6 +101,7 @@ public class UserController {
     }
 
     @PostMapping("/updatelanguage")
+    @Transactional(rollbackFor = Exception.class)
     public void updateLanguage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
         Integer userId = jsonObject.getInteger("userId");
         String languageName = jsonObject.getString("languageName");

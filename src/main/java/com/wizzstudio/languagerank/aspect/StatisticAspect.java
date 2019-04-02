@@ -29,8 +29,12 @@ public class StatisticAspect {
     public void addLanguageNumber(JoinPoint joinPoint){
 
         LanguageCount languageCount = languageCountDAO.findByLanguageName(((JSONObject)joinPoint.getArgs()[0]).getString("languageName"));
-        // increaseNumber加1
+
+        // 小程序的逻辑目前是number与increasingNumber只增不减
 //        languageCountDAO.updateIncreaseNumber(languageCount.getIncreaseNumber()+1, languageCount.getLanguageName());
+
+        // 上下两种方式都可以
+
         languageCount.setIncreaseNumber(languageCount.getIncreaseNumber() + 1);
     }
 }

@@ -191,11 +191,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<StudyPlan> findStudyedLanguageByUserId(Integer userId) {
-        List<UserStudyedLanguage> list =  userStudyedLanguageDAO.findStudyedLanguageByUserId(userId);
+    public List<StudyPlan> findStudyedLanguageByUserId(User user) {
+        List<UserStudyedLanguage> list =  userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
         List<StudyPlan> studyedLanguage = new ArrayList<>();
         for (UserStudyedLanguage u : list) {
-            studyedLanguage.add(studyPlanDAO.findByLanguageNameAndStudyPlanDay(u.getStudyedLanguage(), StudyPlanDayEnum.ACCOMPLISHED));
+            // 用户正在学的语言的奖励不在这里处理
+            if (u.getStudyedLanguage().equals(user.getMyLanguage())) {
+                continue;
+            }
+            StudyPlan studyPlan = studyPlanDAO.findByLanguageNameAndStudyPlanDay(u.getStudyedLanguage(), StudyPlanDayEnum.ACCOMPLISHED);
+            if (u.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
+                studyPlan.setIsViewed(true);
+            } else {
+                studyPlan.setIsViewed(false);
+            }
+            studyedLanguage.add(studyPlan);
         }
 
         return studyedLanguage;

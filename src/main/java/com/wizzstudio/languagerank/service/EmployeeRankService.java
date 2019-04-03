@@ -8,16 +8,6 @@ import java.util.List;
 public interface EmployeeRankService {
 
     /**
-     * 计算排名前十语言的平均需求量，即a值
-     */
-    void findOrdPostNumber(List<String> languageName);
-
-    /**
-     * 计算排名前十语言的平均薪资 m 值
-     */
-    void findSalaryOrd(List<String> languageName);
-
-    /**
      * 计算某一种语言的薪资指数
      * @return salaryExponent
      */

@@ -40,12 +40,9 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     LanguageTendService languageTendService;
     @Autowired
     LanguageDAO languageDAO;
-
     private List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
 
     private int number = 0;
-//    确定数组大小
-    private int size = 0;
 //    计算排名前十语言的平均需求量，即a值
     private double a = 0.0;
     private Map<String, Integer> map = new HashMap<>();
@@ -53,29 +50,9 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 //    计算排名前十语言的平均薪资 m 值
     private int m = 0;
 
-    @Override
-    public void findOrdPostNumber(List<String> languageName) {
-
-        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
-
-//        取排名前十的语言名
-        for (EmployeeRank employeeRank : employeeRanks){
-            String languageNameRank = employeeRank.getLanguageName();
-            size = companyPostDAO.findCompanyPostByLanguageName(languageNameRank).size();
-
-//            取该语言所有公司的岗位数之和，求其平均为a
-            List<CompanyPost> companyPosts = companyPostDAO.findCompanyPostByLanguageName(languageNameRank);
-            for (CompanyPost companyPost : companyPosts){
-                number = companyPost.getCompanyPostNumber();
-                map.put(languageNameRank,number);
-                a = number + a;
-            }
-        }
-        a = a/size;
-    }
 
     @Override
-    public void findSalaryOrd(List<String> languageName) {
+    public Double findSalaryExponent(String languageName) {
 
         int b = 0;
         List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
@@ -95,10 +72,6 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
             b = 0;
         }
         m = m / 10;
-    }
-
-    @Override
-    public Double findSalaryExponent(String languageName) {
         return (double) 50 * salaryExponentMap.get(languageName) / m;
     }
 
@@ -116,6 +89,22 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Override
     public Double findLanguagePostNumber(String languageName) {
+
+        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
+
+//        取排名前十的语言名
+        for (EmployeeRank employeeRank : employeeRanks){
+            String languageNameRank = employeeRank.getLanguageName();
+
+//            取该语言所有公司的岗位数之和，求其平均为a
+            List<CompanyPost> companyPosts = companyPostDAO.findCompanyPostByLanguageName(languageNameRank);
+            for (CompanyPost companyPost : companyPosts){
+                number = companyPost.getCompanyPostNumber();
+                map.put(languageNameRank,number);
+                a = number + a;
+            }
+        }
+        a = a/10;
         return 30 * map.get(languageName) / a;
     }
 

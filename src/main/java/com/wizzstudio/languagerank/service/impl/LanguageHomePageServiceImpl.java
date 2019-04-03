@@ -46,18 +46,21 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExponentList);
 
         List<CompanySalary> companySalaryList = companySalaryDAO.findTopTwoByLanguageName(languageName);
+        List<CompanyMaxSalaryDTO> companyMaxSalaryDTOList = new ArrayList<>();
+
         CompanyMaxSalaryDTO companyOne = new CompanyMaxSalaryDTO();
         companyOne.setCompanyMaxSalary(companySalaryList.get(0).getCompanyMaxSalary());
         companyOne.setCompanyMaxSalaryPost(companySalaryList.get(0).getCompanyMaxSalaryPost());
         companyOne.setCompanyName(companySalaryList.get(0).getCompanyName());
+        companyMaxSalaryDTOList.add(companyOne);
 
         CompanyMaxSalaryDTO companyTwo = new CompanyMaxSalaryDTO();
         companyTwo.setCompanyMaxSalary(companySalaryList.get(1).getCompanyMaxSalary());
         companyTwo.setCompanyMaxSalaryPost(companySalaryList.get(1).getCompanyMaxSalaryPost());
         companyTwo.setCompanyName(companySalaryList.get(1).getCompanyName());
-        languageHomePageDTO.setCompanyOne(companyOne);
-        languageHomePageDTO.setCompanyTwo(companyTwo);
+        companyMaxSalaryDTOList.add(companyTwo);
 
+        languageHomePageDTO.setCompany(companyMaxSalaryDTOList);
         return languageHomePageDTO;
     }
 }

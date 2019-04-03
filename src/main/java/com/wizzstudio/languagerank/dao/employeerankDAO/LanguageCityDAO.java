@@ -25,3 +25,4 @@ public interface LanguageCityDAO extends JpaRepository<LanguageCity, Integer> {
     @Query(nativeQuery = true, value = "select sum(city_post_number) from language_city where language_name = :languageName")
     Integer findLanguageAllSum(@Param("languageName" )String languageName);
 }
+

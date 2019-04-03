@@ -13,6 +13,7 @@ import com.wizzstudio.languagerank.domain.Language;
 import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@Slf4j
 public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Autowired
@@ -40,44 +42,48 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     LanguageTendService languageTendService;
     @Autowired
     LanguageDAO languageDAO;
-    private List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
-
-    private int number = 0;
-//    计算排名前十语言的平均需求量，即a值
-    private double a = 0.0;
-    private Map<String, Integer> map = new HashMap<>();
-    private Map<String,Integer> salaryExponentMap = new HashMap<String, Integer>();
-//    计算排名前十语言的平均薪资 m 值
-    private int m = 0;
-
 
     @Override
     public Double findSalaryExponent(String languageName) {
+        TreeSet<Double> treeSet = new TreeSet<>();
+        // 薪资指数算法中的m值
+        double m = 0.0;
+        // 薪资指数算法中的a值
+        double a = 0.0;
+        // 所需查语言的a值
+        double special_a = 0.0;
 
-        int b = 0;
-        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
-        for (EmployeeRank employeeRank : employeeRanks){
+        // 计算所有语言的a值，取前十的平均值记为m
+        List<Language> languageList = languageDAO.findAll();
+        for (Language language : languageList){
+            String languageNameRank = language.getLanguageName();
 
-//          获取前十的语言名
-            String languageNameRank = employeeRank.getLanguageName();
+            // 取排名前五公司的平均薪资
             List<CompanySalary> companySalaries = companySalaryDAO.findTopFiveByLanguageName(languageNameRank);
-
-//        取前五公司的平均薪资
             for(CompanySalary companySalary : companySalaries){
-                b= b + companySalary.getCompanyOrdSalary();
+                a += companySalary.getCompanyOrdSalary();
             }
-            b = b / 5;
-            m = m + b;
-            salaryExponentMap.put(languageNameRank,b);
-            b = 0;
+            a = a / 5;
+            treeSet.add(a);
+            if (languageNameRank.equals(languageName)) {
+                special_a = a;
+            }
+            a = 0;
         }
+        for (int i = 0;i < 10;i++) {
+            try {
+                m += treeSet.pollLast();
+            } catch (NullPointerException e) {
+                log.error("获取薪资指数失败");
+            }
+        }
+
         m = m / 10;
-        return (double) 50 * salaryExponentMap.get(languageName) / m;
+        return 50 * special_a / m;
     }
 
     @Override
     public Double findCityExponent(String languageName) {
-
         int topSum = 0;
         int allSum = languageCityDAO.findLanguageAllSum(languageName);
         for (int i = 0; i < 5; i++)
@@ -89,23 +95,41 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Override
     public Double findLanguagePostNumber(String languageName) {
+//        Map<String, Integer> map = new HashMap<>();
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        // 某种语言的总需求量
+        int number = 0;
+        // 需求量前十语言的平均需求量
+        double a = 0.0;
+        int special_number = 0;
 
-        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
+        List<Language> languageList = languageDAO.findAll();
 
-//        取排名前十的语言名
-        for (EmployeeRank employeeRank : employeeRanks){
-            String languageNameRank = employeeRank.getLanguageName();
+        // 计算所有语言的需求量，取前十的平均值做分母
+        for (Language language : languageList){
+            String languageNameRank = language.getLanguageName();
 
-//            取该语言所有公司的岗位数之和，求其平均为a
+            // 计算该语言所有公司的岗位数之和
             List<CompanyPost> companyPosts = companyPostDAO.findCompanyPostByLanguageName(languageNameRank);
             for (CompanyPost companyPost : companyPosts){
-                number = companyPost.getCompanyPostNumber();
-                map.put(languageNameRank,number);
-                a = number + a;
+                number += companyPost.getCompanyPostNumber();
+            }
+            if (languageNameRank.equals(languageName)) {
+                special_number = number;
+            }
+            treeSet.add(number);
+            number = 0;
+        }
+        for (int i = 0;i < 10;i++) {
+            try {
+                a += treeSet.pollLast();
+            } catch (NullPointerException e) {
+                log.error("获取需求量指数失败");
             }
         }
         a = a/10;
-        return 30 * map.get(languageName) / a;
+
+        return 15 * special_number / a ;
     }
 
     @Override
@@ -120,6 +144,9 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
             double languagePostNumberExponent = findLanguagePostNumber(temporaryLanguageName);
             double salaryExponent = findSalaryExponent(temporaryLanguageName);
             double exponent = cityExponent + languagePostNumberExponent + salaryExponent;
+            if (exponent > 100) {
+                exponent = 100.0;
+            }
 
             EmployeeRank employeeRank = new EmployeeRank();
 
@@ -146,11 +173,12 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Override
     public List<EmployeeRankDTO> getEmployeeRank() {
-
-        // 测试用
+//        // 测试用
 //        saveExponent();
 
-        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
+        List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
+
+        List<EmployeeRank> employeeRanks = employeeRankDAO.findTopTenLanguage();
         for (EmployeeRank employeeRank : employeeRanks){
 
             EmployeeRankDTO employeeRankDTO = new EmployeeRankDTO();

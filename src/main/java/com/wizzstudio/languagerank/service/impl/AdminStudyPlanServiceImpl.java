@@ -24,7 +24,7 @@ public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
     @Override
     public List<AdminStudyPlanDTO> getAdminStudyPlan() {
 
-        List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
+        List<EmployeeRank> employeeRanks = employeeRankDAO.findTopTenLanguage();
         for (EmployeeRank employeeRank : employeeRanks){
             AdminStudyPlanDTO adminStudyPlanDTO  =  new AdminStudyPlanDTO();
             String languageNa = employeeRank.getLanguageName();

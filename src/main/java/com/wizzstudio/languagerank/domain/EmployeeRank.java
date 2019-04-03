@@ -14,7 +14,6 @@ import java.util.Date;
 // 雇主需求榜
 @Entity
 @Data
-@EntityListeners(AuditingEntityListener.class)
 public class EmployeeRank {
 
     @Id
@@ -38,7 +37,6 @@ public class EmployeeRank {
 
     // 最终指数
     @NotNull
-    @Size(max = 100)
     private Double employeeFinalExponent;
 
 //    后台修改指数，可以为null

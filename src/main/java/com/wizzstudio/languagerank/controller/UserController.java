@@ -51,6 +51,7 @@ public class UserController {
             userDTO.setMyLanguage(user.getMyLanguage());
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(user.getMyLanguage()));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(user.getMyLanguage()));
+            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
@@ -102,13 +103,15 @@ public class UserController {
 
     @PostMapping("/updatelanguage")
     @Transactional(rollbackFor = Exception.class)
-    public void updateLanguage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
+    public ResponseEntity updateLanguage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
         Integer userId = jsonObject.getInteger("userId");
         String languageName = jsonObject.getString("languageName");
 
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
         User user = userService.findByUserId(userId);
         userService.updateMyLanguage(user, languageName);
+
+        return ResultUtil.success();
     }
 
     @PostMapping("/studyplan")
@@ -121,7 +124,8 @@ public class UserController {
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
 
-            return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay));
+            // 调用此接口时user的studyPlanDay已经更新，所以需要减1
+            return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay-1));
         }else
             return ResultUtil.error();
     }

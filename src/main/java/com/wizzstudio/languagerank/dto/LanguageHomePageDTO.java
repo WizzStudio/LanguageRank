@@ -18,7 +18,5 @@ public class LanguageHomePageDTO {
 
     private List<Double> exponentOfLastSevenDays;
 
-    private CompanyMaxSalaryDTO companyOne;
-
-    private CompanyMaxSalaryDTO companyTwo;
+    private List<CompanyMaxSalaryDTO> company;
 }

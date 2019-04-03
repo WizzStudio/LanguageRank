@@ -22,4 +22,7 @@ public class UserDTO {
     private Integer joinedNumber;
 
     private Integer joinedToday;
+
+    // 用户已经完成了几天的学习计划
+    private Integer studyPlanDay;
 }

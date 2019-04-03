@@ -44,10 +44,13 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     private List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
 
     private int number = 0;
+//    确定数组大小
     private int size = 0;
+//    计算排名前十语言的平均需求量，即a值
     private double a = 0.0;
     private Map<String, Integer> map = new HashMap<>();
     private Map<String,Integer> salaryExponentMap = new HashMap<String, Integer>();
+//    计算排名前十语言的平均薪资 m 值
     private int m = 0;
 
     @Override
@@ -74,7 +77,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     @Override
     public void findSalaryOrd(List<String> languageName) {
 
-        int a = 0;
+        int b = 0;
         List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
         for (EmployeeRank employeeRank : employeeRanks){
 
@@ -84,15 +87,14 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
 //        取前五公司的平均薪资
             for(CompanySalary companySalary : companySalaries){
-                a= a + companySalary.getCompanyOrdSalary();
+                b= b + companySalary.getCompanyOrdSalary();
             }
-            a = a / 5;
-            m = m + a;
-            salaryExponentMap.put(languageNameRank,a);
-            a = 0;
+            b = b / 5;
+            m = m + b;
+            salaryExponentMap.put(languageNameRank,b);
+            b = 0;
         }
         m = m / 10;
-
     }
 
     @Override
@@ -125,10 +127,10 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         for (Language language : languageList) {
             String temporaryLanguageName = language.getLanguageName();
 
-            Double cityExponent = findCityExponent(temporaryLanguageName);
-            Double languagePostNumberExponent = findLanguagePostNumber(temporaryLanguageName);
-            Double salaryExponent = findSalaryExponent(temporaryLanguageName);
-            Double exponent = cityExponent + languagePostNumberExponent + salaryExponent;
+            double cityExponent = findCityExponent(temporaryLanguageName);
+            double languagePostNumberExponent = findLanguagePostNumber(temporaryLanguageName);
+            double salaryExponent = findSalaryExponent(temporaryLanguageName);
+            double exponent = cityExponent + languagePostNumberExponent + salaryExponent;
 
             EmployeeRank employeeRank = new EmployeeRank();
 
@@ -157,8 +159,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     public List<EmployeeRankDTO> getEmployeeRank() {
 
         // 测试用
-        saveExponent();
-
+//        saveExponent();
 
         List<EmployeeRank> employeeRanks = employeeRankDAO.languageEmployeeRank();
         for (EmployeeRank employeeRank : employeeRanks){

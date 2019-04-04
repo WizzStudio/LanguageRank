@@ -10,6 +10,8 @@ import lombok.Data;
 public class CompanyMaxSalaryDTO {
     private String companyName;
 
+    private String companySymbol;
+
     private Integer companyMaxSalary;
 
     private String companyMaxSalaryPost;

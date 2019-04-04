@@ -51,7 +51,7 @@ public class UserController {
             userDTO.setMyLanguage(user.getMyLanguage());
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(user.getMyLanguage()));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(user.getMyLanguage()));
-            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
+            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay() - 1);
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
@@ -108,9 +108,13 @@ public class UserController {
         String languageName = jsonObject.getString("languageName");
 
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
-        User user = userService.findByUserId(userId);
-        userService.updateMyLanguage(user, languageName);
-
+        try {
+            User user = userService.findByUserId(userId);
+            userService.updateMyLanguage(user, languageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        log.info("更新语言成功");
         return ResultUtil.success();
     }
 

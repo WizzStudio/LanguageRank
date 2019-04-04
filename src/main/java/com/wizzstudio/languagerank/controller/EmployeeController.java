@@ -4,10 +4,12 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/22.
 */
 
+import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.domain.CompanyPost;
 import com.wizzstudio.languagerank.domain.CompanySalary;
 import com.wizzstudio.languagerank.domain.LanguageCity;
 import com.wizzstudio.languagerank.domain.LanguagePost;
+import com.wizzstudio.languagerank.dto.LanguagePostDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import com.wizzstudio.languagerank.util.ResultUtil;
@@ -29,17 +31,21 @@ public class EmployeeController {
     private EmployeeService employeeService;
     @Autowired
     EmployeeRankService employeeRankService;
+    @Autowired
+    LanguageDAO languageDAO;
 
     @GetMapping("/{languageName}/post")
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
-        List<LanguagePost> list =  employeeService.getLanguagePost(languageName);
-        if (list != null) {
-            log.info("获取与"+ languageName + "相关的热门岗位排行成功");
-            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", list);
-        } else {
+        LanguagePostDTO languagePostDTO = new LanguagePostDTO();
+        try {
+            languagePostDTO.setLanguagePostList(employeeService.getLanguagePost(languageName));
+            languagePostDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+        } catch (Exception e) {
             log.error("获取与"+ languageName + "相关的热门岗位排行失败");
             return ResultUtil.error("获取与"+ languageName + "相关的热门岗位排行失败");
         }
+            log.info("获取与"+ languageName + "相关的热门岗位排行成功");
+            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", languagePostDTO);
     }
 
     @GetMapping("/{languageName}/salary")

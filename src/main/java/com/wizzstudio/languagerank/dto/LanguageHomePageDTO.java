@@ -10,6 +10,10 @@ import java.util.List;
 
 @Data
 public class LanguageHomePageDTO {
+    private String languageSymbol;
+
+    private Integer languageDifficultyIndex;
+
     private Integer joinedNumber;
 
     private Double fixedFinalExponent;
@@ -19,4 +23,6 @@ public class LanguageHomePageDTO {
     private List<Double> exponentOfLastSevenDays;
 
     private List<CompanyMaxSalaryDTO> company;
+
+    private String languageDevelopmentHistory;
 }

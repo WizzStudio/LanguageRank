@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/24.
 */
 
+import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.CompanySalary;
@@ -23,21 +24,24 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
 
     @Autowired
     private FixedFinalExponentDAO fixedFinalExponentDAO;
-
     @Autowired
     private CompanySalaryDAO companySalaryDAO;
-
     @Autowired
     private LanguageCountService languageCountService;
+    @Autowired
+    LanguageDAO languageDAO;
 
     @Override
     public LanguageHomePageDTO getLanguageHomePage(String languageName) {
         LanguageHomePageDTO languageHomePageDTO = new LanguageHomePageDTO();
 
         List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
+        languageHomePageDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
         languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
         languageHomePageDTO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
         languageHomePageDTO.setFixedFinalExponentIncreasing(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent());
+        languageHomePageDTO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
+        languageHomePageDTO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
 
         List<Double> fixedFinalExponentList = new ArrayList<>();
         for (FixedFinalExponent exponent : fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName)) {

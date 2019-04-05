@@ -35,4 +35,9 @@ public interface EmployeeRankService {
      */
     List<EmployeeRankDTO> getEmployeeRank();
 
+    /**
+     * 每周更新一次list（缓存用）
+     */
+    void resetList();
+
 }

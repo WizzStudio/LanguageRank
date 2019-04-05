@@ -14,10 +14,14 @@ import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LanguageHomePageServiceImpl implements LanguageHomePageService {
@@ -31,8 +35,21 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     @Autowired
     LanguageDAO languageDAO;
 
+    private static Map<String, LanguageHomePageDTO> map = new HashMap<>();
+
+    @Override
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void resetMap() {
+        map = new HashMap<>();
+    }
+
     @Override
     public LanguageHomePageDTO getLanguageHomePage(String languageName) {
+        if (map.containsKey(languageName)) {
+            return map.get(languageName);
+        }
+
         LanguageHomePageDTO languageHomePageDTO = new LanguageHomePageDTO();
 
         List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
@@ -65,6 +82,8 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         companyMaxSalaryDTOList.add(companyTwo);
 
         languageHomePageDTO.setCompany(companyMaxSalaryDTOList);
+
+        map.put(languageName, languageHomePageDTO);
         return languageHomePageDTO;
     }
 }

@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -134,6 +135,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Override
     @Scheduled(cron = "0 0 0 * * 1")
+    @Transactional(rollbackFor = Exception.class)
     public void saveExponent() {
         List<Language> languageList = languageDAO.findAll();
 
@@ -171,10 +173,16 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
     }
 
+
+    private static List<EmployeeRankDTO> list = new ArrayList<>();
+
     @Override
     public List<EmployeeRankDTO> getEmployeeRank() {
 //        // 测试用
 //        saveExponent();
+        if (!list.isEmpty()) {
+            return list;
+        }
 
         List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
 
@@ -193,7 +201,15 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
             employeeRankDTOList.add(employeeRankDTO);
         }
+
+        list = employeeRankDTOList;
         return employeeRankDTOList;
     }
 
+    @Override
+    @Scheduled(cron = "0 1 0 * * 1")
+    @Transactional(rollbackFor = Exception.class)
+    public void resetList() {
+        list = new ArrayList<>();
+    }
 }

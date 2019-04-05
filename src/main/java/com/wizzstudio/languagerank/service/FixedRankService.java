@@ -17,4 +17,8 @@ public interface FixedRankService {
      */
     List<FinalRankDTO> getFinalRank();
 
+    /**
+     * 每日更新一次list（缓存用）
+     */
+    void resetList();
 }

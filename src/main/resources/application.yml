@@ -44,14 +44,16 @@ spring:
 #    open-in-view: true
 
 
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
-##    timeout: 0
-#    database: 0
-#    jedis:
-#      pool:
-#        max-active: 8
-#        max-idle: 8
-##        max-wait: -1
-#        min-idle: 0
+# redis:
+#  host: 47.105.192.87
+#  port: 6666
+#  password: xdwizzno1
+##  timeout: 3000
+#  database:
+#    moreLanguageInformation: 0
+#  jedis:
+#     pool:
+##      max-active: 8
+#      max-idle: 8
+##      max-wait: -1
+#      min-idle: 0

@@ -6,6 +6,7 @@ import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
 import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.domain.FixedRank;
 import com.wizzstudio.languagerank.domain.Language;
+import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.dto.FinalRankDTO;
 import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -40,6 +42,7 @@ public class FixedRankServiceImpl implements FixedRankService {
     // TIOBE指数*100*6*0.4+IEEE指数*0.5+百度指数/100*0.1
     @Override
     @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional(rollbackFor = Exception.class)
     public void saveExponent(){
         List<Language> languageList = languageDAO.findAll();
         // temporary开头为临时变量
@@ -74,11 +77,16 @@ public class FixedRankServiceImpl implements FixedRankService {
 
     }
 
+
+    private static List<FinalRankDTO> list = new ArrayList<>();
+
     @Override
     public List<FinalRankDTO> getFinalRank() {
-
         // 测试用
 //        saveExponent();
+        if (!list.isEmpty()) {
+            return list;
+        }
 
         List<FinalRankDTO> finalRankDTOList = new ArrayList<>();
 
@@ -97,6 +105,15 @@ public class FixedRankServiceImpl implements FixedRankService {
 
             finalRankDTOList.add(finalRankDTO);
         }
+
+        list = finalRankDTOList;
         return finalRankDTOList;
+    }
+
+    @Override
+    @Scheduled(cron = "0 1 0 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void resetList() {
+        list = new ArrayList<>();
     }
 }

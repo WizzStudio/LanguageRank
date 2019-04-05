@@ -12,14 +12,15 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class MoreLanguageInformationDTO {
     private Language language;
 
-    private List<LanguageApplicationFieldsEnum> languageApplicationFields;
+    private Map<String, String> languageApplicationFields;
 
-    private List<LanguageUseEnum> languageUse;
+    private Map<String, String> languageUse;
 
     private List<Company> companyList;
 

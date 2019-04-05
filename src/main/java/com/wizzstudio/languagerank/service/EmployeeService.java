@@ -28,4 +28,9 @@ public interface EmployeeService {
      * 查询几大城市对该语言的需求量
      */
     List<LanguageCity> getLanguageCity(String languageName);
+
+    /**
+     * 每周更新一次list（缓存用）
+     */
+    void resetList();
 }

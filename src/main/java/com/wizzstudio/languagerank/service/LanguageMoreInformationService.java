@@ -8,6 +8,11 @@ import com.wizzstudio.languagerank.dto.MoreLanguageInformationDTO;
 
 public interface LanguageMoreInformationService {
     /**
+     * 一周更新Map一次
+     */
+    void resetMap();
+
+    /**
      *  组装语言介绍页信息并返回
      */
     MoreLanguageInformationDTO getMoreLanguageInformation(String languageName);

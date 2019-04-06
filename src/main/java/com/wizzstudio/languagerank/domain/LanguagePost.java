@@ -18,6 +18,10 @@ public class LanguagePost {
     @NotNull
     private String languageName;
 
+    // 公司名
+    @NotNull
+    private String companyName;
+
     // 岗位薪资（区间）
     @NotNull
     private String postSalary;
@@ -26,7 +30,7 @@ public class LanguagePost {
     @NotNull
     private Integer postNumber;
 
-    // 相关语言岗位
+    // 该公司相关语言岗位
     @NotNull
     private String languagePost;
 

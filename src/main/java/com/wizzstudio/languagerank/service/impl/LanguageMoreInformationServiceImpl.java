@@ -65,9 +65,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.MOBILE_DEVELOPMENT.getImageContent(), LanguageUseEnum.MOBILE_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("Intel"));
+                companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
 
                 languageAdvantage.add("Java开发者被大量需求");
                 languageAdvantage.add("这个平台在继续增加新功能");
@@ -87,9 +87,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageContent(), LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("Dell"));
+                companyList.add(companyDAO.findByCompanyName("百度"));
 
                 languageAdvantage.add("被认为总容易学习的编程语言");
                 languageAdvantage.add("大量让人惊讶的库和函数");
@@ -105,9 +105,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageContent(), LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("腾讯"));
+                companyList.add(companyDAO.findByCompanyName("Intel"));
 
                 languageAdvantage.add("C是高度可移动的，可以在平台运行");
                 languageAdvantage.add("C很小，C完全基于变量、宏命令");
@@ -126,9 +126,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageContent(), LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Microsoft"));
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("腾讯"));
 
                 languageAdvantage.add("掌握C++能让你与众不同");
                 languageAdvantage.add("C++允许调整你的应用性能");
@@ -144,8 +144,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.WEB_DEVELOPMENT.getImageContent(), LanguageUseEnum.WEB_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.MOBILE_DEVELOPMENT.getImageContent(), LanguageUseEnum.MOBILE_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Microsoft"));
+                companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
+                companyList.add(companyDAO.findByCompanyName("Google"));
 
                 languageAdvantage.add("作为客户端，JavaScript非常快");
                 languageAdvantage.add("能和其他语言相处融洽");
@@ -159,9 +160,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageUse.put(LanguageUseEnum.WEB_DEVELOPMENT.getImageContent(), LanguageUseEnum.WEB_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("IBM"));
+                companyList.add(companyDAO.findByCompanyName("Facebook"));
+                companyList.add(companyDAO.findByCompanyName("百度"));
 
                 languageAdvantage.add("容易上手");
                 languageAdvantage.add("对数据库友好");
@@ -177,9 +178,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.MOBILE_DEVELOPMENT.getImageContent(), LanguageUseEnum.MOBILE_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Microsoft"));
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
 
                 languageAdvantage.add("完整的.NET库，提供接入大量功能");
                 languageAdvantage.add("可以转移到其他语言，如Java,PHP等");
@@ -194,7 +194,10 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.WEB_DEVELOPMENT.getImageContent(), LanguageUseEnum.WEB_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.MOBILE_DEVELOPMENT.getImageContent(), LanguageUseEnum.MOBILE_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Twitter"));
+                companyList.add(companyDAO.findByCompanyName("Sony"));
+                companyList.add(companyDAO.findByCompanyName("Linkedin"));
+
 
                 languageAdvantage.add("Scala融合了静态类型系统、面向对象、函数式编程等语言特性");
                 languageAdvantage.add("Scala有交互式命令行(REPL), 可以在上面快速的试各种语法和代码");
@@ -208,9 +211,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Microsoft"));
+                companyList.add(companyDAO.findByCompanyName("ORACLE"));
 
                 languageAdvantage.add("使用方式灵活");
                 languageAdvantage.add("语言简洁，语法简单，好学好用");
@@ -225,9 +227,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.MOBILE_DEVELOPMENT.getImageContent(), LanguageUseEnum.MOBILE_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Apple"));
 
                 languageAdvantage.add("可以桥接苹果开发的类库");
                 languageAdvantage.add("写的程序更动态化，运行速度快");
@@ -243,9 +243,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
+                companyList.add(companyDAO.findByCompanyName("京东"));
 
                 languageAdvantage.add("免费，开源，体积小");
                 languageAdvantage.add("同各种OS的兼容性好");
@@ -263,9 +263,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.WEB_DEVELOPMENT.getImageContent(), LanguageUseEnum.WEB_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Google"));
+                companyList.add(companyDAO.findByCompanyName("IBM"));
 
                 languageAdvantage.add("Go 极其地快。其性能与 Java 或 C++相似");
                 languageAdvantage.add("Go 作为一门语言致力于使事情简单化，因此它使用起来非常快速并且简单");
@@ -279,8 +278,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
+                companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
+                companyList.add(companyDAO.findByCompanyName("Microsoft"));
 
                 languageAdvantage.add("用户使用方便，编程效率高");
                 languageAdvantage.add("拥有丰富的库函数");
@@ -294,9 +294,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageUse.put(LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageContent(), LanguageUseEnum.EMBEDDED_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Intel"));
+                companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
+                companyList.add(companyDAO.findByCompanyName("Apple"));
 
                 languageAdvantage.add("能够最大限度地发挥硬件的功能");
                 languageAdvantage.add("不受编译器的限制，对生成的二进制代码进行完全的控制");
@@ -313,9 +313,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageUse.put(LanguageUseEnum.WEB_DEVELOPMENT.getImageContent(), LanguageUseEnum.WEB_DEVELOPMENT.getImageURL());
                 languageUse.put(LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageContent(), LanguageUseEnum.DESKTOP_DEVELOPMENT.getImageURL());
 
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
-//                companyList.add(companyDAO.findByCompanyName());
+                companyList.add(companyDAO.findByCompanyName("Amazon"));
 
                 languageAdvantage.add("Ruby和Python都是公认的最好入门的语言");
                 languageAdvantage.add("大量的扩展和库让创造东西十分简单");

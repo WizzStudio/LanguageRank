@@ -11,6 +11,7 @@ import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -52,6 +53,16 @@ public interface UserService {
      * @param chosenLanguage 用户新选择的语言
      */
     void updateMyLanguage(User user, String chosenLanguage);
+
+    /**
+     * 更新用户转发表
+     */
+    void updateUserTranspondTable(User user, Integer studyPlanDay);
+
+    /**
+     * 获取用户转发表
+     */
+    Map<Integer, Boolean> getUseTranspond(String languageName);
 
     /**
      * 每天零点更新用户今天是否登录

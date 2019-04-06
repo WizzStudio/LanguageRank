@@ -8,6 +8,7 @@ import com.wizzstudio.languagerank.domain.StudyPlan;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 // 获取用户信息接口返回的数据
 @Data
@@ -25,4 +26,6 @@ public class UserDTO {
 
     // 用户已经完成了几天的学习计划
     private Integer studyPlanDay;
+
+    private Map<Integer, Boolean> isTranspondedMap;
 }

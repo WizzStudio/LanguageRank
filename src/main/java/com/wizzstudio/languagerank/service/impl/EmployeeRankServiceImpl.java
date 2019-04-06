@@ -6,10 +6,7 @@ import com.wizzstudio.languagerank.dao.employeerankDAO.CompanyPostDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.LanguageCityDAO;
-import com.wizzstudio.languagerank.domain.CompanyPost;
-import com.wizzstudio.languagerank.domain.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank;
-import com.wizzstudio.languagerank.domain.Language;
+import com.wizzstudio.languagerank.domain.*;
 import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
@@ -85,10 +82,11 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
 
     @Override
     public Double findCityExponent(String languageName) {
-        int topSum = 0;
-        int allSum = languageCityDAO.findLanguageAllSum(languageName);
+        double topSum = 0.0;
+        double allSum = languageCityDAO.findLanguageAllSum(languageName);
+        List<LanguageCity> languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
         for (int i = 0; i < 5; i++)
-            topSum = topSum + languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName).get(i).getCityPostNumber();
+            topSum = topSum + languageCityList.get(i).getCityPostNumber();
 
         double rate = topSum / allSum;
         return 15 * rate + 5 * (1 - rate);
@@ -179,7 +177,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     @Override
     public List<EmployeeRankDTO> getEmployeeRank() {
 //        // 测试用
-//        saveExponent();
+        saveExponent();
         if (!list.isEmpty()) {
             return list;
         }

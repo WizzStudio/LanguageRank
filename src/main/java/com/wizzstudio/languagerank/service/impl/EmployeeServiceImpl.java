@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<LanguagePost> getLanguagePost(String languageName) {
         if (languagePostList.isEmpty()) {
-            languagePostList = languagePostDAO.findLanguagePostByLanguageName(languageName);
+            languagePostList = languagePostDAO.findLanguagePostTopSixByLanguageName(languageName);
         }
         return languagePostList;
     }
@@ -65,7 +65,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<LanguageCity> getLanguageCity(String languageName) {
         if (languageCityList.isEmpty()) {
-            languageCityList = languageCityDAO.findLanguageCityByLanguageName(languageName);
+            languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
+            List<LanguageCity> languageCityTemporaryList = languageCityDAO.findLanguageCityOutOfFiveByLanguageName(languageName);
+            int otherCityPostNumber = 0;
+            for (LanguageCity languageCity : languageCityTemporaryList) {
+                otherCityPostNumber += languageCity.getCityPostNumber();
+            }
+            LanguageCity languageCity = new LanguageCity();
+            languageCity.setLanguageName(languageName);
+            languageCity.setLanguageCity("其它");
+            languageCity.setCityPostNumber(otherCityPostNumber);
+
+            languageCityList.add(languageCity);
         }
         return languageCityList;
     }

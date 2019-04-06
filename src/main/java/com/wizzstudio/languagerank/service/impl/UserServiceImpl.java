@@ -9,10 +9,8 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.wizzstudio.languagerank.dao.StudyPlanDAO;
 import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
-import com.wizzstudio.languagerank.domain.Language;
-import com.wizzstudio.languagerank.domain.StudyPlan;
-import com.wizzstudio.languagerank.domain.User;
-import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
+import com.wizzstudio.languagerank.dao.UserTranspondDAO;
+import com.wizzstudio.languagerank.domain.*;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
@@ -26,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -35,15 +35,14 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private WxMaService wxService;
-
     @Autowired
     private UserDAO userDAO;
-
     @Autowired
     UserStudyedLanguageDAO userStudyedLanguageDAO;
-
     @Autowired
     StudyPlanDAO studyPlanDAO;
+    @Autowired
+    UserTranspondDAO userTranspondDAO;
 
 //    @Autowired
 //    RedisUtil redisUtil;
@@ -84,6 +83,7 @@ public class UserServiceImpl implements UserService{
         user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY);
         user.setMyLanguage("???");
         user.setIsLogInToday(true);
+
         return userDAO.save(user);
     }
 
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService{
 
     /**
      * 将用户正在学的语言与所选语言分开思考，当正在学的语言以前学过时，将该语言的学习进度更新，反之将该语言添加至
-     * 用户学过的语言表；当用户所选语言以前学过时，将该语言以前的进度取出来更新用户信息，反之则将用户信息初始化
+     * 用户学过的语言表；当用户所选语言以前学过时，将该语言以前的进度取出来更新用户信息，反之则将用户信息初始化，并将该语言添加至UserTranspond表
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -171,10 +171,67 @@ public class UserServiceImpl implements UserService{
                 break;
             }
         }
-        // 如果用户没有选择过所选语言，则将用户的学习进度初始化
+        // 如果用户没有选择过所选语言，则将用户的学习进度初始化，并将该语言添加至UserTranspond表
         if (!isStudyedChosenLanguage) {
             userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, user.getUserId());
+
+            UserTranspond userTranspond = new UserTranspond();
+            userTranspond.setUserId(user.getUserId());
+            userTranspond.setLanguageName(chosenLanguage);
+            userTranspond.setIsTranspondTheFirstDay(false);
+            userTranspond.setIsTranspondTheSecondDay(false);
+            userTranspond.setIsTranspondTheThirdDay(false);
+            userTranspond.setIsTranspondTheFourthDay(false);
+            userTranspond.setIsTranspondTheFifthDay(false);
+            userTranspond.setIsTranspondTheSixthDay(false);
+            userTranspond.setIsTranspondTheSeventhDay(false);
+            userTranspondDAO.save(userTranspond);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserTranspondTable(User user, Integer studyPlanDay) {
+        String languageName = user.getMyLanguage();
+        UserTranspond userTranspond = userTranspondDAO.findByLanguageName(languageName);
+       switch (studyPlanDay) {
+           case 1:
+               userTranspond.setIsTranspondTheFirstDay(true);
+               break;
+           case 2:
+               userTranspond.setIsTranspondTheSecondDay(true);
+               break;
+           case 3:
+               userTranspond.setIsTranspondTheThirdDay(true);
+               break;
+           case 4:
+               userTranspond.setIsTranspondTheFourthDay(true);
+               break;
+           case 5:
+               userTranspond.setIsTranspondTheFifthDay(true);
+               break;
+           case 6:
+               userTranspond.setIsTranspondTheSixthDay(true);
+               break;
+           case 7:
+               userTranspond.setIsTranspondTheSeventhDay(true);
+               break;
+       }
+    }
+
+    @Override
+    public Map<Integer, Boolean> getUseTranspond(String languageName) {
+        Map<Integer, Boolean> userTranspondMap = new HashMap<>();
+        UserTranspond userTranspond = userTranspondDAO.findByLanguageName(languageName);
+        userTranspondMap.put(1, userTranspond.getIsTranspondTheFirstDay());
+        userTranspondMap.put(2, userTranspond.getIsTranspondTheSecondDay());
+        userTranspondMap.put(3, userTranspond.getIsTranspondTheThirdDay());
+        userTranspondMap.put(4, userTranspond.getIsTranspondTheFourthDay());
+        userTranspondMap.put(5, userTranspond.getIsTranspondTheFifthDay());
+        userTranspondMap.put(6, userTranspond.getIsTranspondTheSixthDay());
+        userTranspondMap.put(7, userTranspond.getIsTranspondTheSeventhDay());
+
+        return userTranspondMap;
     }
 
     @Override

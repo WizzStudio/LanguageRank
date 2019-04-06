@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/24.
 */
 
+import com.wizzstudio.languagerank.dao.CompanyDAO;
 import com.wizzstudio.languagerank.dao.LanguageDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
@@ -34,6 +35,8 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     private LanguageCountService languageCountService;
     @Autowired
     LanguageDAO languageDAO;
+    @Autowired
+    CompanyDAO companyDAO;
 
     private static Map<String, LanguageHomePageDTO> map = new HashMap<>();
 
@@ -73,12 +76,14 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         companyOne.setCompanyMaxSalary(companySalaryList.get(0).getCompanyMaxSalary());
         companyOne.setCompanyMaxSalaryPost(companySalaryList.get(0).getCompanyMaxSalaryPost());
         companyOne.setCompanyName(companySalaryList.get(0).getCompanyName());
+        companyOne.setCompanySymbol(companyDAO.findByCompanyName(companyOne.getCompanyName()).getCompanySymbol());
         companyMaxSalaryDTOList.add(companyOne);
 
         CompanyMaxSalaryDTO companyTwo = new CompanyMaxSalaryDTO();
         companyTwo.setCompanyMaxSalary(companySalaryList.get(1).getCompanyMaxSalary());
         companyTwo.setCompanyMaxSalaryPost(companySalaryList.get(1).getCompanyMaxSalaryPost());
         companyTwo.setCompanyName(companySalaryList.get(1).getCompanyName());
+        companyTwo.setCompanySymbol(companyDAO.findByCompanyName(companyTwo.getCompanyName()).getCompanySymbol());
         companyMaxSalaryDTOList.add(companyTwo);
 
         languageHomePageDTO.setCompany(companyMaxSalaryDTOList);

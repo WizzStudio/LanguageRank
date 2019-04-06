@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class UserController {
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(user.getMyLanguage()));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(user.getMyLanguage()));
             userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay() - 1);
+            userDTO.setIsTranspondedMap(userService.getUseTranspond(user.getMyLanguage()));
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
@@ -89,7 +91,6 @@ public class UserController {
         List<StudyPlan> studyedLanguage = userService.findStudyedLanguageByUserId(user);
 
         try {
-//            myAward.put("isViewed", user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED));
             myAward.put("studyingLanguage", studyingLanguage);
             myAward.put("studyedLanguage", studyedLanguage);
         } catch (NullPointerException e) {
@@ -124,14 +125,32 @@ public class UserController {
 
         User user =  userService.findByUserId(userId);
         if (user != null) {
-//            UserDTO userDTO = new UserDTO();
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
 
             // 调用此接口时user的studyPlanDay已经更新，所以需要减1
-            return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay-1));
+            Map<String, Object> map = new HashMap<>();
+            map.put("studyPlan", studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay-1));
+            map.put("userTranspond", userService.getUseTranspond(languageName));
+
+            return ResultUtil.success(map);
         }else
             return ResultUtil.error();
     }
 
+    @PostMapping("/updatetranspond")
+    public ResponseEntity updateUserTranspond(@RequestBody JSONObject jsonObject) {
+        Integer studyPlanDay = jsonObject.getInteger("studyPlanDay");
+        Integer userId = jsonObject.getInteger("userId");
+
+        try {
+            User user =  userService.findByUserId(userId);
+            userService.updateUserTranspondTable(user, studyPlanDay);
+        } catch (Exception e) {
+            log.error("更新用户转发表失败");
+            return ResultUtil.error();
+        }
+        log.info("更新用户转发表成功");
+        return ResultUtil.success();
+    }
 }

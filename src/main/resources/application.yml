@@ -16,7 +16,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false
+    url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
     username: "pgrk"
     password: "wizz.pgrk"
 

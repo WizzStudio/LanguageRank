@@ -10,6 +10,7 @@ import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.LanguageCountService;
+import com.wizzstudio.languagerank.service.ShareDimensionCodeService;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.ResultUtil;
@@ -37,6 +38,8 @@ public class UserController {
     LanguageCountService languageCountService;
     @Autowired
     StudyPlanService studyPlanService;
+    @Autowired
+    ShareDimensionCodeService shareDimensionCodeService;
 //    @Autowired
 //    RedisUtil redisUtil;
 //    @Autowired
@@ -152,5 +155,11 @@ public class UserController {
         }
         log.info("更新用户转发表成功");
         return ResultUtil.success();
+    }
+
+//      获得分享的二维码图片
+    @PostMapping("/dimensioncode")
+    public ResponseEntity shareDimensionCode(){
+        return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
     }
 }

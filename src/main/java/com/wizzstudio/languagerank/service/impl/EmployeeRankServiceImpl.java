@@ -177,7 +177,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     @Override
     public List<EmployeeRankDTO> getEmployeeRank() {
 //        // 测试用
-        saveExponent();
+//        saveExponent();
         if (!list.isEmpty()) {
             return list;
         }

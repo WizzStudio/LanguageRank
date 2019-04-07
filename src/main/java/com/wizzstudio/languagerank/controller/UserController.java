@@ -5,6 +5,7 @@ Created by Ben Wen on 2019/3/9.
 */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,13 +52,14 @@ public class UserController {
         Integer userId = jsonObject.getInteger("userId");
 
         User user =  userService.findByUserId(userId);
-        if (user != null) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setMyLanguage(user.getMyLanguage());
-            userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(user.getMyLanguage()));
-            userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(user.getMyLanguage()));
+        String myLanguage = user.getMyLanguage();
+        UserDTO userDTO = new UserDTO();
+        if (!myLanguage.equals("未加入")) {
+            userDTO.setMyLanguage(myLanguage);
+            userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(myLanguage));
+            userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(myLanguage));
             userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay() - 1);
-            userDTO.setIsTranspondedMap(userService.getUseTranspond(user.getMyLanguage()));
+            userDTO.setIsTranspondedList(userService.getUseTranspond(myLanguage, userId));
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
@@ -65,14 +68,14 @@ public class UserController {
                 userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsViewedStudyPlan(true);
-                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(user.getMyLanguage(), user.getStudyPlanDay().getStudyPlanDay()));
+                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(myLanguage, user.getStudyPlanDay().getStudyPlanDay()));
 
                 // 用户今天已登录
                 userService.updateIsLogInToday(userId);
                 userService.updateStudyPlanDay(user);
             }
-            return ResultUtil.success(userDTO);
-        } else return ResultUtil.error();
+        }
+        return ResultUtil.success(userDTO);
     }
 
     @PostMapping("/myaward")
@@ -134,7 +137,7 @@ public class UserController {
             // 调用此接口时user的studyPlanDay已经更新，所以需要减1
             Map<String, Object> map = new HashMap<>();
             map.put("studyPlan", studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay-1));
-            map.put("userTranspond", userService.getUseTranspond(languageName));
+            map.put("isTranspondedList", userService.getUseTranspond(languageName, userId));
 
             return ResultUtil.success(map);
         }else
@@ -158,7 +161,7 @@ public class UserController {
     }
 
 //      获得分享的二维码图片
-    @PostMapping("/dimensioncode")
+    @GetMapping("/dimensioncode")
     public ResponseEntity shareDimensionCode(){
         return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
     }

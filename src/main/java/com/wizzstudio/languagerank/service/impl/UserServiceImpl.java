@@ -6,6 +6,7 @@ Created by Ben Wen on 2019/3/9.
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.wizzstudio.languagerank.dao.StudyPlanDAO;
 import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
@@ -43,13 +44,6 @@ public class UserServiceImpl implements UserService{
     StudyPlanDAO studyPlanDAO;
     @Autowired
     UserTranspondDAO userTranspondDAO;
-
-//    @Autowired
-//    RedisUtil redisUtil;
-//
-//    @Autowired
-//    private RedisTemplate<String, User> redisTemplate;
-
     @Autowired
     private StudyPlanService studyPlanService;
 
@@ -80,8 +74,8 @@ public class UserServiceImpl implements UserService{
     public User saveUser(String openId) {
         User user = new User();
         user.setOpenId(openId);
-        user.setStudyPlanDay(StudyPlanDayEnum.FIRST_DAY);
-        user.setMyLanguage("???");
+        user.setStudyPlanDay(StudyPlanDayEnum.NULL);
+        user.setMyLanguage("未加入");
         user.setIsLogInToday(true);
 
         return userDAO.save(user);
@@ -97,84 +91,61 @@ public class UserServiceImpl implements UserService{
         return userDAO.findByUserId(userId);
     }
 
-//    @Override
-//    @Transactional(rollbackFor = Exception.class)
-//    public void updateStudyPlanDay(String cookie) throws NullPointerException{
-//        StudyPlan studyPlan = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(
-//                redisTemplate.opsForValue().get(cookie).getMyLanguage(),
-//                redisTemplate.opsForValue().get(cookie).getStudyPlanDay());
-//        // 如果用户已完成所有学习计划
-//        if (studyPlan.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
-//            log.info("用户已完成"+ redisTemplate.opsForValue().get(cookie).getMyLanguage() + "所有学习计划");
-//        } else {
-//            userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger
-//                            (studyPlan.getStudyPlanDay().getStudyPlanDay() + 1),
-//                    redisTemplate.opsForValue().get(cookie).getOpenId());
-//        }
-//    }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateStudyPlanDay(User user) {
         Integer studyPlanDayEnumByInteger = user.getStudyPlanDay().getStudyPlanDay() + 1;
         userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), user.getUserId());
-//        // 如果用户已完成该种语言全部计划的学习，将其加入用户已完成语言表
-//        if (studyPlanDayEnumByInteger == 8) {
-//            UserStudyedLanguage u = new UserStudyedLanguage();
-//            u.setUserId(user.getUserId());
-//            u.setStudyedLanguage(user.getMyLanguage());
-//            userStudyedLanguageDAO.save(u);
-//        }
     }
 
     /**
      * 将用户正在学的语言与所选语言分开思考，当正在学的语言以前学过时，将该语言的学习进度更新，反之将该语言添加至
-     * 用户学过的语言表；当用户所选语言以前学过时，将该语言以前的进度取出来更新用户信息，反之则将用户信息初始化，并将该语言添加至UserTranspond表
+     * 用户学过的语言表；当用户所选语言以前学过时，将该语言以前的进度取出来更新用户信息，反之则将用户信息初始化，并将所选语言添加至UserTranspond表
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateMyLanguage(User user, String chosenLanguage) {
-        List<UserStudyedLanguage> userStudyedLanguageList = userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
-
         // 用户曾经是否学过目前正在学的语言
         Boolean isStudyedStudyingLanguage = false;
         // 用户是否学过所选语言
         Boolean isStudyedChosenLanguage = false;
 
-        for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList){
-            String myLanguage = user.getMyLanguage();
-            if (userStudyedLanguage.getStudyedLanguage().equals(myLanguage)) {
-                isStudyedStudyingLanguage = true;
+        List<UserStudyedLanguage> userStudyedLanguageList = userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
+        // 如果用户没有选择过语言，则需单独处理
+        if (!userStudyedLanguageList.isEmpty()) {
+            for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList){
+                String myLanguage = user.getMyLanguage();
                 // 如果用户曾经学过目前正在学的语言，则将该语言学习进度更新
-                userStudyedLanguageDAO.updateStudyedLanguageStudyPlanDay(user.getStudyPlanDay(), user.getMyLanguage());
-                break;
+                if (userStudyedLanguage.getStudyedLanguage().equals(myLanguage)) {
+                    isStudyedStudyingLanguage = true;
+                    userStudyedLanguageDAO.updateStudyedLanguageStudyPlanDay(user.getStudyPlanDay(), user.getMyLanguage());
+                    break;
+                }
+            }
+            for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList) {
+                // 如果用户曾经选择过所选语言，则将该语言的学习进度更新至user表
+                if (userStudyedLanguage.getStudyedLanguage().equals(chosenLanguage)) {
+                    isStudyedChosenLanguage = true;
+                    userDAO.updateStudyPlanDay(userStudyedLanguage.getStudyPlanDay(), user.getUserId());
+                    break;
+                }
             }
         }
-        // 如果用户没有学过目前正在学的语言，则将该语言添加至UserStudyedLanguage表
-        if (!isStudyedStudyingLanguage) {
+
+        // 如果用户没有学过目前正在学的语言（未加入不算），则将该语言添加至UserStudyedLanguage表
+        if (!isStudyedStudyingLanguage && !user.getMyLanguage().equals("未加入")) {
             UserStudyedLanguage userStudyedLanguage = new UserStudyedLanguage();
             userStudyedLanguage.setStudyedLanguage(user.getMyLanguage());
             userStudyedLanguage.setStudyPlanDay(user.getStudyPlanDay());
             userStudyedLanguage.setUserId(user.getUserId());
             userStudyedLanguageDAO.save(userStudyedLanguage);
         }
-        // 更新用户所选语言
+        // 更新用户所选语言，必须要在处理完目前正在学的语言的逻辑之后
         userDAO.updateMyLanguage(chosenLanguage, user.getUserId());
 
-
-
-        for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList) {
-            // 如果用户曾经选择过所选语言，则将该语言的学习进度更新至user表
-            if (userStudyedLanguage.getStudyedLanguage().equals(chosenLanguage)) {
-                isStudyedChosenLanguage = true;
-                userDAO.updateStudyPlanDay(userStudyedLanguage.getStudyPlanDay(), user.getUserId());
-                break;
-            }
-        }
-        // 如果用户没有选择过所选语言，则将用户的学习进度初始化，并将该语言添加至UserTranspond表
+        // 如果用户没有选择过所选语言，则将用户的学习进度初始化，并将所选语言添加至UserTranspond表
         if (!isStudyedChosenLanguage) {
             userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, user.getUserId());
-
             UserTranspond userTranspond = new UserTranspond();
             userTranspond.setUserId(user.getUserId());
             userTranspond.setLanguageName(chosenLanguage);
@@ -193,7 +164,7 @@ public class UserServiceImpl implements UserService{
     @Transactional(rollbackFor = Exception.class)
     public void updateUserTranspondTable(User user, Integer studyPlanDay) {
         String languageName = user.getMyLanguage();
-        UserTranspond userTranspond = userTranspondDAO.findByLanguageName(languageName);
+        UserTranspond userTranspond = userTranspondDAO.findByLanguageNameAndUserId(languageName, user.getUserId());
        switch (studyPlanDay) {
            case 1:
                userTranspond.setIsTranspondTheFirstDay(true);
@@ -220,18 +191,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<Integer, Boolean> getUseTranspond(String languageName) {
-        Map<Integer, Boolean> userTranspondMap = new HashMap<>();
-        UserTranspond userTranspond = userTranspondDAO.findByLanguageName(languageName);
-        userTranspondMap.put(1, userTranspond.getIsTranspondTheFirstDay());
-        userTranspondMap.put(2, userTranspond.getIsTranspondTheSecondDay());
-        userTranspondMap.put(3, userTranspond.getIsTranspondTheThirdDay());
-        userTranspondMap.put(4, userTranspond.getIsTranspondTheFourthDay());
-        userTranspondMap.put(5, userTranspond.getIsTranspondTheFifthDay());
-        userTranspondMap.put(6, userTranspond.getIsTranspondTheSixthDay());
-        userTranspondMap.put(7, userTranspond.getIsTranspondTheSeventhDay());
+    public List<Boolean> getUseTranspond(String languageName, Integer userId) {
+       List<Boolean> userTranspondList = new ArrayList<>();
+        UserTranspond userTranspond = userTranspondDAO.findByLanguageNameAndUserId(languageName, userId);
+        userTranspondList.add(userTranspond.getIsTranspondTheFirstDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheSecondDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheThirdDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheFourthDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheFifthDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheSixthDay());
+        userTranspondList.add(userTranspond.getIsTranspondTheSeventhDay());
 
-        return userTranspondMap;
+        return userTranspondList;
     }
 
     @Override

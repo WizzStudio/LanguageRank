@@ -30,17 +30,16 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
     private static Map<String, MoreLanguageInformationDTO> map = new HashMap<>();
 
-    // 需不需要更新是个问题
-    @Override
-    @Scheduled(cron = "0 0 0 * * 1")
-    @Transactional(rollbackFor = Exception.class)
-    public void resetMap() {
-        map = new HashMap<>();
-    }
+//    // 需不需要更新是个问题
+//    @Override
+//    @Scheduled(cron = "0 0 0 * * 1")
+//    @Transactional(rollbackFor = Exception.class)
+//    public void resetMap() {
+//        map = new HashMap<>();
+//    }
 
     @Override
     public MoreLanguageInformationDTO getMoreLanguageInformation(String languageName) {
-
         if (map.containsKey(languageName)) {
             return map.get(languageName);
         }

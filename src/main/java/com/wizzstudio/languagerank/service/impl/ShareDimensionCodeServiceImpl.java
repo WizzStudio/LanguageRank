@@ -9,9 +9,9 @@ import java.util.List;
 @Service
 public class ShareDimensionCodeServiceImpl implements ShareDimensionCodeService {
 
-    private static final String page1 = "Http://pgrk.wizzstdio.com/";
-    private static final String page2 = "Http://pgrk.wizzstdio.com/";
-    private static final String page3 = "Http://pgrk.wizzstdio.com/";
+    private static final String page1 = "Http://pgrk.wizzstudio.com/";
+    private static final String page2 = "Http://pgrk.wizzstudio.com/";
+    private static final String page3 = "Http://pgrk.wizzstudio.com/";
 
     @Override
     public List<String> getDimensionCode() {

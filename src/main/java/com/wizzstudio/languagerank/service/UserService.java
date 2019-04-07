@@ -11,7 +11,6 @@ import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -62,7 +61,7 @@ public interface UserService {
     /**
      * 获取用户转发表
      */
-    Map<Integer, Boolean> getUseTranspond(String languageName);
+    List<Boolean> getUseTranspond(String languageName, Integer userId);
 
     /**
      * 每天零点更新用户今天是否登录

@@ -14,11 +14,13 @@ import com.wizzstudio.languagerank.dto.CompanyMaxSalaryDTO;
 import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageCountService;
+import com.wizzstudio.languagerank.util.DoubleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,9 +61,9 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         languageHomePageDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
         languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
         languageHomePageDTO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
-        languageHomePageDTO.setFixedFinalExponentIncreasing(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent());
         languageHomePageDTO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
         languageHomePageDTO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
+        languageHomePageDTO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
 
         List<Double> fixedFinalExponentList = new ArrayList<>();
         for (FixedFinalExponent exponent : fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName)) {

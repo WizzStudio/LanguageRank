@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum StudyPlanDayEnum {
+    NULL(0),
     FIRST_DAY(1),
     SECOND_DAY(2),
     THIRD_DAY(3),

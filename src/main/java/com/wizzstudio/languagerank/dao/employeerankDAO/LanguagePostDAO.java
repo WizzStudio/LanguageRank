@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface LanguagePostDAO extends JpaRepository<LanguagePost, Integer> {
 
-    // 查询与该语言相关的热门岗位排行前六名
-    @Query(nativeQuery = true,value = "select * from language_post where language_name = :languageName order by post_number DESC limit 6")
-    List<LanguagePost> findLanguagePostTopSixByLanguageName(@Param("languageName")String languageName);
+    // 查询与该语言相关的热门岗位排行前四名
+    @Query(nativeQuery = true,value = "select * from language_post where language_name = :languageName order by post_number DESC limit 4")
+    List<LanguagePost> findLanguagePostTopFourByLanguageName(@Param("languageName")String languageName);
 }

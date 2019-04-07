@@ -8,5 +8,5 @@ import com.wizzstudio.languagerank.domain.UserTranspond;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserTranspondDAO extends JpaRepository<UserTranspond, Integer> {
-    UserTranspond findByLanguageName(String languageName);
+    UserTranspond findByLanguageNameAndUserId(String languageName, Integer userId);
 }

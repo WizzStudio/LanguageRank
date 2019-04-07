@@ -10,6 +10,8 @@ import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.dto.FinalRankDTO;
 import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
+import com.wizzstudio.languagerank.util.DateUtil;
+import com.wizzstudio.languagerank.util.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -41,7 +43,7 @@ public class FixedRankServiceImpl implements FixedRankService {
 
     // TIOBE指数*100*6*0.4+IEEE指数*0.5+百度指数/100*0.1
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 55 23 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void saveExponent(){
         List<Language> languageList = languageDAO.findAll();
@@ -56,21 +58,15 @@ public class FixedRankServiceImpl implements FixedRankService {
                 exponent = 100.0;
             }
 
-            // 设置小数点后位数
-            DecimalFormat df = new DecimalFormat("#.#");
-            exponent = Double.parseDouble(df.format(exponent));
-
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
             FixedFinalExponent fixedFinalExponent = new FixedFinalExponent();
             fixedFinalExponent.setLanguageName(temporaryLanguageName);
-            fixedFinalExponent.setFixedFinalExponent(exponent);
+            fixedFinalExponent.setFixedFinalExponent(DoubleUtil.getDecimalFormat(exponent));
             try {
-                fixedFinalExponent.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
+                fixedFinalExponent.setUpdateTime(DateUtil.getNextDate(new Date()));
             } catch (ParseException e) {
+                log.error("时间转换异常");
                 e.printStackTrace();
             }
-//            fixedFinalExponent.setUpdateTime(new Date());
 
             fixedRankLanguageNameDAO.save(fixedFinalExponent);
         }
@@ -111,7 +107,7 @@ public class FixedRankServiceImpl implements FixedRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 1 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         list = new ArrayList<>();

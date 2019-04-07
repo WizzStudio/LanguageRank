@@ -10,6 +10,8 @@ import com.wizzstudio.languagerank.domain.*;
 import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
+import com.wizzstudio.languagerank.util.DateUtil;
+import com.wizzstudio.languagerank.util.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -132,7 +134,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * 1")
+    @Scheduled(cron = "0 55 23 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void saveExponent() {
         List<Language> languageList = languageDAO.findAll();
@@ -149,28 +151,21 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
             }
 
             EmployeeRank employeeRank = new EmployeeRank();
-
-            // 设置小数点后位数
-            DecimalFormat df = new DecimalFormat("#.#");
-            exponent = Double.parseDouble(df.format(exponent));
-
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
             employeeRank.setLanguageName(temporaryLanguageName);
             employeeRank.setCityPostExponent(cityExponent);
             employeeRank.setLanguagePostExponent(languagePostNumberExponent);
             employeeRank.setSalaryExponent(salaryExponent);
-            employeeRank.setEmployeeFinalExponent(exponent);
+            employeeRank.setEmployeeFinalExponent(DoubleUtil.getDecimalFormat(exponent));
             try {
-                employeeRank.setUpdateTime(dateFormat.parse(dateFormat.format(new Date())));
+                employeeRank.setUpdateTime(DateUtil.getNextDate(new Date()));
             } catch (ParseException e) {
+                log.error("时间转换异常");
                 e.printStackTrace();
             }
 
             employeeRankDAO.save(employeeRank);
         }
     }
-
 
     private static List<EmployeeRankDTO> list = new ArrayList<>();
 
@@ -205,7 +200,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 1 0 * * 1")
+    @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         list = new ArrayList<>();

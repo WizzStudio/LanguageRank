@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<LanguagePost> getLanguagePost(String languageName) {
         if (languagePostList.isEmpty()) {
-            languagePostList = languagePostDAO.findLanguagePostTopSixByLanguageName(languageName);
+            languagePostList = languagePostDAO.findLanguagePostTopFourByLanguageName(languageName);
         }
         return languagePostList;
     }
@@ -82,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Scheduled(cron = "0 1 0 * * 1")
+    @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         languagePostList = new ArrayList<>();

@@ -9,4 +9,6 @@ public interface Constant {
     Integer TOKEN_EXPIRED = 24;
 
     String TOKEN = "token";
+
+    String[] STUDY_PLAN_LANGUAGE = {"Java", "Python", "PHP", "C", "C++", "JavaScript"};
 }

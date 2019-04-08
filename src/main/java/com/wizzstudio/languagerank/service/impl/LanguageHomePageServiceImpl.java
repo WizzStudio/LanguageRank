@@ -52,6 +52,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     @Override
     public LanguageHomePageDTO getLanguageHomePage(String languageName) {
         if (map.containsKey(languageName)) {
+            map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
             return map.get(languageName);
         }
 
@@ -64,12 +65,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         languageHomePageDTO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
         languageHomePageDTO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
         languageHomePageDTO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
-
-        List<Double> fixedFinalExponentList = new ArrayList<>();
-        for (FixedFinalExponent exponent : fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName)) {
-            fixedFinalExponentList.add(exponent.getFixedFinalExponent());
-        }
-        languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExponentList);
+        languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName));
 
         List<CompanySalary> companySalaryList = companySalaryDAO.findTopTwoByLanguageName(languageName);
         List<CompanyMaxSalaryDTO> companyMaxSalaryDTOList = new ArrayList<>();

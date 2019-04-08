@@ -45,4 +45,8 @@ public class ResultUtil<T> {
     public static ResponseEntity error(String msg) {
         return error(-1, msg);
     }
+
+    public static ResponseEntity error(Integer code) {
+        return error(code, "请求失败", HttpStatus.BAD_REQUEST);
+    }
 }

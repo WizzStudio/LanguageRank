@@ -6,12 +6,14 @@ Created by Ben Wen on 2019/3/9.
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.wizzstudio.languagerank.dao.StudyPlanDAO;
 import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
 import com.wizzstudio.languagerank.dao.UserTranspondDAO;
-import com.wizzstudio.languagerank.domain.*;
+import com.wizzstudio.languagerank.domain.StudyPlan;
+import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
+import com.wizzstudio.languagerank.domain.UserTranspond;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
@@ -25,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j

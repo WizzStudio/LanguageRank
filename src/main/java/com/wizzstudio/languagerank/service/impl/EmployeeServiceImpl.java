@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -33,39 +35,39 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private LanguageCityDAO languageCityDAO;
 
-    private static List<LanguagePost> languagePostList = new ArrayList<>();
-    private static List<CompanySalary> companySalaryList = new ArrayList<>();
-    private static List<CompanyPost> companyPostList = new ArrayList<>();
-    private static List<LanguageCity> languageCityList = new ArrayList<>();
+    private static Map<String, List<LanguagePost>> languagePostMap = new HashMap<>();
+    private static Map<String, List<CompanySalary>> companySalaryMap = new HashMap<>();
+    private static Map<String, List<CompanyPost>> companyPostMap = new HashMap<>();
+    private static Map<String, List<LanguageCity>> languageCityMap = new HashMap<>();
 
     @Override
     public List<LanguagePost> getLanguagePost(String languageName) {
-        if (languagePostList.isEmpty()) {
-            languagePostList = languagePostDAO.findLanguagePostTopFourByLanguageName(languageName);
+        if (!languagePostMap.containsKey(languageName)) {
+            languagePostMap.put(languageName, languagePostDAO.findLanguagePostTopFourByLanguageName(languageName));
         }
-        return languagePostList;
+        return languagePostMap.get(languageName);
     }
 
     @Override
     public List<CompanySalary> getCompanySalary(String languageName) {
-        if (companySalaryList.isEmpty()) {
-            companySalaryList = companySalaryDAO.findTopFiveByLanguageName(languageName);
+        if (!companySalaryMap.containsKey(languageName)) {
+            companySalaryMap.put(languageName, companySalaryDAO.findTopFiveByLanguageName(languageName));
         }
-        return companySalaryList;
+        return companySalaryMap.get(languageName);
     }
 
     @Override
     public List<CompanyPost> getCompanyPost(String languageName) {
-        if (companyPostList.isEmpty()) {
-            companyPostList = companyPostDAO.findCompanyPostTopFiveByLanguageName(languageName);
+        if (!companyPostMap.containsKey(languageName)) {
+            companyPostMap.put(languageName, companyPostDAO.findCompanyPostTopFiveByLanguageName(languageName));
         }
-        return companyPostList;
+        return companyPostMap.get(languageName);
     }
 
     @Override
     public List<LanguageCity> getLanguageCity(String languageName) {
-        if (languageCityList.isEmpty()) {
-            languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
+        if (!languageCityMap.containsKey(languageName)) {
+            List<LanguageCity> languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
             List<LanguageCity> languageCityTemporaryList = languageCityDAO.findLanguageCityOutOfFiveByLanguageName(languageName);
             int otherCityPostNumber = 0;
             for (LanguageCity languageCity : languageCityTemporaryList) {
@@ -77,17 +79,18 @@ public class EmployeeServiceImpl implements EmployeeService {
             languageCity.setCityPostNumber(otherCityPostNumber);
 
             languageCityList.add(languageCity);
+            languageCityMap.put(languageName, languageCityList);
         }
-        return languageCityList;
+        return languageCityMap.get(languageName);
     }
 
     @Override
     @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
-        languagePostList = new ArrayList<>();
-        companySalaryList = new ArrayList<>();
-        companyPostList = new ArrayList<>();
-        languageCityList = new ArrayList<>();
+        languagePostMap = new HashMap<>();
+        companySalaryMap = new HashMap<>();
+        companyPostMap = new HashMap<>();
+        languageCityMap = new HashMap<>();
     }
 }

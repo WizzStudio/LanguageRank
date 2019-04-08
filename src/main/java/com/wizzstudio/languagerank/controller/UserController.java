@@ -5,6 +5,7 @@ Created by Ben Wen on 2019/3/9.
 */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.dao.UserDAO;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-public class UserController {
+public class UserController implements Constant {
 
     @Autowired
     UserService userService;
@@ -58,17 +59,18 @@ public class UserController {
             userDTO.setMyLanguage(myLanguage);
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(myLanguage));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(myLanguage));
-            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay() - 1);
-            userDTO.setIsTranspondedList(userService.getUseTranspond(myLanguage, userId));
+            // 把减一删了
+            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
+//            userDTO.setIsTranspondedList(userService.getUseTranspond(myLanguage, userId));
 
             // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
             if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
                     || user.getIsLogInToday().equals(true)) {
                 userDTO.setIsViewedStudyPlan(false);
-                userDTO.setStudyPlan(null);
+//                userDTO.setStudyPlan(null);
             } else {
                 userDTO.setIsViewedStudyPlan(true);
-                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(myLanguage, user.getStudyPlanDay().getStudyPlanDay()));
+//                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(myLanguage, user.getStudyPlanDay().getStudyPlanDay()));
 
                 // 用户今天已登录
                 userService.updateIsLogInToday(userId);
@@ -114,6 +116,17 @@ public class UserController {
         Integer userId = jsonObject.getInteger("userId");
         String languageName = jsonObject.getString("languageName");
 
+        Boolean isInStudyPlanLanguage = false;
+        for (String language : Constant.STUDY_PLAN_LANGUAGE) {
+            if (language.equals(languageName)) {
+                isInStudyPlanLanguage = true;
+                break;
+            }
+        }
+        if (!isInStudyPlanLanguage) {
+            return ResultUtil.error(2);
+        }
+
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
         try {
             User user = userService.findByUserId(userId);
@@ -134,9 +147,9 @@ public class UserController {
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
 
-            // 调用此接口时user的studyPlanDay已经更新，所以需要减1
+//             调用此接口时user的studyPlanDay已经更新，所以需要减1（删了）
             Map<String, Object> map = new HashMap<>();
-            map.put("studyPlan", studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay-1));
+            map.put("studyPlan", studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay));
             map.put("isTranspondedList", userService.getUseTranspond(languageName, userId));
 
             return ResultUtil.success(map);

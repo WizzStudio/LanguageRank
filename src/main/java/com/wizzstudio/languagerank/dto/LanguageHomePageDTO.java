@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.dto;
 Created by Ben Wen on 2019/3/24.
 */
 
+import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import lombok.Data;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class LanguageHomePageDTO {
 
     private Double fixedFinalExponentIncreasing;
 
-    private List<Double> exponentOfLastSevenDays;
+    private List<FixedFinalExponent> exponentOfLastSevenDays;
 
     private List<CompanyMaxSalaryDTO> company;
 

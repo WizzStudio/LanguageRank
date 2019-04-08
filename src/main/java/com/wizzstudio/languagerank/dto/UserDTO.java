@@ -18,7 +18,7 @@ public class UserDTO {
 
     private Boolean isViewedStudyPlan;
 
-    private List<StudyPlan> studyPlan;
+//    private List<StudyPlan> studyPlan;
 
     private Integer joinedNumber;
 
@@ -27,5 +27,5 @@ public class UserDTO {
     // 用户已经完成了几天的学习计划
     private Integer studyPlanDay;
 
-    private List<Boolean> isTranspondedList;
+//    private List<Boolean> isTranspondedList;
 }

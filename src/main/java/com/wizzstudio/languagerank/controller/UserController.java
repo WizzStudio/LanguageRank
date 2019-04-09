@@ -6,15 +6,11 @@ Created by Ben Wen on 2019/3/9.
 
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.constants.Constant;
-import com.wizzstudio.languagerank.dao.UserDAO;
-import com.wizzstudio.languagerank.domain.StudyPlan;
+import com.wizzstudio.languagerank.domain.Award;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
-import com.wizzstudio.languagerank.service.LanguageCountService;
-import com.wizzstudio.languagerank.service.ShareDimensionCodeService;
-import com.wizzstudio.languagerank.service.StudyPlanService;
-import com.wizzstudio.languagerank.service.UserService;
+import com.wizzstudio.languagerank.service.*;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +38,8 @@ public class UserController implements Constant {
     StudyPlanService studyPlanService;
     @Autowired
     ShareDimensionCodeService shareDimensionCodeService;
+    @Autowired
+    AwardService awardService;
 //    @Autowired
 //    RedisUtil redisUtil;
 //    @Autowired
@@ -55,28 +52,25 @@ public class UserController implements Constant {
         User user =  userService.findByUserId(userId);
         String myLanguage = user.getMyLanguage();
         UserDTO userDTO = new UserDTO();
+
+        // 先新增用户学习计划天数，核心思想是数据库中存储的学习计划天数是用户可见的天数
         if (!myLanguage.equals("未加入")) {
+            if (!user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED) && user.getIsLogInToday().equals(false)) {
+                userService.updateStudyPlanDay(user);
+                userDTO.setIsViewedStudyPlan(true);
+            } else {
+                userDTO.setIsViewedStudyPlan(false);
+            }
+
             userDTO.setMyLanguage(myLanguage);
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(myLanguage));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(myLanguage));
-            // 把减一删了
             userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
-//            userDTO.setIsTranspondedList(userService.getUseTranspond(myLanguage, userId));
-
-            // 当用户已完成所有学习计划或当天计划时返回false，否则返回true及具体学习计划
-            if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)
-                    || user.getIsLogInToday().equals(true)) {
-                userDTO.setIsViewedStudyPlan(false);
-//                userDTO.setStudyPlan(null);
-            } else {
-                userDTO.setIsViewedStudyPlan(true);
-//                userDTO.setStudyPlan(studyPlanService.getAllStudyPlanDay(myLanguage, user.getStudyPlanDay().getStudyPlanDay()));
-
-                // 用户今天已登录
-                userService.updateIsLogInToday(userId);
-                userService.updateStudyPlanDay(user);
-            }
         }
+        // 用户今天已登录
+        userService.updateIsLogInToday(userId);
+
+        log.info("获取用户信息成功");
         return ResultUtil.success(userDTO);
     }
 
@@ -88,7 +82,8 @@ public class UserController implements Constant {
 
         User user = userService.findByUserId(userId);
         Map<String, Object> myAward = new HashMap<>();
-        StudyPlan studyingLanguage = studyPlanService.findStudyPlanByLanguageNameAndStudyPlanDay(user.getMyLanguage(), StudyPlanDayEnum.ACCOMPLISHED);
+
+        Award studyingLanguage = awardService.findAwardByLanguageName(user.getMyLanguage());
         // 将该语言的奖励返回，但只有完成了学习计划才能显示
         if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
             studyingLanguage.setIsViewed(true);
@@ -96,7 +91,7 @@ public class UserController implements Constant {
             studyingLanguage.setIsViewed(false);
         }
 
-        List<StudyPlan> studyedLanguage = userService.findStudyedLanguageByUserId(user);
+        List<Award> studyedLanguage = userService.findStudyedLanguageAwardByUserId(user);
 
         try {
             myAward.put("studyingLanguage", studyingLanguage);
@@ -124,7 +119,7 @@ public class UserController implements Constant {
             }
         }
         if (!isInStudyPlanLanguage) {
-            return ResultUtil.error(2);
+            return ResultUtil.error(Constant.NOT_READY_lANGUAGE);
         }
 
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
@@ -132,6 +127,7 @@ public class UserController implements Constant {
             User user = userService.findByUserId(userId);
             userService.updateMyLanguage(user, languageName);
         } catch (Exception e) {
+            log.error("更新语言失败");
             e.printStackTrace();
         }
         log.info("更新语言成功");
@@ -147,14 +143,17 @@ public class UserController implements Constant {
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
 
-//             调用此接口时user的studyPlanDay已经更新，所以需要减1（删了）
             Map<String, Object> map = new HashMap<>();
-            map.put("studyPlan", studyPlanService.getAllStudyPlanDay(languageName,studyPlanDay));
+            map.put("studyPlan", studyPlanService.getStudyedStudyPlanDay(languageName,studyPlanDay));
             map.put("isTranspondedList", userService.getUseTranspond(languageName, userId));
 
+            log.info("获取用户学习计划成功");
             return ResultUtil.success(map);
-        }else
+        }else {
+            log.error("获取用户学习计划失败");
             return ResultUtil.error();
+        }
+
     }
 
     @PostMapping("/updatetranspond")
@@ -176,6 +175,7 @@ public class UserController implements Constant {
 //      获得分享的二维码图片
     @GetMapping("/dimensioncode")
     public ResponseEntity shareDimensionCode(){
+        log.info("获取小程序码成功");
         return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
     }
 }

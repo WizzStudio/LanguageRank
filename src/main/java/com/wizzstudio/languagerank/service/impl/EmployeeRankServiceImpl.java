@@ -79,7 +79,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
 
         m = m / 10;
-        return 50 * special_a / m;
+        return 30 * special_a / m;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
         a = a/10;
 
-        return 15 * special_number / a ;
+        return 20 * special_number / a ;
     }
 
     @Override

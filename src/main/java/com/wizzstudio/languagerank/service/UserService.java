@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.service;
 Created by Ben Wen on 2019/3/9.
 */
 
+import com.wizzstudio.languagerank.domain.Award;
 import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.WxInfo;
@@ -64,7 +65,7 @@ public interface UserService {
     List<Boolean> getUseTranspond(String languageName, Integer userId);
 
     /**
-     * 每天零点更新用户今天是否登录
+     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言
      */
     void updateAllIsLogInToDay();
 
@@ -76,5 +77,5 @@ public interface UserService {
     /**
      * 查询用户已学完的语言并返回其奖励
      */
-    List<StudyPlan> findStudyedLanguageByUserId(User user);
+    List<Award> findStudyedLanguageAwardByUserId(User user);
 }

@@ -19,7 +19,7 @@ public interface StudyPlanService {
     /**
      * 获取所选语言已学习的全部学习计划
      */
-    List<StudyPlan> getAllStudyPlanDay(String languageName ,Integer studyPlanDay);
+    List<StudyPlan> getStudyedStudyPlanDay(String languageName ,Integer studyPlanDay);
 
     /**
      * 获取某语言的全部的学习计划

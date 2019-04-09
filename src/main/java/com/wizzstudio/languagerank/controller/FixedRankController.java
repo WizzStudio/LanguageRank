@@ -29,6 +29,7 @@ public class FixedRankController {
 
     @GetMapping("/languagerank")
     public ResponseEntity getFixedRank(){
+        log.info("获取语言热度榜榜单页成功");
         return ResultUtil.success(fixedRankService.getFinalRank());
     }
 

@@ -18,7 +18,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Modifying
     @Query("update User u set u.isLogInToday = false")
-    void updateAllIsLogInToday();
+    void resetIsLogInToday();
 
     @Modifying
     @Query("update User u set u.isLogInToday = true where u.userId = :userId")

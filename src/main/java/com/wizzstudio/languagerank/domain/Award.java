@@ -22,20 +22,20 @@ public class Award {
     @NotNull
     private String imageOne;
 
+    @NotNull
     private String contentOne;
 
+    @NotNull
     private String linkOne;
-
-    private String passwordOne;
 
     @NotNull
     private String imageTwo;
 
+    @NotNull
     private String contentTwo;
 
+    @NotNull
     private String linkTwo;
-
-    private String passwordTwo;
 
     // 最终奖励才有，表示用户是否完成该语言学习计划，即我的奖励页面该语言的奖励是否上锁
     @Transient

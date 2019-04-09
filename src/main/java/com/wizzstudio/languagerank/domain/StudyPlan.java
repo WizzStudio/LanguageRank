@@ -29,23 +29,6 @@ public class StudyPlan {
     @NotNull
     private String imageOne;
 
-    // content与link只有最终奖励才有
-    private String contentOne;
-
-    private String linkOne;
-
-    private String passwordOne;
-
     @NotNull
     private String imageTwo;
-
-    private String contentTwo;
-
-    private String linkTwo;
-
-    private String passwordTwo;
-
-    // 最终奖励才有，表示用户是否完成该语言学习计划，即我的奖励页面该语言的奖励是否上锁
-    @Transient
-    private Boolean isViewed;
 }

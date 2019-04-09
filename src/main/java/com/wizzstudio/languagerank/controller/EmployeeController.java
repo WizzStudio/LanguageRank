@@ -86,6 +86,7 @@ public class EmployeeController {
 
     @GetMapping("/employerdemandrank")
     public ResponseEntity getEmployeeRank(){
+        log.info("获取雇主需求榜榜单页成功");
         return ResultUtil.success(employeeRankService.getEmployeeRank());
     }
 }

@@ -18,8 +18,8 @@ public enum StudyPlanDayEnum {
     FOURTH_DAY(4),
     FIFTH_DAY(5),
     SIXTH_DAY(6),
-    SEVEN_DAY(7),
-    ACCOMPLISHED(8);
+//    SEVEN_DAY(7);
+    ACCOMPLISHED(7);
 
     private Integer studyPlanDay;
 

@@ -27,8 +27,8 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     }
 
     @Override
-    public List<StudyPlan> getAllStudyPlanDay(String languageName, Integer studyPlanDay) {
-        List<StudyPlan> studyPlanList =  studyPlanDAO.getAllStudyPlanDay(languageName);
+    public List<StudyPlan> getStudyedStudyPlanDay(String languageName, Integer studyPlanDay) {
+        List<StudyPlan> studyPlanList = studyPlanDAO.getAllStudyPlanDay(languageName);
         List<StudyPlan> returnStudyPlanList = new ArrayList<>();
         for (StudyPlan studyPlan: studyPlanList) {
             if (studyPlan.getStudyPlanDay().getStudyPlanDay() <= studyPlanDay) {
@@ -56,24 +56,23 @@ public class StudyPlanServiceImpl implements StudyPlanService {
            studyPlan.setLanguageName(studyPlanImageDTO.getLanguageName());
            studyPlan.setStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanImageDTO.getStudyPlanDay()));
            // 当修改的是奖励相关信息时
-           if (studyPlanDay == StudyPlanDayEnum.ACCOMPLISHED) {
-               if (studyPlanImageDTO.getImageNumber() == 1) {
-                   // 理论上会自动修改数据库中的值，待测试
-                   studyPlan.setImageOne(filePath);
-                   studyPlan.setContentOne(studyPlanImageDTO.getContent());
-                   studyPlan.setLinkOne(studyPlanImageDTO.getLink());
-                   studyPlan.setImageTwo("无");
-                   studyPlan.setContentTwo("无");
-                   studyPlan.setLinkTwo("无");
-               } else {
-                   studyPlan.setImageOne("无");
-                   studyPlan.setContentOne("无");
-                   studyPlan.setLinkOne("无");
-                   studyPlan.setImageTwo(filePath);
-                   studyPlan.setContentTwo(studyPlanImageDTO.getContent());
-                   studyPlan.setLinkTwo(studyPlanImageDTO.getLink());
-               }
-           } else {
+//           if (studyPlanDay == StudyPlanDayEnum.ACCOMPLISHED) {
+//               if (studyPlanImageDTO.getImageNumber() == 1) {
+//                   studyPlan.setImageOne(filePath);
+//                   studyPlan.setContentOne(studyPlanImageDTO.getContent());
+//                   studyPlan.setLinkOne(studyPlanImageDTO.getLink());
+//                   studyPlan.setImageTwo("无");
+//                   studyPlan.setContentTwo("无");
+//                   studyPlan.setLinkTwo("无");
+//               } else {
+//                   studyPlan.setImageOne("无");
+//                   studyPlan.setContentOne("无");
+//                   studyPlan.setLinkOne("无");
+//                   studyPlan.setImageTwo(filePath);
+//                   studyPlan.setContentTwo(studyPlanImageDTO.getContent());
+//                   studyPlan.setLinkTwo(studyPlanImageDTO.getLink());
+//               }
+//           } else {
                // 当修改的是学习计划相关信息时
                if (studyPlanImageDTO.getImageNumber() == 1) {
                    studyPlan.setImageOne(filePath);
@@ -82,25 +81,25 @@ public class StudyPlanServiceImpl implements StudyPlanService {
                    studyPlan.setImageTwo(filePath);
                    studyPlan.setImageOne("无");
                }
-           }
+//           }
        } else {
-           if (studyPlanDay == StudyPlanDayEnum.ACCOMPLISHED) {
+//           if (studyPlanDay == StudyPlanDayEnum.ACCOMPLISHED) {
+//               if (studyPlanImageDTO.getImageNumber() == 1) {
+//                   studyPlan.setImageOne(filePath);
+//                   studyPlan.setContentOne(studyPlanImageDTO.getContent());
+//                   studyPlan.setLinkOne(studyPlanImageDTO.getLink());
+//               } else {
+//                   studyPlan.setImageTwo(filePath);
+//                   studyPlan.setContentTwo(studyPlanImageDTO.getContent());
+//                   studyPlan.setLinkTwo(studyPlanImageDTO.getLink());
+//               }
+//           } else {
                if (studyPlanImageDTO.getImageNumber() == 1) {
                    studyPlan.setImageOne(filePath);
-                   studyPlan.setContentOne(studyPlanImageDTO.getContent());
-                   studyPlan.setLinkOne(studyPlanImageDTO.getLink());
-               } else {
-                   studyPlan.setImageTwo(filePath);
-                   studyPlan.setContentTwo(studyPlanImageDTO.getContent());
-                   studyPlan.setLinkTwo(studyPlanImageDTO.getLink());
-               }
-           } else {
-               if (studyPlanImageDTO.getImageNumber() == 1) {
-                   studyPlan.setImageOne(filePath);
                } else {
                    studyPlan.setImageTwo(filePath);
                }
-           }
+//           }
        }
     }
 }

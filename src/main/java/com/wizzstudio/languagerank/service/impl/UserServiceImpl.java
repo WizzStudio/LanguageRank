@@ -6,11 +6,9 @@ Created by Ben Wen on 2019/3/9.
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.wizzstudio.languagerank.dao.StudyPlanDAO;
-import com.wizzstudio.languagerank.dao.UserDAO;
-import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
-import com.wizzstudio.languagerank.dao.UserTranspondDAO;
-import com.wizzstudio.languagerank.domain.StudyPlan;
+import com.wizzstudio.languagerank.constants.Constant;
+import com.wizzstudio.languagerank.dao.*;
+import com.wizzstudio.languagerank.domain.Award;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
 import com.wizzstudio.languagerank.domain.UserTranspond;
@@ -32,7 +30,7 @@ import java.util.List;
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, Constant {
 
     @Autowired
     private WxMaService wxService;
@@ -45,7 +43,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     UserTranspondDAO userTranspondDAO;
     @Autowired
-    private StudyPlanService studyPlanService;
+    StudyPlanService studyPlanService;
+    @Autowired
+    AwardDAO awardDAO;
 
     @Override
     public WxLogInDTO userLogin(WxInfo loginData) throws WxErrorException {
@@ -110,15 +110,19 @@ public class UserServiceImpl implements UserService{
         // 用户是否学过所选语言
         Boolean isStudyedChosenLanguage = false;
 
-        List<UserStudyedLanguage> userStudyedLanguageList = userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
+        Integer userId = user.getUserId();
+
+        List<UserStudyedLanguage> userStudyedLanguageList = userStudyedLanguageDAO.findStudyedLanguageByUserId(userId);
         // 如果用户没有选择过语言，则需单独处理
         if (!userStudyedLanguageList.isEmpty()) {
-            for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList){
+            for (UserStudyedLanguage userStudyedLanguage : userStudyedLanguageList) {
                 String myLanguage = user.getMyLanguage();
-                // 如果用户曾经学过目前正在学的语言，则将该语言学习进度更新
+
+                // 如果用户曾经学过目前正在学的语言，则将该语言学习进度更新，同时设置isStudyToday为true
                 if (userStudyedLanguage.getStudyedLanguage().equals(myLanguage)) {
                     isStudyedStudyingLanguage = true;
-                    userStudyedLanguageDAO.updateStudyedLanguageStudyPlanDay(user.getStudyPlanDay(), user.getMyLanguage());
+                    userStudyedLanguageDAO.updateStudyPlanDayByLanguageNameAndUserId(user.getStudyPlanDay(),myLanguage, userId);
+                    userStudyedLanguageDAO.updateIsStudyedTodayByLanguageNameAndUserId(myLanguage, userId);
                     break;
                 }
             }
@@ -126,28 +130,36 @@ public class UserServiceImpl implements UserService{
                 // 如果用户曾经选择过所选语言，则将该语言的学习进度更新至user表
                 if (userStudyedLanguage.getStudyedLanguage().equals(chosenLanguage)) {
                     isStudyedChosenLanguage = true;
-                    userDAO.updateStudyPlanDay(userStudyedLanguage.getStudyPlanDay(), user.getUserId());
+
+                    Integer studyPlanDayEnumByInteger = userStudyedLanguage.getStudyPlanDay().getStudyPlanDay();
+                    Boolean isStudyedToday = userStudyedLanguage.getIsStudyedToday();
+                    // 如果所选语言用户曾经未学完且用户今天没有学过该语言，则将该语言学习进度加1并更新至用户表，同时设置isStudyToday为true
+                    if (!studyPlanDayEnumByInteger.equals(StudyPlanDayEnum.ACCOMPLISHED.getStudyPlanDay()) && !isStudyedToday) {
+                        studyPlanDayEnumByInteger += 1;
+                        userStudyedLanguageDAO.updateIsStudyedTodayByLanguageNameAndUserId(chosenLanguage, userId);
+                    }
+                    userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), userId);
                     break;
                 }
             }
         }
-
         // 如果用户没有学过目前正在学的语言（未加入不算），则将该语言添加至UserStudyedLanguage表
         if (!isStudyedStudyingLanguage && !user.getMyLanguage().equals("未加入")) {
             UserStudyedLanguage userStudyedLanguage = new UserStudyedLanguage();
             userStudyedLanguage.setStudyedLanguage(user.getMyLanguage());
             userStudyedLanguage.setStudyPlanDay(user.getStudyPlanDay());
             userStudyedLanguage.setUserId(user.getUserId());
+            userStudyedLanguage.setIsStudyedToday(true);
             userStudyedLanguageDAO.save(userStudyedLanguage);
         }
         // 更新用户所选语言，必须要在处理完目前正在学的语言的逻辑之后
-        userDAO.updateMyLanguage(chosenLanguage, user.getUserId());
+        userDAO.updateMyLanguage(chosenLanguage, userId);
 
         // 如果用户没有选择过所选语言，则将用户的学习进度初始化，并将所选语言添加至UserTranspond表
         if (!isStudyedChosenLanguage) {
-            userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, user.getUserId());
+            userDAO.updateStudyPlanDay(StudyPlanDayEnum.FIRST_DAY, userId);
             UserTranspond userTranspond = new UserTranspond();
-            userTranspond.setUserId(user.getUserId());
+            userTranspond.setUserId(userId);
             userTranspond.setLanguageName(chosenLanguage);
             userTranspond.setIsTranspondTheFirstDay(false);
             userTranspond.setIsTranspondTheSecondDay(false);
@@ -209,7 +221,8 @@ public class UserServiceImpl implements UserService{
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void updateAllIsLogInToDay() {
-        userDAO.updateAllIsLogInToday();
+        userDAO.resetIsLogInToday();
+        userStudyedLanguageDAO.resetIsStudyedToday();
     }
 
     @Override
@@ -219,21 +232,25 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<StudyPlan> findStudyedLanguageByUserId(User user) {
+    public List<Award> findStudyedLanguageAwardByUserId(User user) {
         List<UserStudyedLanguage> list =  userStudyedLanguageDAO.findStudyedLanguageByUserId(user.getUserId());
-        List<StudyPlan> studyedLanguage = new ArrayList<>();
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        List<Award> studyedLanguage = new ArrayList<>();
         for (UserStudyedLanguage u : list) {
             // 用户正在学的语言的奖励不在这里处理
             if (u.getStudyedLanguage().equals(user.getMyLanguage())) {
                 continue;
             }
-            StudyPlan studyPlan = studyPlanDAO.findByLanguageNameAndStudyPlanDay(u.getStudyedLanguage(), StudyPlanDayEnum.ACCOMPLISHED);
+            Award award = awardDAO.findByLanguageName(u.getStudyedLanguage());
             if (u.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
-                studyPlan.setIsViewed(true);
+                award.setIsViewed(true);
             } else {
-                studyPlan.setIsViewed(false);
+                award.setIsViewed(false);
             }
-            studyedLanguage.add(studyPlan);
+            studyedLanguage.add(award);
         }
 
         return studyedLanguage;

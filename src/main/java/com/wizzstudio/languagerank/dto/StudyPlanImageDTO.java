@@ -50,4 +50,9 @@ public class StudyPlanImageDTO {
      * 奖励的链接
      */
     private String link;
+
+    /**
+     * 奖励链接的提取码
+     */
+    private String password;
 }

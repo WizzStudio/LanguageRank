@@ -23,4 +23,6 @@ public class UserStudyedLanguage {
 
     @Enumerated(value = EnumType.STRING)
     private StudyPlanDayEnum studyPlanDay;
+
+    private Boolean isStudyedToday;
 }

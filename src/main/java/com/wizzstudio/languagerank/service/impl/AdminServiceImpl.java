@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    // 有问题
+    // 有问题，还没处理
     private FixedFinalExponent fixedFinalExponent;
     private EmployeeRank employeeRank;
 

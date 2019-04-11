@@ -17,4 +17,7 @@ public interface CompanySalaryDAO extends JpaRepository<CompanySalary, Integer> 
     @Query(nativeQuery = true, value = "select * from company_salary where language_name = :languageName order by company_ord_salary DESC limit 2")
     List<CompanySalary> findTopTwoByLanguageName(@Param("languageName")String LanguageName);
 
+    // 查询使用该语言的公司薪资排行前三名
+    @Query(nativeQuery = true, value = "select * from company_salary where language_name = :languageName order by company_ord_salary DESC limit 3")
+    List<CompanySalary> findTopThreeByLanguageName(@Param("languageName")String LanguageName);
 }

@@ -4,23 +4,20 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/6.
 */
 
-import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.service.UserService;
-import com.wizzstudio.languagerank.util.CookieUtil;
-import com.wizzstudio.languagerank.util.RedisUtil;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RestController
 @Slf4j

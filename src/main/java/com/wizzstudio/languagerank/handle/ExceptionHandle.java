@@ -16,10 +16,10 @@ import java.io.IOException;
 @ControllerAdvice
 public class ExceptionHandle {
 
-    @ExceptionHandler(IOException.class)
-    @ResponseBody
-    public ResponseEntity IOExceptionHandle(Exception e) {
-        return ResultUtil.error(-1,"上传图片失败");
-    }
+//    @ExceptionHandler(IOException.class)
+//    @ResponseBody
+//    public ResponseEntity IOExceptionHandle(Exception e) {
+//        return ResultUtil.error(-1,"上传图片失败");
+//    }
 
 }

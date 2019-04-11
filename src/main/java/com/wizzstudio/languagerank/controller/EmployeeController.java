@@ -12,6 +12,7 @@ import com.wizzstudio.languagerank.domain.LanguagePost;
 import com.wizzstudio.languagerank.dto.LanguagePostDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
+import com.wizzstudio.languagerank.service.PosterService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeService employeeService;
+    EmployeeService employeeService;
     @Autowired
     EmployeeRankService employeeRankService;
     @Autowired
     LanguageDAO languageDAO;
+    @Autowired
+    PosterService posterService;
 
     @GetMapping("/{languageName}/post")
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
@@ -88,5 +91,11 @@ public class EmployeeController {
     public ResponseEntity getEmployeeRank(){
         log.info("获取雇主需求榜榜单页成功");
         return ResultUtil.success(employeeRankService.getEmployeeRank());
+    }
+
+    // 生成雇主需求详情页海报
+    @GetMapping("/poster/{languageName}")
+    public String a(@PathVariable("languageName")String languageName) throws Exception{
+        return posterService.createPoster(languageName);
     }
 }

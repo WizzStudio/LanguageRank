@@ -69,10 +69,10 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 companyList.add(companyDAO.findByCompanyName("阿里巴巴"));
 
                 languageAdvantage.add("Java开发者被大量需求");
-                languageAdvantage.add("这个平台在继续增加新功能");
+                languageAdvantage.add("甲骨文公司还在不断为Java推出新的特性");
 
-                languageDisadvantage.add("Java比C++使用更多的内存");
-                languageDisadvantage.add("用Java写安卓应用启动慢");
+                languageDisadvantage.add("Java比C++占用更多的内存");
+                languageDisadvantage.add("Java平台的高安全性与稳定性使得Java应用程序开发非常复杂");
 
                 break;
             case "Python":
@@ -90,8 +90,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 companyList.add(companyDAO.findByCompanyName("Dell"));
                 companyList.add(companyDAO.findByCompanyName("百度"));
 
-                languageAdvantage.add("被认为总容易学习的编程语言");
-                languageAdvantage.add("大量让人惊讶的库和函数");
+                languageAdvantage.add("被认为是最容易学习的编程语言");
+                languageAdvantage.add("大量让人惊讶的第三方库");
 
                 languageDisadvantage.add("比编译类语言慢很多");
                 languageDisadvantage.add("在移动计算方面很弱");
@@ -108,8 +108,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 companyList.add(companyDAO.findByCompanyName("腾讯"));
                 companyList.add(companyDAO.findByCompanyName("Intel"));
 
-                languageAdvantage.add("C是高度可移动的，可以在平台运行");
-                languageAdvantage.add("C很小，C完全基于变量、宏命令");
+                languageAdvantage.add("C是高度可移动的，可以在任意平台运行");
+                languageAdvantage.add("C很小，完全基于变量、宏命令");
 
                 languageDisadvantage.add("C没有运行时检查机制");
                 languageDisadvantage.add("不支持面向对象编程");
@@ -197,7 +197,6 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 companyList.add(companyDAO.findByCompanyName("Sony"));
                 companyList.add(companyDAO.findByCompanyName("Linkedin"));
 
-
                 languageAdvantage.add("Scala融合了静态类型系统、面向对象、函数式编程等语言特性");
                 languageAdvantage.add("Scala有交互式命令行(REPL), 可以在上面快速的试各种语法和代码");
 
@@ -231,7 +230,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageAdvantage.add("可以桥接苹果开发的类库");
                 languageAdvantage.add("写的程序更动态化，运行速度快");
 
-                languageDisadvantage.add("不是最容易掌握的语言");
+                languageDisadvantage.add("不是特别容易掌握");
                 languageDisadvantage.add("苹果有自己的编程方法");
 
                 break;
@@ -247,7 +246,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 companyList.add(companyDAO.findByCompanyName("京东"));
 
                 languageAdvantage.add("免费，开源，体积小");
-                languageAdvantage.add("同各种OS的兼容性好");
+                languageAdvantage.add("同各种操作系统的兼容性好");
 
                 languageDisadvantage.add("内存管理和平行处理都为人诟病");
                 languageDisadvantage.add("对大文本处理较差");
@@ -268,8 +267,8 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageAdvantage.add("Go 极其地快。其性能与 Java 或 C++相似");
                 languageAdvantage.add("Go 作为一门语言致力于使事情简单化，因此它使用起来非常快速并且简单");
 
-                languageDisadvantage.add("Go 语言没有一个主要的框架，如 Ruby 的 Rails 框架、Python 的 Django 框架或 PHP 的 Laravel");
-                languageDisadvantage.add("Go 语言的软件包管理不够完美的。默认情况下，它没有办法制定特定版本的依赖库，也无法创建可复写的 builds");
+                languageDisadvantage.add("Go 语言没有一个主要的框架");
+                languageDisadvantage.add("Go 语言的软件包管理不够完美的");
 
                 break;
             case "Matlab":
@@ -320,7 +319,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 
                 languageDisadvantage.add(" 关于Ruby和Rail的主要批评都是\"慢\"");
                 languageDisadvantage.add("很难找到很好的文档，尤其是对于一些冷门的库或多个库复用");
-                languageDisadvantage.add(" RoR应用运行起来不像Java和C写出来那么快，但大部分的Ruby on Rails的应用都足够快");
+                languageDisadvantage.add(" Ruby on Rails应用运行起来不像Java和C写出来那么快");
         }
 
         moreLanguageInformation.setCompanyList(companyList);

@@ -119,9 +119,13 @@ public class UserController implements Constant {
             return ResultUtil.error(Constant.NOT_READY_lANGUAGE);
         }
 
+        User user = userService.findByUserId(userId);
+        if (languageName.equals(user.getMyLanguage())) {
+            return ResultUtil.error(Constant.STUDYING_NOW);
+        }
+
 //        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
         try {
-            User user = userService.findByUserId(userId);
             userService.updateMyLanguage(user, languageName);
         } catch (Exception e) {
             log.error("更新语言失败");
@@ -132,7 +136,7 @@ public class UserController implements Constant {
     }
 
     @PostMapping("/studyplan")
-    public ResponseEntity getStudyAllPlan(@RequestBody JSONObject jsonObject,HttpServletRequest request){
+    public ResponseEntity getStudyPlan(@RequestBody JSONObject jsonObject,HttpServletRequest request){
         Integer userId = jsonObject.getInteger("userId");
 
         User user =  userService.findByUserId(userId);

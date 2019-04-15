@@ -55,6 +55,16 @@ public interface UserService {
     void updateMyLanguage(User user, String chosenLanguage);
 
     /**
+     * 更新某用户今日登录情况
+     */
+    void updateIsLogInToday(Integer userId);
+
+    /**
+     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言
+     */
+    void updateAllIsLogInToDay();
+
+    /**
      * 更新用户转发表
      */
     void updateUserTranspondTable(User user, Integer studyPlanDay);
@@ -63,16 +73,6 @@ public interface UserService {
      * 获取用户转发表
      */
     List<Boolean> getUseTranspond(String languageName, Integer userId);
-
-    /**
-     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言
-     */
-    void updateAllIsLogInToDay();
-
-    /**
-     * 更新某用户今日登录情况
-     */
-    void updateIsLogInToday(Integer userId);
 
     /**
      * 查询用户已学完的语言并返回其奖励

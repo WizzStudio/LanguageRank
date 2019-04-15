@@ -15,10 +15,13 @@ qiniu:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-
     url: jdbc:mysql://pgrk.wizzstudio.com:3333/pgrk?serverTimezone=Asia/Shanghai&useSSL=false&characterEncoding=utf-8
     username: "pgrk"
     password: "wizz.pgrk"
+  redis:
+    host: 47.105.192.87
+    port: 6666
+    password: xdwizzno1
 
 
 #本地配置
@@ -42,18 +45,3 @@ spring:
       hibernate:
         dialect: com.wizzstudio.languagerank.config.MysqlConfig
 #    open-in-view: true
-
-
-# redis:
-#  host: 47.105.192.87
-#  port: 6666
-#  password: xdwizzno1
-##  timeout: 3000
-#  database:
-#    moreLanguageInformation: 0
-#  jedis:
-#     pool:
-##      max-active: 8
-#      max-idle: 8
-##      max-wait: -1
-#      min-idle: 0

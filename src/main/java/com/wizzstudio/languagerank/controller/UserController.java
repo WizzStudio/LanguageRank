@@ -11,9 +11,11 @@ import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.*;
+import com.wizzstudio.languagerank.util.RedisUtil;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +39,10 @@ public class UserController implements Constant {
     ShareDimensionCodeService shareDimensionCodeService;
     @Autowired
     AwardService awardService;
-//    @Autowired
-//    RedisUtil redisUtil;
-//    @Autowired
-//    private RedisTemplate<String, User> redisTemplate;
+    @Autowired
+    RedisUtil redisUtil;
+    @Autowired
+    private RedisTemplate<String, User> redisTemplate;
 
     @PostMapping("/userinfo")
     public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
@@ -178,5 +180,13 @@ public class UserController implements Constant {
     public ResponseEntity shareDimensionCode(){
         log.info("获取小程序码成功");
         return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity testSetUser(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        User user = userService.findByUserId(userId);
+        redisUtil.setUser(userId, user);
+        return ResultUtil.success(redisUtil.getUser(userId));
     }
 }

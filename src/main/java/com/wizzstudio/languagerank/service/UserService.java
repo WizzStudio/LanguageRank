@@ -9,6 +9,7 @@ import com.wizzstudio.languagerank.domain.StudyPlan;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
+import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public interface UserService {
     /**
      * 当用户已完成今天学习计划(已登录过)后更新studyPlanDay
      */
-    void updateStudyPlanDay(User user);
+    StudyPlanDayEnum updateStudyPlanDay(User user);
 
     /**
      * 更新用户个人主页上的语言
@@ -60,7 +61,7 @@ public interface UserService {
     void updateIsLogInToday(Integer userId);
 
     /**
-     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言
+     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言，同时清空redis
      */
     void updateAllIsLogInToDay();
 
@@ -68,6 +69,11 @@ public interface UserService {
      * 更新用户转发表
      */
     void updateUserTranspondTable(User user, Integer studyPlanDay);
+
+    /**
+     * 关闭加入我的小程序弹窗
+     */
+    void updateIsViewedJoinMyApplet(Integer userId);
 
     /**
      * 获取用户转发表

@@ -27,5 +27,6 @@ public class UserDTO {
     // 用户已经完成了几天的学习计划
     private Integer studyPlanDay;
 
+    private Boolean isViewedJoinMyApplet;
 //    private List<Boolean> isTranspondedList;
 }

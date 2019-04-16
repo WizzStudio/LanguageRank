@@ -31,4 +31,8 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.myLanguage = :myLanguage where u.userId = :userId")
     void updateMyLanguage(@Param("myLanguage") String myLanguage, @Param("userId") Integer userId);
+
+    @Modifying
+    @Query("update User u set u.isViewedJoinMyApplet = false where u.userId = :userId")
+    void updateIsViewedJoinMyApplet(@Param("userId") Integer userId);
 }

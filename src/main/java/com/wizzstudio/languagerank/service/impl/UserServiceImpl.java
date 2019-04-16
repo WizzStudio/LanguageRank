@@ -17,6 +17,7 @@ import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
+import com.wizzstudio.languagerank.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,10 @@ import java.util.List;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService, Constant {
-
     @Autowired
-    private WxMaService wxService;
+    WxMaService wxService;
     @Autowired
-    private UserDAO userDAO;
+    UserDAO userDAO;
     @Autowired
     UserStudyedLanguageDAO userStudyedLanguageDAO;
     @Autowired
@@ -46,6 +46,8 @@ public class UserServiceImpl implements UserService, Constant {
     StudyPlanService studyPlanService;
     @Autowired
     AwardDAO awardDAO;
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public WxLogInDTO userLogin(WxInfo loginData) throws WxErrorException {
@@ -57,8 +59,6 @@ public class UserServiceImpl implements UserService, Constant {
         if (user == null) {
             user = saveUser(sessionResult.getOpenid());
         }
-//        // 以cookie值为key，user对象为value存入redis
-//        redisUtil.storeNewUser(cookie, user);
 
         WxLogInDTO wxLogInDTO = new WxLogInDTO();
         wxLogInDTO.setOpenId(sessionResult.getOpenid());
@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService, Constant {
         user.setStudyPlanDay(StudyPlanDayEnum.NULL);
         user.setMyLanguage("未加入");
         user.setIsLogInToday(true);
+        user.setIsViewedJoinMyApplet(true);
 
         return userDAO.save(user);
     }
@@ -93,9 +94,10 @@ public class UserServiceImpl implements UserService, Constant {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateStudyPlanDay(User user) {
-        Integer studyPlanDayEnumByInteger = user.getStudyPlanDay().getStudyPlanDay() + 1;
-        userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), user.getUserId());
+    public StudyPlanDayEnum updateStudyPlanDay(User user) {
+        StudyPlanDayEnum studyPlanDayEnum = StudyPlanDayEnum.getStudyPlanDayByInteger(user.getStudyPlanDay().getStudyPlanDay() + 1);
+        userDAO.updateStudyPlanDay(studyPlanDayEnum, user.getUserId());
+        return studyPlanDayEnum;
     }
 
     /**
@@ -109,6 +111,8 @@ public class UserServiceImpl implements UserService, Constant {
         Boolean isStudyedStudyingLanguage = false;
         // 用户是否学过所选语言
         Boolean isStudyedChosenLanguage = false;
+
+        StudyPlanDayEnum newStudyPlanDay = StudyPlanDayEnum.FIRST_DAY;
 
         Integer userId = user.getUserId();
 
@@ -138,7 +142,8 @@ public class UserServiceImpl implements UserService, Constant {
                         studyPlanDayEnumByInteger += 1;
                         userStudyedLanguageDAO.updateIsStudyedTodayByLanguageNameAndUserId(chosenLanguage, userId);
                     }
-                    userDAO.updateStudyPlanDay(StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger), userId);
+                    newStudyPlanDay = StudyPlanDayEnum.getStudyPlanDayByInteger(studyPlanDayEnumByInteger);
+                    userDAO.updateStudyPlanDay(newStudyPlanDay, userId);
                     break;
                 }
             }
@@ -170,6 +175,12 @@ public class UserServiceImpl implements UserService, Constant {
             userTranspond.setIsTranspondTheSeventhDay(false);
             userTranspondDAO.save(userTranspond);
         }
+
+        // 修改redis中的数据
+        user.setMyLanguage(chosenLanguage);
+        user.setStudyPlanDay(newStudyPlanDay);
+        redisUtil.setUser(userId, user);
+//        System.out.println(user);
     }
 
     @Override
@@ -223,12 +234,18 @@ public class UserServiceImpl implements UserService, Constant {
     public void updateAllIsLogInToDay() {
         userDAO.resetIsLogInToday();
         userStudyedLanguageDAO.resetIsStudyedToday();
+        redisUtil.flushRedis();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateIsLogInToday(Integer userId) {
         userDAO.updateIsLogInToday(userId);
+    }
+
+    @Override
+    public void updateIsViewedJoinMyApplet(Integer userId) {
+        userDAO.updateIsViewedJoinMyApplet(userId);
     }
 
     @Override

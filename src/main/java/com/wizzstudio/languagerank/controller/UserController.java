@@ -15,10 +15,11 @@ import com.wizzstudio.languagerank.util.RedisUtil;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -41,22 +42,25 @@ public class UserController implements Constant {
     AwardService awardService;
     @Autowired
     RedisUtil redisUtil;
-    @Autowired
-    private RedisTemplate<String, User> redisTemplate;
 
     @PostMapping("/userinfo")
     public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
         Integer userId = jsonObject.getInteger("userId");
 
-        User user =  userService.findByUserId(userId);
+//        User user =  userService.findByUserId(userId);
+        User user = redisUtil.getUser(userId);
+        System.out.println(user);
         String myLanguage = user.getMyLanguage();
         UserDTO userDTO = new UserDTO();
 
         // 先新增用户学习计划天数，核心思想是数据库中存储的学习计划天数是用户可见的天数
         if (!myLanguage.equals("未加入")) {
             if (!user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED) && user.getIsLogInToday().equals(false)) {
-                userService.updateStudyPlanDay(user);
+                StudyPlanDayEnum newStudyPlanDay =  userService.updateStudyPlanDay(user);
                 userDTO.setIsViewedStudyPlan(true);
+
+                // 当用户今天登录后studyPlanDay与isLogInToday要变化，修改后存入redis(isLogInToday要手动修改)
+                user.setStudyPlanDay(newStudyPlanDay);
             } else {
                 userDTO.setIsViewedStudyPlan(false);
             }
@@ -65,21 +69,25 @@ public class UserController implements Constant {
             userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(myLanguage));
             userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(myLanguage));
             userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
+            userDTO.setIsViewedJoinMyApplet(user.getIsViewedJoinMyApplet());
         }
         // 用户今天已登录
-        userService.updateIsLogInToday(userId);
+        if (user.getIsLogInToday().equals(false)) {
+            userService.updateIsLogInToday(userId);
+            user.setIsLogInToday(true);
+        }
 
+        redisUtil.setUser(userId, user);
         log.info("获取用户信息成功");
         return ResultUtil.success(userDTO);
     }
 
     @PostMapping("/myaward")
     public ResponseEntity getMyAward(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
-//        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
-
         Integer userId = jsonObject.getInteger("userId");
 
-        User user = userService.findByUserId(userId);
+//        User user =  userService.findByUserId(userId);
+        User user = redisUtil.getUser(userId);
         Map<String, Object> myAward = new HashMap<>();
 
         Award studyingLanguage = awardService.findAwardByLanguageName(user.getMyLanguage());
@@ -121,12 +129,12 @@ public class UserController implements Constant {
             return ResultUtil.error(Constant.NOT_READY_lANGUAGE);
         }
 
-        User user = userService.findByUserId(userId);
+//        User user = userService.findByUserId(userId);
+        User user = redisUtil.getUser(userId);
         if (languageName.equals(user.getMyLanguage())) {
             return ResultUtil.error(Constant.STUDYING_NOW);
         }
 
-//        User user = redisTemplate.opsForValue().get(CookieUtil.getCookie(request));
         try {
             userService.updateMyLanguage(user, languageName);
         } catch (Exception e) {
@@ -141,7 +149,8 @@ public class UserController implements Constant {
     public ResponseEntity getStudyPlan(@RequestBody JSONObject jsonObject,HttpServletRequest request){
         Integer userId = jsonObject.getInteger("userId");
 
-        User user =  userService.findByUserId(userId);
+//        User user =  userService.findByUserId(userId);
+        User user = redisUtil.getUser(userId);
         if (user != null) {
             String languageName = user.getMyLanguage();
             Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
@@ -156,7 +165,6 @@ public class UserController implements Constant {
             log.error("获取用户学习计划失败");
             return ResultUtil.error();
         }
-
     }
 
     @PostMapping("/updatetranspond")
@@ -165,7 +173,8 @@ public class UserController implements Constant {
         Integer userId = jsonObject.getInteger("userId");
 
         try {
-            User user =  userService.findByUserId(userId);
+//            User user =  userService.findByUserId(userId);
+            User user = redisUtil.getUser(userId);
             userService.updateUserTranspondTable(user, studyPlanDay);
         } catch (Exception e) {
             log.error("更新用户转发表失败");
@@ -175,18 +184,31 @@ public class UserController implements Constant {
         return ResultUtil.success();
     }
 
-//      获得分享的二维码图片
-    @GetMapping("/dimensioncode")
-    public ResponseEntity shareDimensionCode(){
-        log.info("获取小程序码成功");
-        return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
+    @PostMapping("/updateisviewedjoinmyapplet")
+    public ResponseEntity updateIsViewedJoinMyApplet(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        userService.updateIsViewedJoinMyApplet(userId);
+        User user = redisUtil.getUser(userId);
+        user.setIsViewedJoinMyApplet(false);
+        redisUtil.setUser(userId, user);
+
+        log.info("加入我的小程序弹窗不再弹出");
+        return ResultUtil.success();
     }
 
-    @PostMapping("/test")
-    public ResponseEntity testSetUser(@RequestBody JSONObject jsonObject) {
-        Integer userId = jsonObject.getInteger("userId");
-        User user = userService.findByUserId(userId);
-        redisUtil.setUser(userId, user);
-        return ResultUtil.success(redisUtil.getUser(userId));
-    }
+////      获得分享的二维码图片
+//    @GetMapping("/dimensioncode")
+//    public ResponseEntity shareDimensionCode(){
+//        log.info("获取小程序码成功");
+//        return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
+//    }
+
+//    @PostMapping("/test")
+//    public ResponseEntity testSetUser(@RequestBody JSONObject jsonObject) {
+//        Integer userId = jsonObject.getInteger("userId");
+//        User user = userService.findByUserId(userId);
+//        User user = redisUtil.getUser(userId);
+//        redisUtil.setUser(userId, user);
+//        return ResultUtil.success(redisUtil.getUser(userId));
+//    }
 }

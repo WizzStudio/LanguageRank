@@ -5,9 +5,9 @@ Created by Ben Wen on 2019/3/16.
 */
 
 
-import com.alibaba.fastjson.JSON;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,22 +16,30 @@ import java.util.concurrent.TimeUnit;
 
 @Repository
 public class RedisUtil {
-
     @Autowired
-    private RedisTemplate<String, User> redisTemplate;
+    RedisTemplate<String, User> redisTemplate;
+    @Autowired
+    UserService userService;
 
-    // 以userId值为key，user对象为value存入redis中，Constant.TOKEN_EXPIRED时间后过期，时间单位为TimeUnit.SECONDS
+    // 以userId值为key，user对象为value存入redis中，30分钟(7200秒)后过期，时间单位为秒
+    // 如果redis中没有该用户则新增，有该用户则更新数据
     public void setUser(Integer userId, User user) {
-        // setIfAbsent必须不存在才能新增
-        redisTemplate.opsForValue().setIfAbsent(Integer.toString(userId), user, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(Integer.toString(userId), user, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
     }
 
+    // 如果redis中没有该用户，则查询mysql并存入redis中，如果有则直接返回
     public User getUser(Integer userId) {
-        return redisTemplate.opsForValue().get(Integer.toString(userId));
+        User user = redisTemplate.opsForValue().get(Integer.toString(userId));
+        if (user == null) {
+            user = userService.findByUserId(userId);
+            setUser(userId, user);
+        }
+        return user;
     }
 
-    public void getAndSetUser(Integer userId, User user) {
-        redisTemplate.opsForValue().getAndSet(Integer.toString(userId), user);
+    // 清空redis中的key
+    public void flushRedis() {
+        redisTemplate.delete(redisTemplate.keys("*"));
     }
 //
 //    /**

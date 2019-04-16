@@ -32,8 +32,8 @@ public class LogInController {
            // 生成cookie
 //            String cookie = CookieUtil.tokenGenerate();
 //            System.out.println(loginData.code);
-
 //            WxLogInDTO wxLogInDTO = userService.userLogin(loginData, cookie);
+
             WxLogInDTO wxLogInDTO = userService.userLogin(loginData);
 
 //            // 将cookie写入response中返回給前端

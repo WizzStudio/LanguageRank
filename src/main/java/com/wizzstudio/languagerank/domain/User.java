@@ -31,4 +31,7 @@ public class User implements Serializable {
 
     @NotNull
     private Boolean isLogInToday;
+
+    @NotNull
+    private Boolean isViewedJoinMyApplet;
 }

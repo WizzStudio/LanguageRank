@@ -85,7 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         languagePostMap = new HashMap<>();

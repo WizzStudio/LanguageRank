@@ -229,15 +229,6 @@ public class UserServiceImpl implements UserService, Constant {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
-    @Transactional(rollbackFor = Exception.class)
-    public void updateAllIsLogInToDay() {
-        userDAO.resetIsLogInToday();
-        userStudyedLanguageDAO.resetIsStudyedToday();
-        redisUtil.flushRedis();
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateIsLogInToday(Integer userId) {
         userDAO.updateIsLogInToday(userId);

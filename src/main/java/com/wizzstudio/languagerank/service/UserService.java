@@ -61,11 +61,6 @@ public interface UserService {
     void updateIsLogInToday(Integer userId);
 
     /**
-     * 每天零点更新用户今天是否登录与用户今天是否学过某种语言，同时清空redis
-     */
-    void updateAllIsLogInToDay();
-
-    /**
      * 更新用户转发表
      */
     void updateUserTranspondTable(User user, Integer studyPlanDay);

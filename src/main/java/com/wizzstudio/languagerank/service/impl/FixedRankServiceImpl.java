@@ -43,9 +43,8 @@ public class FixedRankServiceImpl implements FixedRankService {
 
     // TIOBE指数*100*6*0.4+IEEE指数*0.5+百度指数/100*0.1
     @Override
-    @Scheduled(cron = "0 55 23 * * ?")
     @Transactional(rollbackFor = Exception.class)
-    public void saveExponent(){
+    public void saveExponent() {
         List<Language> languageList = languageDAO.findAll();
         // temporary开头为临时变量
         for (Language language : languageList) {
@@ -107,7 +106,6 @@ public class FixedRankServiceImpl implements FixedRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         list = new ArrayList<>();

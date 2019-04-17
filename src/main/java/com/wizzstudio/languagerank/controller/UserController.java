@@ -49,7 +49,7 @@ public class UserController implements Constant {
 
 //        User user =  userService.findByUserId(userId);
         User user = redisUtil.getUser(userId);
-        System.out.println(user);
+//        System.out.println(user);
         String myLanguage = user.getMyLanguage();
         UserDTO userDTO = new UserDTO();
 

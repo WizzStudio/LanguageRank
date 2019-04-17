@@ -134,7 +134,6 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 55 23 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void saveExponent() {
         List<Language> languageList = languageDAO.findAll();
@@ -200,7 +199,6 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
     public void resetList() {
         list = new ArrayList<>();

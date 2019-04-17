@@ -32,7 +32,6 @@ public class LanguageCountServiceImpl implements LanguageCountService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void updateNumber() {
         List<LanguageCount> languageCountDAOList = languageCountDAO.findAll();

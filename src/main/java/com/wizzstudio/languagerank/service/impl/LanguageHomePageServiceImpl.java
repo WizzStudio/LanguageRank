@@ -43,7 +43,6 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     private static Map<String, LanguageHomePageDTO> map = new HashMap<>();
 
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional(rollbackFor = Exception.class)
     public void resetMap() {
         map = new HashMap<>();

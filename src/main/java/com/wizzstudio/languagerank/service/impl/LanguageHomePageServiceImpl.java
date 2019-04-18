@@ -51,7 +51,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     @Override
     public LanguageHomePageDTO getLanguageHomePage(String languageName) {
         if (map.containsKey(languageName)) {
-            map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
+            map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
             return map.get(languageName);
         }
 
@@ -59,7 +59,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
 
         List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
         languageHomePageDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
-        languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName));
+        languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
         languageHomePageDTO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
         languageHomePageDTO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
         languageHomePageDTO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());

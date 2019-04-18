@@ -65,9 +65,10 @@ public class UserController implements Constant {
                 userDTO.setIsViewedStudyPlan(false);
             }
 
+            Integer[] languageCountArrays = languageCountService.findJoinedNumberByLanguage(myLanguage);
             userDTO.setMyLanguage(myLanguage);
-            userDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(myLanguage));
-            userDTO.setJoinedToday(languageCountService.findJoinedTodayByLanguage(myLanguage));
+            userDTO.setJoinedNumber(languageCountArrays[0]);
+            userDTO.setJoinedToday(languageCountArrays[1]);
             userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
             userDTO.setIsViewedJoinMyApplet(user.getIsViewedJoinMyApplet());
         }

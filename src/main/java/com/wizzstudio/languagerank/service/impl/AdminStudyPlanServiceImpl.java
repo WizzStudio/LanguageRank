@@ -27,11 +27,11 @@ public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
         List<EmployeeRank> employeeRanks = employeeRankDAO.findTopTenLanguage();
         for (EmployeeRank employeeRank : employeeRanks){
             AdminStudyPlanDTO adminStudyPlanDTO  =  new AdminStudyPlanDTO();
-            String languageNa = employeeRank.getLanguageName();
+            String languageName = employeeRank.getLanguageName();
 
-            adminStudyPlanDTO.setLanguageName(languageNa);
-            adminStudyPlanDTO.setIncreaseNumber(languageCountService.findJoinedTodayByLanguage(languageNa));
-            adminStudyPlanDTO.setNumber(languageCountService.findJoinedNumberByLanguage(languageNa));
+            adminStudyPlanDTO.setLanguageName(languageName);
+            adminStudyPlanDTO.setIncreaseNumber(languageCountService.findJoinedNumberByLanguage(languageName)[1]);
+            adminStudyPlanDTO.setNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
 
             adminStudyPlanDTOList.add(adminStudyPlanDTO);
         }

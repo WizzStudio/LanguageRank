@@ -20,16 +20,17 @@ public class LanguageCountServiceImpl implements LanguageCountService {
     @Autowired
     LanguageCountDAO languageCountDAO;
 
-    // 当前总人数为number与increaseNumber之和
+    // 第一项为加入总人数，第二项为今日新增人数
     @Override
-    public Integer findJoinedNumberByLanguage(String languageName) {
-        return languageCountDAO.findByLanguageName(languageName).getNumber()+ languageCountDAO.findByLanguageName(languageName).getIncreaseNumber();
+    public Integer[] findJoinedNumberByLanguage(String languageName) {
+        LanguageCount languageCount = languageCountDAO.findByLanguageName(languageName);
+        return new Integer[]{languageCount.getNumber() + languageCount.getIncreaseNumber(), languageCount.getIncreaseNumber()};
     }
-
-    @Override
-    public Integer findJoinedTodayByLanguage(String languageName) {
-        return languageCountDAO.findByLanguageName(languageName).getIncreaseNumber();
-    }
+//
+//    @Override
+//    public Integer findJoinedTodayByLanguage(String languageName) {
+//        return languageCountDAO.findByLanguageName(languageName).getIncreaseNumber();
+//    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -37,7 +38,7 @@ public class LanguageCountServiceImpl implements LanguageCountService {
         List<LanguageCount> languageCountDAOList = languageCountDAO.findAll();
         for (LanguageCount languageCount : languageCountDAOList) {
             String languageName = languageCount.getLanguageName();
-            Integer number = findJoinedNumberByLanguage(languageName);
+            Integer number = findJoinedNumberByLanguage(languageName)[0];
 
             languageCountDAO.updateNumber(number,languageName);
             languageCountDAO.resetIncreaseNumber(languageName);

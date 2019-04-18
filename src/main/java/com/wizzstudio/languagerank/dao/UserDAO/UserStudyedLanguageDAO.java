@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.dao;
+package com.wizzstudio.languagerank.dao.UserDAO;
 
 /*
 Created by Ben Wen on 2019/3/26.

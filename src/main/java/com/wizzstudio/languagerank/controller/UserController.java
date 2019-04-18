@@ -197,6 +197,22 @@ public class UserController implements Constant {
         return ResultUtil.success();
     }
 
+    @PostMapping("/updateuserrelationship")
+    public ResponseEntity updateUserRelationship(@RequestBody JSONObject jsonObject) {
+        Integer userOne = jsonObject.getInteger("userOne");
+        Integer userTwo = jsonObject.getInteger("userTwo");
+
+        try {
+            redisUtil.setUserRelationship(userOne, userTwo);
+        } catch (Exception e) {
+            log.error("新增好友关系失败");
+            e.printStackTrace();
+        }
+
+        log.info("新增好友关系成功");
+        return ResultUtil.success();
+    }
+
 ////      获得分享的二维码图片
 //    @GetMapping("/dimensioncode")
 //    public ResponseEntity shareDimensionCode(){

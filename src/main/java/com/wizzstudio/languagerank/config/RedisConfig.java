@@ -30,21 +30,41 @@ public class RedisConfig {
     @Value("${spring.redis.port}")
     private int port;
 
+    @Value("${spring.redis.database.userCache}")
+    private int userCacheDatabase;
+
+    @Value("${spring.redis.database.userRelationship}")
+    private int userRelationshipDatabase;
+
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
+    public RedisTemplate<String, User> cacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPassword(password);
         redisStandaloneConfiguration.setPort(port);
-        return new JedisConnectionFactory(redisStandaloneConfiguration);
+        redisStandaloneConfiguration.setDatabase(userCacheDatabase);
+
+        RedisTemplate<String, User> template = new RedisTemplate<>();
+        template.setConnectionFactory(new JedisConnectionFactory(redisStandaloneConfiguration));
+        // 设置value的序列化规则和 key的序列化规则
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisObjectSerializer());
+        return template;
     }
 
     @Bean
-    public RedisTemplate<String, User> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, User> template = new RedisTemplate<String, User>();
-        template.setConnectionFactory(jedisConnectionFactory());
+    public RedisTemplate<String, String> userRelationshipRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPassword(password);
+        redisStandaloneConfiguration.setPort(port);
+        redisStandaloneConfiguration.setDatabase(userRelationshipDatabase);
+
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(new JedisConnectionFactory(redisStandaloneConfiguration));
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new RedisObjectSerializer());
+        // 如果设置为RedisObjectSerializer，redis中会在value前面加上\xac\xed\x00\x05t\x00\x03
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 

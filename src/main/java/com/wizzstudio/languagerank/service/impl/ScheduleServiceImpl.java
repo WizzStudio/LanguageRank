@@ -4,8 +4,8 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/4/17.
 */
 
-import com.wizzstudio.languagerank.dao.UserDAO;
-import com.wizzstudio.languagerank.dao.UserStudyedLanguageDAO;
+import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
+import com.wizzstudio.languagerank.dao.UserDAO.UserStudyedLanguageDAO;
 import com.wizzstudio.languagerank.service.*;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void updateAllIsLogInToDay() {
         userDAO.resetIsLogInToday();
         userStudyedLanguageDAO.resetIsStudyedToday();
-        redisUtil.flushRedis();
+        redisUtil.flushUserCacheRedis();
     }
 
     @Override

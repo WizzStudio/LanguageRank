@@ -22,6 +22,9 @@ spring:
     host: 47.105.192.87
     port: 6666
     password: xdwizzno1
+    database:
+      userCache: 0
+      userRelationship: 1
 
 
 #本地配置

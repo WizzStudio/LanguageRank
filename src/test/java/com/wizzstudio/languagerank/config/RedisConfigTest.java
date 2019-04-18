@@ -24,28 +24,42 @@ Created by Ben Wen on 2019/3/21.
 public class RedisConfigTest {
 
     @Autowired
-    private RedisTemplate<String, User> redisTemplate;
+    private RedisTemplate<String, User> cacheRedisTemplate;
     @Autowired
     private UserService userService;
     @Autowired
     private RedisUtil redisUtil;
 
     @Test
-    public void redisTemplateTest() {
-//        User user = userService.saveUser("abcdefg");
-//        redisTemplate.opsForValue().set("aaa", user, Constant.TOKEN_EXPIRED, TimeUnit.HOURS);
-//        Assert.assertEquals("FIRST_DAY",redisTemplate.opsForaVlue().get("aaa").getStudyPlanDay().toString());
-
+    public void setUserTest() {
         User user = userService.findByUserId(3);
         redisUtil.setUser(3, user);
-        User user2 = redisTemplate.opsForValue().get(Integer.toString(3));
+        User user2 = cacheRedisTemplate.opsForValue().get(Integer.toString(3));
         System.out.println(user2);
     }
 
     @Test
-    public void flushRedisTest() {
-        redisUtil.flushRedis();
+    public void flushCacheRedisTest() {
+        redisUtil.flushUserCacheRedis();
     }
+
+    @Test
+    public void setUserRelationshipTest() {
+        // Test中修改数据库后会自动删除
+        redisUtil.setUserRelationship(3, 5);
+        redisUtil.setUserRelationship(3, 4);
+        redisUtil.setUserRelationship(4, 7);
+        redisUtil.setUserRelationship(4, 5);
+        redisUtil.setUserRelationship(4, 8);
+        redisUtil.setUserRelationship(8, 5);
+        redisUtil.setUserRelationship(5, 7);
+//        redisUtil.getUserRelationship(3);
+//        redisUtil.getUserRelationship(4);
+//        redisUtil.getUserRelationship(5);
+//        redisUtil.getUserRelationship(7);
+//        redisUtil.getUserRelationship(8);
+    }
+
 //    @Test
 //    public void jedisTest() {
 //        Jedis jedis = new Jedis("47.105.192.87",6666);

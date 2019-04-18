@@ -8,6 +8,9 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.dao.*;
+import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
+import com.wizzstudio.languagerank.dao.UserDAO.UserStudyedLanguageDAO;
+import com.wizzstudio.languagerank.dao.UserDAO.UserTranspondDAO;
 import com.wizzstudio.languagerank.domain.Award;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
@@ -21,7 +24,6 @@ import com.wizzstudio.languagerank.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

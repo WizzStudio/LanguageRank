@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -208,9 +210,25 @@ public class UserController implements Constant {
             log.error("新增好友关系失败");
             e.printStackTrace();
         }
-
-        log.info("新增好友关系成功");
         return ResultUtil.success();
+    }
+
+    @PostMapping("/getuserrelationship")
+    public ResponseEntity getUserRelationship(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+
+        List<String> stringList = new ArrayList<>(redisUtil.getUserRelationship(userId));
+        List<Integer> integerList = null;
+
+        // Java8 stream流式计算
+        try {
+            integerList = stringList.stream().map(Integer::parseInt).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("获取好友关系失败");
+            e.printStackTrace();
+        }
+        log.info("获取好友关系成功");
+        return ResultUtil.success(integerList);
     }
 
 ////      获得分享的二维码图片

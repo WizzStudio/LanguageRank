@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -80,6 +81,7 @@ public class UserServiceImpl implements UserService, Constant {
         user.setMyLanguage("未加入");
         user.setIsLogInToday(true);
         user.setIsViewedJoinMyApplet(true);
+        user.setLogInTime(new Date());
 
         return userDAO.save(user);
     }

@@ -10,15 +10,16 @@ import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
 import com.wizzstudio.languagerank.dao.UserDAO.UserRelationshipDAO;
 import com.wizzstudio.languagerank.domain.User;
 import com.wizzstudio.languagerank.domain.UserRelationship;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Repository
+@Slf4j
 public class RedisUtil {
     @Autowired
     RedisTemplate<String, User> userCacheRedisTemplate;
@@ -29,7 +30,7 @@ public class RedisUtil {
     @Autowired
     UserRelationshipDAO userRelationshipDAO;
 
-    // 以userId值为key，user对象为value存入redis中，30分钟(7200秒)后过期，时间单位为秒
+    // 以userId值为key，user对象为value存入redis中，30分钟(1800秒)后过期，时间单位为秒
     // 如果redis中没有该用户则新增，有该用户则更新数据
     public void setUser(Integer userId, User user) {
         userCacheRedisTemplate.opsForValue().set(Integer.toString(userId), user, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
@@ -60,6 +61,7 @@ public class RedisUtil {
             userRelationship.setUserOne(userOne);
             userRelationship.setUserTwo(userTwo);
             userRelationshipDAO.save(userRelationship);
+            log.info("新增好友关系成功");
         }
     }
 

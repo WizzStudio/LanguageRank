@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -34,4 +35,6 @@ public class User implements Serializable {
 
     @NotNull
     private Boolean isViewedJoinMyApplet;
+
+    private Date logInTime;
 }

@@ -37,4 +37,6 @@ public class User implements Serializable {
     private Boolean isViewedJoinMyApplet;
 
     private Date logInTime;
+
+    private Date logInLastTime;
 }

@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
+
 public interface UserDAO extends JpaRepository<User, Integer> {
     User findByOpenId(String openId);
 
@@ -35,4 +37,8 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.isViewedJoinMyApplet = false where u.userId = :userId")
     void updateIsViewedJoinMyApplet(@Param("userId") Integer userId);
+
+    @Modifying
+    @Query("update User u set u.logInLastTime = :logInLastTime where u.userId = :userId")
+    void updateLogInLastTime(@Param("logInLastTime") Date logInLastTime, @Param("userId") Integer userId);
 }

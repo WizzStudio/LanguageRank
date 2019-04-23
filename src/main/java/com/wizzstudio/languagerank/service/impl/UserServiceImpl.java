@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService, Constant {
         wxLogInDTO.setSession_key(sessionResult.getSessionKey());
         wxLogInDTO.setUserId(user.getUserId());
 
+        redisUtil.setUser(user.getUserId(), user);
         return wxLogInDTO;
     }
 
@@ -76,12 +77,14 @@ public class UserServiceImpl implements UserService, Constant {
     @Override
     public User saveUser(String openId) {
         User user = new User();
+        Date date = new Date();
         user.setOpenId(openId);
         user.setStudyPlanDay(StudyPlanDayEnum.NULL);
         user.setMyLanguage("未加入");
         user.setIsLogInToday(true);
         user.setIsViewedJoinMyApplet(true);
-        user.setLogInTime(new Date());
+        user.setLogInTime(date);
+        user.setLogInLastTime(date);
 
         return userDAO.save(user);
     }

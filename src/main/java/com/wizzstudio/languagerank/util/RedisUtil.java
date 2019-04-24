@@ -65,7 +65,7 @@ public class RedisUtil {
             userRelationship.setUserOne(userOne);
             userRelationship.setUserTwo(userTwo);
             userRelationshipDAO.save(userRelationship);
-            log.info("新增好友关系成功");
+            log.info(userOne + "号用户与"+ userTwo + "号用户新增好友关系成功");
         }
     }
 

@@ -81,7 +81,7 @@ public class UserController implements Constant {
         }
 
         redisUtil.setUser(userId, user);
-        log.info("获取用户信息成功");
+        log.info("获取"+ userId + "号用户信息成功");
         return ResultUtil.success(userDTO);
     }
 
@@ -107,12 +107,12 @@ public class UserController implements Constant {
             myAward.put("studyingLanguage", studyingLanguage);
             myAward.put("studyedLanguage", studyedLanguage);
         } catch (NullPointerException e) {
-            log.error("获取我的奖励失败");
+            log.error("获取"+ userId + "号用户我的奖励失败");
             e.printStackTrace();
-            return ResultUtil.error("获取我的奖励失败");
+            return ResultUtil.error("获取"+ userId + "号用户我的奖励失败");
         }
-        log.info("获取我的奖励成功");
-        return ResultUtil.success("获取我的奖励成功", myAward);
+        log.info("获取"+ userId + "号用户我的奖励成功");
+        return ResultUtil.success("获取"+ userId + "号用户我的奖励成功", myAward);
     }
 
     @PostMapping("/updatelanguage")
@@ -141,10 +141,10 @@ public class UserController implements Constant {
         try {
             userService.updateMyLanguage(user, languageName);
         } catch (Exception e) {
-            log.error("更新语言失败");
+            log.error(userId + "号用户更新语言失败");
             e.printStackTrace();
         }
-        log.info("更新语言成功");
+        log.info(userId + "号更新语言成功");
         return ResultUtil.success();
     }
 
@@ -162,10 +162,10 @@ public class UserController implements Constant {
             map.put("studyPlan", studyPlanService.getStudyedStudyPlanDay(languageName,studyPlanDay));
             map.put("isTranspondedList", userService.getUseTranspond(languageName, userId));
 
-            log.info("获取用户学习计划成功");
+            log.info("获取"+ userId + "号用户学习计划成功");
             return ResultUtil.success(map);
         }else {
-            log.error("获取用户学习计划失败");
+            log.error("获取"+ userId + "号用户学习计划失败");
             return ResultUtil.error();
         }
     }
@@ -180,10 +180,10 @@ public class UserController implements Constant {
             User user = redisUtil.getUser(userId);
             userService.updateUserTranspondTable(user, studyPlanDay);
         } catch (Exception e) {
-            log.error("更新用户转发表失败");
+            log.error("更新"+ userId + "号用户转发表失败");
             return ResultUtil.error();
         }
-        log.info("更新用户转发表成功");
+        log.info("更新"+ userId + "号用户转发表成功");
         return ResultUtil.success();
     }
 
@@ -195,7 +195,7 @@ public class UserController implements Constant {
         user.setIsViewedJoinMyApplet(false);
         redisUtil.setUser(userId, user);
 
-        log.info("加入我的小程序弹窗不再弹出");
+        log.info(userId + "号用户加入我的小程序弹窗不再弹出");
         return ResultUtil.success();
     }
 
@@ -207,7 +207,7 @@ public class UserController implements Constant {
         try {
             redisUtil.setUserRelationship(userOne, userTwo);
         } catch (Exception e) {
-            log.error("新增好友关系失败");
+            log.error(userOne + "号用户与"+ userTwo + "号用户新增好友关系失败");
             e.printStackTrace();
         }
         return ResultUtil.success();
@@ -224,10 +224,10 @@ public class UserController implements Constant {
         try {
             integerList = stringList.stream().map(Integer::parseInt).collect(Collectors.toList());
         } catch (Exception e) {
-            log.error("获取好友关系失败");
+            log.error("获取"+ userId + "号用户好友关系失败");
             e.printStackTrace();
         }
-        log.info("获取好友关系成功");
+        log.info("获取"+ userId + "号用户好友关系成功");
         return ResultUtil.success(integerList);
     }
 

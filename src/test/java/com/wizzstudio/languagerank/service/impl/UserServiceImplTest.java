@@ -1,6 +1,7 @@
 package com.wizzstudio.languagerank.service.impl;
 
 import com.wizzstudio.languagerank.service.UserService;
+import com.wizzstudio.languagerank.util.RedisUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,16 @@ public class UserServiceImplTest {
 
     @Autowired
     UserService userService;
+    @Autowired
+    RedisUtil redisUtil;
 
     @Test
     public void saveUserTest() {
 //        assertNotNull(userService.saveUser("abcdefg"));
+    }
+
+    @Test
+    public void getUser() {
+        System.out.println(redisUtil.getUser(25));
     }
 }

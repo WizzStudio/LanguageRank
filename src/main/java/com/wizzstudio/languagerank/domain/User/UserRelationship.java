@@ -1,7 +1,7 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.User;
 
 /*
-Created by Ben Wen on 2019/3/19.
+Created by Ben Wen on 2019/4/18.
 */
 
 import lombok.Data;
@@ -12,20 +12,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-// 雇主需求详情页面第四部分
-@Data
 @Entity
-public class LanguageCity {
+@Data
+public class UserRelationship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private String languageName;
+    private Integer userOne;
 
     @NotNull
-    private String languageCity;
-
-    @NotNull
-    private Integer cityPostNumber;
+    private Integer userTwo;
 }

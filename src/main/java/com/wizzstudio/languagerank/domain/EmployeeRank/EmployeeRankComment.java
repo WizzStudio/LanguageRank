@@ -1,4 +1,8 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.EmployeeRank;
+
+/*
+Created by Ben Wen on 2019/4/24.
+*/
 
 import lombok.Data;
 
@@ -9,12 +13,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-// 语言热度榜
-// 该表由爬虫爬取，因数据更新频率不同，第一版小程序暂不保存过期数据
-@Entity
 @Data
-public class FixedRank {
-
+@Entity
+public class EmployeeRankComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,11 +24,11 @@ public class FixedRank {
     private String languageName;
 
     @NotNull
-    private Double TIOBEExponent;
+    private Integer userId;
 
     @NotNull
-    private Double IEEEExponent;
+    private String comment;
 
     @NotNull
-    private Double BaiduExponent;
+    private Date saveTime;
 }

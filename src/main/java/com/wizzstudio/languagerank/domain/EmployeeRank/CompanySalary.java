@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.EmployeeRank;
 
 
 import lombok.Data;

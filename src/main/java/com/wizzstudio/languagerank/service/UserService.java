@@ -5,10 +5,10 @@ Created by Ben Wen on 2019/3/9.
 */
 
 import com.wizzstudio.languagerank.domain.Award;
-import com.wizzstudio.languagerank.domain.StudyPlan;
-import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.domain.User.User;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
+import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import me.chanjar.weixin.common.error.WxErrorException;
 
@@ -69,6 +69,11 @@ public interface UserService {
      * 关闭加入我的小程序弹窗
      */
     void updateIsViewedJoinMyApplet(Integer userId);
+
+//    /**
+//     * 更改用户显示评论的顺序
+//     */
+//    void updateCommentDisplayMode(CommentDisplayModeEnum commentDisplayMode, Integer userId);
 
     /**
      * 获取用户转发表

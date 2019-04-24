@@ -1,5 +1,6 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.User;
 
+import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import lombok.Data;
 
@@ -36,7 +37,14 @@ public class User implements Serializable {
     @NotNull
     private Boolean isViewedJoinMyApplet;
 
+    @NotNull
     private Date logInTime;
 
+    @NotNull
     private Date logInLastTime;
+
+//    // 用户评论显示顺序
+//    @NotNull
+//    @Enumerated(value = EnumType.STRING)
+//    private CommentDisplayModeEnum commentDisplayMode;
 }

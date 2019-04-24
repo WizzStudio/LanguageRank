@@ -1,7 +1,7 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.EmployeeRank;
 
 /*
-Created by Ben Wen on 2019/4/18.
+Created by Ben Wen on 2019/3/19.
 */
 
 import lombok.Data;
@@ -12,16 +12,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-@Entity
+// 雇主需求详情页面第三部分
 @Data
-public class UserRelationship {
+@Entity
+public class CompanyPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private Integer userOne;
+    private String languageName;
 
     @NotNull
-    private Integer userTwo;
+    private String companyName;
+
+    @NotNull
+    private Integer companyPostNumber;
 }

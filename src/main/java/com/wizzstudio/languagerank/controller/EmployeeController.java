@@ -5,10 +5,9 @@ Created by Ben Wen on 2019/3/22.
 */
 
 import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.domain.CompanyPost;
-import com.wizzstudio.languagerank.domain.CompanySalary;
-import com.wizzstudio.languagerank.domain.LanguageCity;
-import com.wizzstudio.languagerank.domain.LanguagePost;
+import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
+import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
+import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
 import com.wizzstudio.languagerank.dto.LanguagePostDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;

@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.dao.UserDAO;
 Created by Ben Wen on 2019/3/26.
 */
 
-import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
+import com.wizzstudio.languagerank.domain.User.UserStudyedLanguage;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

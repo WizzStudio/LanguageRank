@@ -12,11 +12,12 @@ import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
 import com.wizzstudio.languagerank.dao.UserDAO.UserStudyedLanguageDAO;
 import com.wizzstudio.languagerank.dao.UserDAO.UserTranspondDAO;
 import com.wizzstudio.languagerank.domain.Award;
-import com.wizzstudio.languagerank.domain.User;
-import com.wizzstudio.languagerank.domain.UserStudyedLanguage;
-import com.wizzstudio.languagerank.domain.UserTranspond;
+import com.wizzstudio.languagerank.domain.User.User;
+import com.wizzstudio.languagerank.domain.User.UserStudyedLanguage;
+import com.wizzstudio.languagerank.domain.User.UserTranspond;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
+import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
@@ -85,6 +86,8 @@ public class UserServiceImpl implements UserService, Constant {
         user.setIsViewedJoinMyApplet(true);
         user.setLogInTime(date);
         user.setLogInLastTime(date);
+//        // 默认优先显示最新的评论
+//        user.setCommentDisplayMode(CommentDisplayModeEnum.NEW_COMMENT_PRIORITIZED);
 
         return userDAO.save(user);
     }
@@ -245,6 +248,11 @@ public class UserServiceImpl implements UserService, Constant {
     public void updateIsViewedJoinMyApplet(Integer userId) {
         userDAO.updateIsViewedJoinMyApplet(userId);
     }
+
+//    @Override
+//    public void updateCommentDisplayMode(CommentDisplayModeEnum commentDisplayMode, Integer userId) {
+//        userDAO.updateCommentDisplayMode(commentDisplayMode, userId);
+//    }
 
     @Override
     public List<Award> findStudyedLanguageAwardByUserId(User user) {

@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.config;
 
-import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.domain.User.User;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.User;
 
 /*
 Created by Ben Wen on 2019/3/20.

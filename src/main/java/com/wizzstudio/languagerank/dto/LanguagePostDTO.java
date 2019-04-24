@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.dto;
 Created by Ben Wen on 2019/4/4.
 */
 
-import com.wizzstudio.languagerank.domain.LanguagePost;
+import com.wizzstudio.languagerank.domain.EmployeeRank.LanguagePost;
 import lombok.Data;
 
 import java.util.List;

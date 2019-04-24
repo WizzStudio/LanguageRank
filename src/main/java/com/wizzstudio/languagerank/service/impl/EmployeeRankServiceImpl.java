@@ -7,6 +7,10 @@ import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.dao.employeerankDAO.LanguageCityDAO;
 import com.wizzstudio.languagerank.domain.*;
+import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
+import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
+import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
+import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
 import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
@@ -14,14 +18,10 @@ import com.wizzstudio.languagerank.util.DateUtil;
 import com.wizzstudio.languagerank.util.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service

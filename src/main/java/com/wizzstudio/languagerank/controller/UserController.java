@@ -7,7 +7,7 @@ Created by Ben Wen on 2019/3/9.
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.domain.Award;
-import com.wizzstudio.languagerank.domain.User;
+import com.wizzstudio.languagerank.domain.User.User;
 import com.wizzstudio.languagerank.dto.UserDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.*;
@@ -46,7 +46,7 @@ public class UserController implements Constant {
     RedisUtil redisUtil;
 
     @PostMapping("/userinfo")
-    public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject,HttpServletRequest request) {
+    public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
 
 //        User user =  userService.findByUserId(userId);
@@ -86,7 +86,7 @@ public class UserController implements Constant {
     }
 
     @PostMapping("/myaward")
-    public ResponseEntity getMyAward(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
+    public ResponseEntity getMyAward(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
 
 //        User user =  userService.findByUserId(userId);
@@ -117,7 +117,7 @@ public class UserController implements Constant {
 
     @PostMapping("/updatelanguage")
     @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity updateLanguage(@RequestBody JSONObject jsonObject, HttpServletRequest request){
+    public ResponseEntity updateLanguage(@RequestBody JSONObject jsonObject){
         Integer userId = jsonObject.getInteger("userId");
         String languageName = jsonObject.getString("languageName");
 
@@ -143,13 +143,14 @@ public class UserController implements Constant {
         } catch (Exception e) {
             log.error(userId + "号用户更新语言失败");
             e.printStackTrace();
+            return ResultUtil.error();
         }
         log.info(userId + "号更新语言成功");
         return ResultUtil.success();
     }
 
     @PostMapping("/studyplan")
-    public ResponseEntity getStudyPlan(@RequestBody JSONObject jsonObject,HttpServletRequest request){
+    public ResponseEntity getStudyPlan(@RequestBody JSONObject jsonObject){
         Integer userId = jsonObject.getInteger("userId");
 
 //        User user =  userService.findByUserId(userId);
@@ -209,6 +210,7 @@ public class UserController implements Constant {
         } catch (Exception e) {
             log.error(userOne + "号用户与"+ userTwo + "号用户新增好友关系失败");
             e.printStackTrace();
+            return ResultUtil.error();
         }
         return ResultUtil.success();
     }
@@ -226,6 +228,7 @@ public class UserController implements Constant {
         } catch (Exception e) {
             log.error("获取"+ userId + "号用户好友关系失败");
             e.printStackTrace();
+            return ResultUtil.error();
         }
         log.info("获取"+ userId + "号用户好友关系成功");
         return ResultUtil.success(integerList);

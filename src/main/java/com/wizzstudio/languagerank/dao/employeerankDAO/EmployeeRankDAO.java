@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.dao.employeerankDAO;
 
-import com.wizzstudio.languagerank.domain.EmployeeRank;
+import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

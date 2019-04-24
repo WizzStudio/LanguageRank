@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.domain.EmployeeRank;
-import com.wizzstudio.languagerank.domain.FixedFinalExponent;
+import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
+import com.wizzstudio.languagerank.domain.FixedRank.FixedFinalExponent;
 import com.wizzstudio.languagerank.service.AdminService;
 import org.springframework.stereotype.Service;
 

@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.dao.fixedrankDAO;
 Created by Ben Wen on 2019/3/24.
 */
 
-import com.wizzstudio.languagerank.domain.FixedFinalExponent;
+import com.wizzstudio.languagerank.domain.FixedRank.FixedFinalExponent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

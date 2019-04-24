@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.dao.fixedrankDAO;
 
-import com.wizzstudio.languagerank.domain.FixedRank;
+import com.wizzstudio.languagerank.domain.FixedRank.FixedRank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FixedRankDAO extends JpaRepository<FixedRank, Integer> {

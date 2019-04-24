@@ -1,6 +1,5 @@
 package com.wizzstudio.languagerank.service;
 
-import com.wizzstudio.languagerank.domain.FixedFinalExponent;
 import com.wizzstudio.languagerank.dto.FinalRankDTO;
 
 import java.util.List;

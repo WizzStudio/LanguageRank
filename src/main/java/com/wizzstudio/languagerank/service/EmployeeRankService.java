@@ -1,6 +1,5 @@
 package com.wizzstudio.languagerank.service;
 
-import com.wizzstudio.languagerank.domain.EmployeeRank;
 import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
 
 import java.util.List;

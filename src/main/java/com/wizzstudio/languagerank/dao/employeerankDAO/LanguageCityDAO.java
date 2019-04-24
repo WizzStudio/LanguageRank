@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.dao.employeerankDAO;
 Created by Ben Wen on 2019/3/22.
 */
 
-import com.wizzstudio.languagerank.domain.LanguageCity;
+import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

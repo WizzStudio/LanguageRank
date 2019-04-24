@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.FixedRank;
 
 /*
 Created by Ben Wen on 2019/3/18.

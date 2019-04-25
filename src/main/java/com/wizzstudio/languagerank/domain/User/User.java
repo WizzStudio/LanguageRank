@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.domain.User;
 
-import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
+import com.wizzstudio.languagerank.domain.Clazz.Clazz;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import lombok.Data;
 
@@ -23,6 +23,12 @@ public class User implements Serializable {
     @NotNull
     private String openId;
 
+    @NotNull
+    private String nickName;
+
+    @NotNull
+    private String avatarUrl;
+
     // 个人主页上学习的语言
     private String myLanguage;
 
@@ -42,6 +48,17 @@ public class User implements Serializable {
 
     @NotNull
     private Date logInLastTime;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            // 连接表的表名
+            name = "UserClazz",
+            // 当前实体对应表的主键列
+            joinColumns = {@JoinColumn(name = "userId")},
+            // 当前实体的关联实体对应表的主键列
+            inverseJoinColumns = {@JoinColumn(name = "clazzId")}
+    )
+    private List<Clazz> clazzList;
 
 //    // 用户评论显示顺序
 //    @NotNull

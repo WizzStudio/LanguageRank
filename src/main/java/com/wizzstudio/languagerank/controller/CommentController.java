@@ -5,9 +5,6 @@ Created by Ben Wen on 2019/4/24.
 */
 
 import com.alibaba.fastjson.JSONObject;
-import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRankComment;
-import com.wizzstudio.languagerank.domain.FixedRank.FixedRankComment;
-import com.wizzstudio.languagerank.domain.User.User;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.service.CommentService;
 import com.wizzstudio.languagerank.service.UserService;
@@ -20,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -48,16 +45,17 @@ public class CommentController {
         }
 
 //        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
-        List<EmployeeRankComment> list;
+//        List<CommentDTO> list;
+        Map<String, Object> map;
         try {
-             list =  commentService.getEmployeeRankComment(languageName, pageIndex, commentDisplayMode);
+             map =  commentService.getEmployeeRankComment(languageName, pageIndex, commentDisplayMode);
         } catch (Exception e) {
             log.error("获取雇主需求详情页的评论失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
         log.info("获取雇主需求详情页的评论成功");
-        return ResultUtil.success(list);
+        return ResultUtil.success(map);
     }
 
     @PostMapping("getfixedrankcomment")
@@ -75,16 +73,47 @@ public class CommentController {
         }
 
 //        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
-        List<FixedRankComment> list;
+//        List<CommentDTO> list;
+        Map<String, Object> map;
         try {
-            list =  commentService.getFixedRankComment(languageName, pageIndex, commentDisplayMode);
+            map = commentService.getFixedRankComment(languageName, pageIndex, commentDisplayMode);
         } catch (Exception e) {
             log.error("获取语言主页的评论失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
         log.info("获取语言主页的评论成功");
-        return ResultUtil.success(list);
+
+        return ResultUtil.success(map);
+    }
+
+    @PostMapping("getclazzcomment")
+    public ResponseEntity getClazzComment(@RequestBody JSONObject jsonObject) {
+        Integer clazzId = jsonObject.getInteger("clazzId");
+        Integer pageIndex = jsonObject.getInteger("pageIndex");
+//        Integer userId = jsonObject.getInteger("userId");
+        Integer commentDisplayModeInteger = jsonObject.getInteger("commentDisplayMode");
+
+        CommentDisplayModeEnum commentDisplayMode;
+        if (commentDisplayModeInteger == 1) {
+            commentDisplayMode = CommentDisplayModeEnum.NEW_COMMENT_PRIORITIZED;
+        } else {
+            commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
+        }
+
+//        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
+//        List<CommentDTO> list;
+        Map<String, Object> map;
+        try {
+            map = commentService.getClazzComment(clazzId, pageIndex, commentDisplayMode);
+        } catch (Exception e) {
+            log.error("获取班级评论失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+        log.info("获取班级评论成功");
+
+        return ResultUtil.success(map);
     }
 
     @PostMapping("/updateemployeerankcomment")
@@ -110,6 +139,19 @@ public class CommentController {
             return ResultUtil.error();
         }
         log.info("更新语言主页的评论成功");
+        return ResultUtil.success();
+    }
+
+    @PostMapping("/updateclazzcomment")
+    public ResponseEntity updateClazzComment(@RequestBody JSONObject jsonObject) {
+        try {
+            commentService.updateClazzComment(jsonObject);
+        } catch (Exception e) {
+            log.error("更新班级评论失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+        log.info("更新班级评论成功");
         return ResultUtil.success();
     }
 

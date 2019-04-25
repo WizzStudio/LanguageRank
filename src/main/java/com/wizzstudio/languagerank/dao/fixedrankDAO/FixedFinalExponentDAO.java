@@ -19,7 +19,7 @@ public interface FixedFinalExponentDAO extends JpaRepository<FixedFinalExponent,
     List<FixedFinalExponent> findTwoByLanguageName(@Param("languageName")String languageName);
 
     @Query(nativeQuery = true,value = "select * from fixed_final_exponent where language_name = :languageName  " +
-            "order by update_time DESC limit 1,8")
+            "order by update_time DESC limit 7")
     List<FixedFinalExponent> findLastSevenDaysByLanguageName(@Param("languageName")String languageName);
 
     // 排序语言热度最终指数前十的语言

@@ -6,6 +6,7 @@ Created by Ben Wen on 2019/3/9.
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.dao.*;
 import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
@@ -61,7 +62,8 @@ public class UserServiceImpl implements UserService, Constant {
         // 通过openId在数据库中寻找是否存在该用户，不存在则写入数据库
         User user = findByOpenId(sessionResult.getOpenid());
         if (user == null) {
-            user = saveUser(sessionResult.getOpenid());
+            WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
+            user = saveUser(sessionResult.getOpenid(), wxUserInfo.getNickName(), wxUserInfo.getAvatarUrl());
         }
 
         WxLogInDTO wxLogInDTO = new WxLogInDTO();
@@ -76,10 +78,12 @@ public class UserServiceImpl implements UserService, Constant {
     // 只通过openId新增用户，myLanguage默认为空，studyPlanDay默认为FIRST_DAY
     // 只在login中调用，调用时表示正在注册，isLoginToday设置为true
     @Override
-    public User saveUser(String openId) {
+    public User saveUser(String openId, String nickName, String avatarUrl) {
         User user = new User();
         Date date = new Date();
         user.setOpenId(openId);
+        user.setNickName(nickName);
+        user.setAvatarUrl(avatarUrl);
         user.setStudyPlanDay(StudyPlanDayEnum.NULL);
         user.setMyLanguage("未加入");
         user.setIsLogInToday(true);

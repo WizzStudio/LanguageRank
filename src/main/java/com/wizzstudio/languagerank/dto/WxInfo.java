@@ -10,4 +10,8 @@ import lombok.Data;
 @Data
 public class WxInfo {
     public String code;
+
+    private String encryptedData;
+
+    private String iv;
 }

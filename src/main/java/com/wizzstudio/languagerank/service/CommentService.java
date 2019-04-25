@@ -7,20 +7,27 @@ Created by Ben Wen on 2019/4/24.
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRankComment;
 import com.wizzstudio.languagerank.domain.FixedRank.FixedRankComment;
+import com.wizzstudio.languagerank.dto.CommentDTO;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CommentService {
     /**
      * 获取雇主需求详情页的评论
      */
-    List<EmployeeRankComment> getEmployeeRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode);
+    Map<String, Object> getEmployeeRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode);
 
     /**
      * 获取语言主页的评论
      */
-    List<FixedRankComment> getFixedRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode);
+    Map<String, Object> getFixedRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode);
+
+    /**
+     * 获取班级评论
+     */
+    Map<String, Object> getClazzComment(Integer clazzId, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode);
 
     /**
      * 新增雇主需求详情页的评论
@@ -31,4 +38,9 @@ public interface CommentService {
      * 新增语言主页的评论
      */
     void updateFixedRankComment(JSONObject jsonObject);
+
+    /**
+     * 新增班级评论
+     */
+    void updateClazzComment(JSONObject jsonObject);
 }

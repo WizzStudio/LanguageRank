@@ -28,7 +28,7 @@ public interface UserService {
      *
      * @param openId 用户openId
      */
-    User saveUser(String openId);
+    User saveUser(String openId, String nickName, String avatarUrl);
 
     /**
      * 通过openId获取用户信息

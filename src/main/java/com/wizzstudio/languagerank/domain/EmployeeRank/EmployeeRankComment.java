@@ -4,12 +4,10 @@ package com.wizzstudio.languagerank.domain.EmployeeRank;
 Created by Ben Wen on 2019/4/24.
 */
 
+import com.wizzstudio.languagerank.domain.User.User;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -24,7 +22,9 @@ public class EmployeeRankComment {
     private String languageName;
 
     @NotNull
-    private Integer userId;
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "userId")
+    private User user;
 
     @NotNull
     private String comment;

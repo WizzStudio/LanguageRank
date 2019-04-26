@@ -1,5 +1,8 @@
 package com.wizzstudio.languagerank.aspect;
 
+/*
+Created by Ben Wen on 2019/4/26.
+*/
 
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.constants.Constant;
@@ -11,13 +14,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.transaction.annotation.Transactional;
 
 @Aspect
 @Configuration
-public class StatisticAspect implements Constant {
-
+public class LanguageCountAspect implements Constant {
     @Autowired
     private LanguageCountDAO languageCountDAO;
 
@@ -43,7 +44,5 @@ public class StatisticAspect implements Constant {
                 break;
             }
         }
-
-
     }
 }

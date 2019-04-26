@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.domain.Clazz;
 Created by Ben Wen on 2019/4/25.
 */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wizzstudio.languagerank.domain.User.User;
 import lombok.Data;
 
@@ -22,12 +23,15 @@ public class Clazz {
     private String clazzName;
 
     @NotNull
+    // 班长userId，当班长未定时默认为0
     private Integer monitor;
 
+    // 该班级学生人数(写切面自增还是写redis？？？)
     @NotNull
     private Integer studentNumber;
 
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "clazzList")
     @JoinTable(
             name = "UserClazz",
             joinColumns = {@JoinColumn(name = "clazzId")},

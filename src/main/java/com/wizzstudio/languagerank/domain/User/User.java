@@ -1,6 +1,10 @@
 package com.wizzstudio.languagerank.domain.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wizzstudio.languagerank.domain.Clazz.Clazz;
+import com.wizzstudio.languagerank.domain.Clazz.ClazzComment;
+import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRankComment;
+import com.wizzstudio.languagerank.domain.FixedRank.FixedRankComment;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import lombok.Data;
 
@@ -38,6 +42,9 @@ public class User implements Serializable {
     private StudyPlanDayEnum studyPlanDay;
 
     @NotNull
+    private Integer score;
+
+    @NotNull
     private Boolean isLogInToday;
 
     @NotNull
@@ -49,7 +56,23 @@ public class User implements Serializable {
     @NotNull
     private Date logInLastTime;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    @JsonIgnoreProperties(value = "user")
+    List<EmployeeRankComment> employeeRankCommentList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    @JsonIgnoreProperties(value = "user")
+    List<FixedRankComment> fixedRankCommentList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId")
+    @JsonIgnoreProperties(value = "user")
+    List<ClazzComment> clazzCommentList;
+
     @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "userList")
     @JoinTable(
             // 连接表的表名
             name = "UserClazz",

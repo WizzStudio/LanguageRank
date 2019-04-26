@@ -24,4 +24,10 @@ public class UserClazz {
 
     @NotNull
     private Integer clazzId;
+
+    @NotNull
+    private Integer allStudyPlanDay;
+
+    @NotNull
+    private Integer uninterruptedStudyPlanDay;
 }

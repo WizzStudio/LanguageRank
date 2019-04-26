@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.domain.Clazz;
 
 /*
-Created by Ben Wen on 2019/4/25.
+Created by Ben Wen on 2019/4/26.
 */
 
 import lombok.Data;
@@ -14,17 +14,20 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-public class ClazzStudyPlan {
+public class UserJoinedClazz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private Integer clazzId;
+    private Integer userId;
 
     @NotNull
-    private String content;
+    private Integer joinedClazz;
 
     @NotNull
     private Integer studyPlanDay;
+
+    @NotNull
+    private Boolean isJoinedToday;
 }

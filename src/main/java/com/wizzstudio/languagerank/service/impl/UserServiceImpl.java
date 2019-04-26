@@ -67,9 +67,10 @@ public class UserServiceImpl implements UserService, Constant {
         }
 
         WxLogInDTO wxLogInDTO = new WxLogInDTO();
-        wxLogInDTO.setOpenId(sessionResult.getOpenid());
-        wxLogInDTO.setSession_key(sessionResult.getSessionKey());
+        wxLogInDTO.setOpenId(user.getOpenId());
         wxLogInDTO.setUserId(user.getUserId());
+        wxLogInDTO.setNickName(user.getNickName());
+        wxLogInDTO.setAvatarUrl(user.getAvatarUrl());
 
         redisUtil.setUser(user.getUserId(), user);
         return wxLogInDTO;

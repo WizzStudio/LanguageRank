@@ -14,5 +14,7 @@ public class WxLogInDTO {
 
     private Integer userId;
 
-    private String session_key;
+    private String nickName;
+
+    private String avatarUrl;
 }

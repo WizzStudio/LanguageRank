@@ -4,6 +4,8 @@ package com.wizzstudio.languagerank.domain.Clazz;
 Created by Ben Wen on 2019/4/25.
 */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wizzstudio.languagerank.domain.Comment;
 import com.wizzstudio.languagerank.domain.User.User;
 import lombok.Data;
 
@@ -13,7 +15,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class ClazzComment {
+public class ClazzComment implements Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,6 +27,7 @@ public class ClazzComment {
     @NotNull
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "userId")
+    @JsonIgnoreProperties(value = "clazzCommentList")
     private User user;
 
     @NotNull

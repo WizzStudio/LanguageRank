@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @Entity
@@ -26,8 +27,14 @@ public class UserClazz {
     private Integer clazzId;
 
     @NotNull
+    private Date joinedTime;
+
+    @NotNull
     private Integer allStudyPlanDay;
 
     @NotNull
     private Integer uninterruptedStudyPlanDay;
+
+    @NotNull
+    private Integer worship;
 }

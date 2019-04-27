@@ -4,8 +4,9 @@ package com.wizzstudio.languagerank.dao.UserDAO;
 Created by Ben Wen on 2019/3/16.
 */
 
+import com.wizzstudio.languagerank.domain.Clazz.Clazz;
 import com.wizzstudio.languagerank.domain.User.User;
-import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
+import com.wizzstudio.languagerank.dto.UserClazzListDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 
 public interface UserDAO extends JpaRepository<User, Integer> {
     User findByOpenId(String openId);
@@ -42,6 +44,9 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.logInLastTime = :logInLastTime where u.userId = :userId")
     void updateLogInLastTime(@Param("logInLastTime") Date logInLastTime, @Param("userId") Integer userId);
+
+    @Query("select u.clazzList from User u where u.userId = :userId")
+    List<Clazz> findUserClazz(@Param("userId") Integer userId);
 
 //    @Modifying
 //    @Query("update User u set u.commentDisplayMode = :commentDisplayMode where u.userId = :userId")

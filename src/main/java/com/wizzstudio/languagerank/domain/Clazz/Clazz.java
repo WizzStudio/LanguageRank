@@ -23,6 +23,12 @@ public class Clazz {
     private String clazzName;
 
     @NotNull
+    private String clazzTag;
+
+    @NotNull
+    private String clazzImage;
+
+    @NotNull
     // 班长userId，当班长未定时默认为0
     private Integer monitor;
 

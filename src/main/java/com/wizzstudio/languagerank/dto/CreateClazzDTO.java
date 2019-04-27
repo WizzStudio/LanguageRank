@@ -13,6 +13,10 @@ import java.util.List;
 public class CreateClazzDTO {
     private String clazzName;
 
+    private String clazzTag;
+
+    private String clazzImage;
+
     private Integer monitor;
 
     private List<ClazzStudyPlan> clazzStudyPlanList;

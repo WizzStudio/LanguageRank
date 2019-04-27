@@ -1,20 +1,18 @@
 package com.wizzstudio.languagerank.dto;
 
 /*
-Created by Ben Wen on 2019/4/26.
+Created by Ben Wen on 2019/4/27.
 */
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class ClazzDTO {
+public class UserClazzListDTO {
     private Integer clazzId;
 
     private String clazzName;
 
     private Integer monitor;
 
-    private Integer studentNumber;
+    private String clazzImage;
 }

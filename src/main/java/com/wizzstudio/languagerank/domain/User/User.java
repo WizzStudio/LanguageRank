@@ -42,7 +42,10 @@ public class User implements Serializable {
     private StudyPlanDayEnum studyPlanDay;
 
     @NotNull
-    private Integer score;
+    private Integer totalScore;
+
+    @NotNull
+    private Integer todayScore;
 
     @NotNull
     private Boolean isLogInToday;

@@ -28,11 +28,15 @@ public class Clazz {
     @NotNull
     private String clazzImage;
 
+    /**
+     * 班长userId，当班长未定时默认为0
+     */
     @NotNull
-    // 班长userId，当班长未定时默认为0
     private Integer monitor;
 
-    // 该班级学生人数(写切面自增还是写redis？？？)
+    /**
+     * 该班级学生人数(写切面自增还是写redis？？？)
+     */
     @NotNull
     private Integer studentNumber;
 

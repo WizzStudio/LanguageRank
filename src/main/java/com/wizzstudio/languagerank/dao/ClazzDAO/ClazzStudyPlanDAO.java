@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ClazzStudyPlanDAO extends JpaRepository<ClazzStudyPlan, Integer> {
-
     @Query("select c.content from ClazzStudyPlan c where c.clazzId = :clazzId order by c.studyPlanDay ASC")
     List<String> getAllContent(@Param("clazzId") Integer clazzId);
 }

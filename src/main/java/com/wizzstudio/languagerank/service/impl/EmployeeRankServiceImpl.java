@@ -51,7 +51,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         // 薪资指数算法中的a值
         double a = 0.0;
         // 所需查语言的a值
-        double special_a = 0.0;
+        double specialA = 0.0;
 
         // 计算所有语言的a值，取前十的平均值记为m
         List<Language> languageList = languageDAO.findAll();
@@ -66,7 +66,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
             a = a / 5;
             treeSet.add(a);
             if (languageNameRank.equals(languageName)) {
-                special_a = a;
+                specialA = a;
             }
             a = 0;
         }
@@ -79,7 +79,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
 
         m = m / 10;
-        return 30 * special_a / m;
+        return 30 * specialA / m;
     }
 
     @Override
@@ -87,9 +87,9 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         double topSum = 0.0;
         double allSum = languageCityDAO.findLanguageAllSum(languageName);
         List<LanguageCity> languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++) {
             topSum = topSum + languageCityList.get(i).getCityPostNumber();
-
+        }
         double rate = topSum / allSum;
         return 15 * rate + 5 * (1 - rate);
     }
@@ -102,7 +102,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         int number = 0;
         // 需求量前十语言的平均需求量
         double a = 0.0;
-        int special_number = 0;
+        int specialNumber = 0;
 
         List<Language> languageList = languageDAO.findAll();
 
@@ -116,7 +116,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
                 number += companyPost.getCompanyPostNumber();
             }
             if (languageNameRank.equals(languageName)) {
-                special_number = number;
+                specialNumber = number;
             }
             treeSet.add(number);
             number = 0;
@@ -130,7 +130,7 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
         a = a/10;
 
-        return 20 * special_number / a ;
+        return 20 * specialNumber / a ;
     }
 
     @Override

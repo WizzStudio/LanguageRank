@@ -6,7 +6,7 @@ Created by Ben Wen on 2019/3/16.
 
 import com.wizzstudio.languagerank.domain.Clazz.Clazz;
 import com.wizzstudio.languagerank.domain.User.User;
-import com.wizzstudio.languagerank.dto.UserClazzListDTO;
+import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,6 +20,9 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     User findByOpenId(String openId);
 
     User findByUserId(Integer userId);
+
+    @Query("select u from User u where u.reminderTime = :reminderTime")
+    List<User> findUsersRemindAtWhen(@Param("reminderTime")PunchReminderTimeEnum reminderTime);
 
     @Modifying
     @Query("update User u set u.isLogInToday = false")

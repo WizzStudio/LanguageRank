@@ -33,7 +33,6 @@ public class CommentController {
     public ResponseEntity getEmployeeRankComment(@RequestBody JSONObject jsonObject) {
         String languageName = jsonObject.getString("languageName");
         Integer pageIndex = jsonObject.getInteger("pageIndex");
-//        Integer userId = jsonObject.getInteger("userId");
         Integer commentDisplayModeInteger = jsonObject.getInteger("commentDisplayMode");
 
         CommentDisplayModeEnum commentDisplayMode;
@@ -44,8 +43,6 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-//        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
-//        List<CommentDTO> list;
         Map<String, Object> map;
         try {
              map =  commentService.getEmployeeRankComment(languageName, pageIndex, commentDisplayMode);
@@ -62,7 +59,6 @@ public class CommentController {
     public ResponseEntity getFixedRankComment(@RequestBody JSONObject jsonObject) {
         String languageName = jsonObject.getString("languageName");
         Integer pageIndex = jsonObject.getInteger("pageIndex");
-//        Integer userId = jsonObject.getInteger("userId");
         Integer commentDisplayModeInteger = jsonObject.getInteger("commentDisplayMode");
 
         CommentDisplayModeEnum commentDisplayMode;
@@ -72,8 +68,6 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-//        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
-//        List<CommentDTO> list;
         Map<String, Object> map;
         try {
             map = commentService.getFixedRankComment(languageName, pageIndex, commentDisplayMode);
@@ -91,7 +85,6 @@ public class CommentController {
     public ResponseEntity getClazzComment(@RequestBody JSONObject jsonObject) {
         Integer clazzId = jsonObject.getInteger("clazzId");
         Integer pageIndex = jsonObject.getInteger("pageIndex");
-//        Integer userId = jsonObject.getInteger("userId");
         Integer commentDisplayModeInteger = jsonObject.getInteger("commentDisplayMode");
 
         CommentDisplayModeEnum commentDisplayMode;
@@ -101,8 +94,6 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-//        CommentDisplayModeEnum commentDisplayMode = redisUtil.getUser(userId).getCommentDisplayMode();
-//        List<CommentDTO> list;
         Map<String, Object> map;
         try {
             map = commentService.getClazzComment(clazzId, pageIndex, commentDisplayMode);

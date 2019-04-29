@@ -30,5 +30,5 @@ public class LanguageCompanyCity {
     private String cityName;
 
     @NotNull
-    private Integer LanguagePostNumber;
+    private Integer languagePostNumber;
 }

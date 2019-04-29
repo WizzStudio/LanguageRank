@@ -55,8 +55,9 @@ public class LanguageTendServiceImpl implements LanguageTendService {
             return LanguageTendEnum.INCREASE.getLanguageTend();
         }else if (languageTendNumber < 0){
             return LanguageTendEnum.DECREASE.getLanguageTend();
-        }else
+        }else {
             return LanguageTendEnum.NO_CHANGE.getLanguageTend();
+        }
     }
 
 }

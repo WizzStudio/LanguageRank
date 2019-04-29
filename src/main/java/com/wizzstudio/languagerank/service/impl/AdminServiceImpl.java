@@ -14,13 +14,13 @@ public class AdminServiceImpl implements AdminService {
 
     // 将持久化对象从数据库中拿出再set是可以的
     @Override
-    public void updateFixedExponent(String languageName, Double FArtificialExponent) {
-        fixedFinalExponent.setFArtificialExponent(FArtificialExponent);
+    public void updateFixedExponent(String languageName, Double Fartificialexponent) {
+        fixedFinalExponent.setFArtificialExponent(Fartificialexponent);
     }
 
     @Override
-    public void updateEmployeeExponent(String languageName, Double EArtificialExponent) {
-        employeeRank.setEArtificialExponent(EArtificialExponent);
+    public void updateEmployeeExponent(String languageName, Double Eartificialexponent) {
+        employeeRank.setEArtificialExponent(Eartificialexponent);
     }
 
     @Override

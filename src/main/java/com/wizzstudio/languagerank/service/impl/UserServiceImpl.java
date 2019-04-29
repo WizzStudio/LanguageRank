@@ -19,6 +19,7 @@ import com.wizzstudio.languagerank.domain.User.UserTranspond;
 import com.wizzstudio.languagerank.dto.WxInfo;
 import com.wizzstudio.languagerank.dto.WxLogInDTO;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
+import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
@@ -87,6 +88,11 @@ public class UserServiceImpl implements UserService, Constant {
         user.setAvatarUrl(avatarUrl);
         user.setStudyPlanDay(StudyPlanDayEnum.NULL);
         user.setMyLanguage("未加入");
+        user.setTotalScore(0);
+        user.setTodayScore(0);
+        user.setTotalPunch(0);
+        // 默认10点提醒用户打卡
+        user.setReminderTime(PunchReminderTimeEnum.TEN);
         user.setIsLogInToday(true);
         user.setIsViewedJoinMyApplet(true);
         user.setLogInTime(date);
@@ -164,7 +170,7 @@ public class UserServiceImpl implements UserService, Constant {
             }
         }
         // 如果用户没有学过目前正在学的语言（未加入不算），则将该语言添加至UserStudyedLanguage表
-        if (!isStudyedStudyingLanguage && !user.getMyLanguage().equals("未加入")) {
+        if (!isStudyedStudyingLanguage && !"未加入".equals(user.getMyLanguage())) {
             UserStudyedLanguage userStudyedLanguage = new UserStudyedLanguage();
             userStudyedLanguage.setStudyedLanguage(user.getMyLanguage());
             userStudyedLanguage.setStudyPlanDay(user.getStudyPlanDay());
@@ -225,6 +231,7 @@ public class UserServiceImpl implements UserService, Constant {
            case 7:
                userTranspond.setIsTranspondTheSeventhDay(true);
                break;
+           default: break;
        }
     }
 

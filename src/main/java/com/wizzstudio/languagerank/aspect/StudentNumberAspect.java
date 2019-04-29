@@ -22,15 +22,26 @@ public class StudentNumberAspect {
     ClazzDAO clazzDAO;
 
     @Pointcut("execution(public * com.wizzstudio.languagerank.controller.ClazzController.joinClazz(..))")
-    public void newStudent() {
-    }
+    public void joinClazz() {}
 
-    @AfterReturning("newStudent()")
+    @Pointcut("execution(public * com.wizzstudio.languagerank.controller.ClazzController.quitClazz(..))")
+    public void quitClazz(){}
+
+    @AfterReturning("joinClazz()")
     @Transactional(rollbackFor = Exception.class)
-    public void addLanguageNumber(JoinPoint joinPoint){
+    public void increaseStudentNumber(JoinPoint joinPoint){
         Integer clazzId = ((JSONObject)joinPoint.getArgs()[0]).getInteger("clazzId");
 
         Clazz clazz = clazzDAO.findByClazzId(clazzId);
         clazz.setStudentNumber(clazz.getStudentNumber() + 1);
+    }
+
+    @AfterReturning("quitClazz()")
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteStudentNumber(JoinPoint joinPoint){
+        Integer clazzId = ((JSONObject)joinPoint.getArgs()[0]).getInteger("clazzId");
+
+        Clazz clazz = clazzDAO.findByClazzId(clazzId);
+        clazz.setStudentNumber(clazz.getStudentNumber() - 1);
     }
 }

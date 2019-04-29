@@ -8,8 +8,6 @@ import lombok.Data;
 
 @Data
 public class UserClazzListDTO {
-    private Integer clazzId;
-
     private String clazzName;
 
     private Integer monitor;

@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.domain.Clazz.Clazz;
 import com.wizzstudio.languagerank.dto.AllClazzListDTO;
+import com.wizzstudio.languagerank.dto.ClazzMemberDTO;
 import com.wizzstudio.languagerank.dto.CreateClazzDTO;
 import com.wizzstudio.languagerank.dto.UserClazzListDTO;
 import com.wizzstudio.languagerank.service.ClazzService;
@@ -103,6 +104,24 @@ public class ClazzController implements Constant {
         }
     }
 
+    @PostMapping("/quitclazz")
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseEntity quitClazz(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer clazzId = jsonObject.getInteger("clazzId");
+
+        try {
+            clazzService.quitClazz(userId, clazzId);
+
+            log.info(userId + "号用户退出班级" + clazzId + "成功");
+            return ResultUtil.success();
+        } catch (Exception e) {
+            log.error(userId + "号用户退出班级" + clazzId + "失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
     @PostMapping("/getclazzstudyplan")
     public ResponseEntity getClazzStudyPlan(@RequestBody JSONObject jsonObject) {
         Integer clazzId = jsonObject.getInteger("clazzId");
@@ -119,10 +138,24 @@ public class ClazzController implements Constant {
         }
     }
 
+    @PostMapping("/getspecialclazzmember")
+    public ResponseEntity getSpecialClazzMember(@RequestBody JSONObject jsonObject) {
+        try {
+            Map<String, Object> specialClazzMember = clazzService.getSpecialClazzMember(jsonObject);
+
+            log.info("获取班级特殊成员成功");
+            return ResultUtil.success(specialClazzMember);
+        } catch (Exception e) {
+            log.error("获取班级特殊成员失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
     @PostMapping("/getclazzmember")
     public ResponseEntity getClazzMember(@RequestBody JSONObject jsonObject) {
         try {
-            Map<String, Object> clazzMember = clazzService.getClazzMember(jsonObject);
+            List<ClazzMemberDTO> clazzMember = clazzService.getClazzMember(jsonObject);
 
             log.info("获取班级成员列表成功");
             return ResultUtil.success(clazzMember);

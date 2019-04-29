@@ -23,7 +23,7 @@ public class UserJoinedClazz {
     private Integer userId;
 
     @NotNull
-    private Integer joinedClazz;
+    private Integer joinedClazzId;
 
     @NotNull
     private Integer studyPlanDay;

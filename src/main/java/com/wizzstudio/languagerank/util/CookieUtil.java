@@ -33,7 +33,9 @@ public class CookieUtil {
     public static Cookie getCookie(HttpServletRequest request) {
 
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
+        if (cookies == null) {
+            return null;
+        }
         Cookie cookie;
         try {
             cookie = Arrays.stream(cookies).filter(c -> c.getName().equals(Constant.TOKEN)).collect(Collectors.toList()).get(0);

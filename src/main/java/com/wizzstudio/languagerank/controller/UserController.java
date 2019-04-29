@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +55,7 @@ public class UserController implements Constant {
         UserDTO userDTO = new UserDTO();
 
         // 先新增用户学习计划天数，核心思想是数据库中存储的学习计划天数是用户可见的天数
-        if (!myLanguage.equals("未加入")) {
+        if (!"未加入".equals(myLanguage)) {
             if (!user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED) && user.getIsLogInToday().equals(false)) {
                 StudyPlanDayEnum newStudyPlanDay =  userService.updateStudyPlanDay(user);
                 userDTO.setIsViewedStudyPlan(true);
@@ -129,7 +128,7 @@ public class UserController implements Constant {
             }
         }
         if (!isInStudyPlanLanguage) {
-            return ResultUtil.error(Constant.NOT_READY_lANGUAGE);
+            return ResultUtil.error(Constant.NOT_READY_LANGUAGE);
         }
 
 //        User user = userService.findByUserId(userId);

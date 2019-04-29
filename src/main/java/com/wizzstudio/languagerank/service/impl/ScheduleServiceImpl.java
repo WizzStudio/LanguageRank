@@ -6,12 +6,16 @@ Created by Ben Wen on 2019/4/17.
 
 import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
 import com.wizzstudio.languagerank.dao.UserDAO.UserStudyedLanguageDAO;
+import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.*;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -31,6 +35,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     EmployeeService employeeService;
     @Autowired
     EmployeeRankService employeeRankService;
+    @Autowired
+    PushMessageService pushMessageService;
 
     @Override
     @Scheduled(cron = "0 0 0 * * ?")
@@ -57,20 +63,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         fixedRankService.saveExponent();
     }
 
-//    @Override
-//    @Scheduled(cron = "0 0 0 * * ?")
-//    @Transactional(rollbackFor = Exception.class)
-//    public void resetFixedRankList() {
-//
-//    }
-//
-//    @Override
-//    @Scheduled(cron = "0 0 0 * * ?")
-//    @Transactional(rollbackFor = Exception.class)
-//    public void resetLanguageHomePageMap() {
-//
-//    }
-
     @Override
     @Scheduled(cron = "0 0 0 * * 1")
     @Transactional(rollbackFor = Exception.class)
@@ -86,10 +78,27 @@ public class ScheduleServiceImpl implements ScheduleService {
         employeeRankService.saveExponent();
     }
 
-//    @Override
-//    @Scheduled(cron = "0 0 0 * * 1")
-//    @Transactional(rollbackFor = Exception.class)
-//    public void resetEmployeeRankList() {
-//
-//    }
+    @Override
+    @Scheduled(cron = "0 0 8 * * ?")
+    public void pushMessageAtEight() {
+        pushMessageService.sendTemplateMsg(PunchReminderTimeEnum.EIGHT);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 9 * * ?")
+    public void pushMessageAtNine() {
+        pushMessageService.sendTemplateMsg(PunchReminderTimeEnum.NINE);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 10 * * ?")
+    public void pushMessageAtTen() {
+        pushMessageService.sendTemplateMsg(PunchReminderTimeEnum.TEN);
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 11 * * ?")
+    public void pushMessageAtEleven() {
+        pushMessageService.sendTemplateMsg(PunchReminderTimeEnum.ELEVEN);
+    }
 }

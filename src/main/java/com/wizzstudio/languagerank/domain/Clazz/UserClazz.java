@@ -29,12 +29,15 @@ public class UserClazz {
     @NotNull
     private Date joinedTime;
 
+    /**
+     * 用户在该班级的学习天数
+     */
     @NotNull
     private Integer allStudyPlanDay;
 
+    /**
+     * 用户连续打卡天数
+     */
     @NotNull
     private Integer uninterruptedStudyPlanDay;
-
-    @NotNull
-    private Integer worship;
 }

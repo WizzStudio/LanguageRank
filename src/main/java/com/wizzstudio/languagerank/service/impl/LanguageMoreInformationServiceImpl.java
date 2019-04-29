@@ -320,6 +320,9 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
                 languageDisadvantage.add(" 关于Ruby和Rail的主要批评都是\"慢\"");
                 languageDisadvantage.add("很难找到很好的文档，尤其是对于一些冷门的库或多个库复用");
                 languageDisadvantage.add(" Ruby on Rails应用运行起来不像Java和C写出来那么快");
+
+                break;
+            default: break;
         }
 
         moreLanguageInformation.setCompanyList(companyList);

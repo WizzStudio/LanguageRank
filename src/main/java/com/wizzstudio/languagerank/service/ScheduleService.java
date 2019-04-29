@@ -11,7 +11,7 @@ public interface ScheduleService {
     void updateAllIsLogInToDay();
 
     /**
-     * 每日更新每种语言学习的总人数，并重置每日新增人数
+     * 每日更新每种语言学习的总人数，重置每日新增人数，更新一次FixedRankServiceImpl中的list和LanguageHomePageServiceImpl中的map
      */
     void updateNumber();
 
@@ -20,18 +20,8 @@ public interface ScheduleService {
      */
     void saveFixedRankExponent();
 
-//    /**
-//     * 每日更新一次FixedRankServiceImpl中的list（缓存用）
-//     */
-//    void resetFixedRankList();
-//
-//    /**
-//     * 每日更新一次LanguageHomePageServiceImpl中的map（缓存用）
-//     */
-//    void resetLanguageHomePageMap();
-
     /**
-     * 每周更新一次EmployeeServiceImpl中的list（缓存用）
+     * 每周更新一次EmployeeServiceImpl和EmployeeRankService中的list（缓存用）
      */
     void resetEmployeeList();
 
@@ -40,8 +30,23 @@ public interface ScheduleService {
      */
     void saveEmployeeRankExponent();
 
-//    /**
-//     * 每周更新一次list（缓存用）
-//     */
-//    void resetEmployeeRankList();
+    /**
+     * 每日八点向部分用户推送消息
+     */
+    void pushMessageAtEight();
+
+    /**
+     * 每日九点向部分用户推送消息
+     */
+    void pushMessageAtNine();
+
+    /**
+     * 每日十点向部分用户推送消息
+     */
+    void pushMessageAtTen();
+
+    /**
+     * 每日十一点向部分用户推送消息
+     */
+    void pushMessageAtEleven();
 }

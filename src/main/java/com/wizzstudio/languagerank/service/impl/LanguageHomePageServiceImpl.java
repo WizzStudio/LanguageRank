@@ -4,14 +4,14 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/24.
 */
 
-import com.wizzstudio.languagerank.dao.CompanyDAO;
-import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.FixedRank.FixedFinalExponent;
-import com.wizzstudio.languagerank.dto.CompanyMaxSalaryDTO;
-import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
+import com.wizzstudio.languagerank.DAO.CompanyDAO;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
+import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedFinalExponentDAO;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
+import com.wizzstudio.languagerank.DTO.CompanyMaxSalaryDTO;
+import com.wizzstudio.languagerank.VO.LanguageHomePageVO;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageCountService;
 import com.wizzstudio.languagerank.util.DoubleUtil;
@@ -38,7 +38,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     @Autowired
     CompanyDAO companyDAO;
 
-    private static Map<String, LanguageHomePageDTO> map = new HashMap<>();
+    private static Map<String, LanguageHomePageVO> map = new HashMap<>();
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -47,22 +47,22 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     }
 
     @Override
-    public LanguageHomePageDTO getLanguageHomePage(String languageName) {
+    public LanguageHomePageVO getLanguageHomePage(String languageName) {
         if (map.containsKey(languageName)) {
             map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
             return map.get(languageName);
         }
 
-        LanguageHomePageDTO languageHomePageDTO = new LanguageHomePageDTO();
+        LanguageHomePageVO languageHomePageVO = new LanguageHomePageVO();
 
         List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
-        languageHomePageDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
-        languageHomePageDTO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
-        languageHomePageDTO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
-        languageHomePageDTO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
-        languageHomePageDTO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
-        languageHomePageDTO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
-        languageHomePageDTO.setExponentOfLastSevenDays(fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName));
+        languageHomePageVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+        languageHomePageVO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
+        languageHomePageVO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
+        languageHomePageVO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
+        languageHomePageVO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
+        languageHomePageVO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
+        languageHomePageVO.setExponentOfLastSevenDays(fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName));
 
         List<CompanySalary> companySalaryList = companySalaryDAO.findTopTwoByLanguageName(languageName);
         List<CompanyMaxSalaryDTO> companyMaxSalaryDTOList = new ArrayList<>();
@@ -81,9 +81,9 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         companyTwo.setCompanySymbol(companyDAO.findByCompanyName(companyTwo.getCompanyName()).getCompanySymbol());
         companyMaxSalaryDTOList.add(companyTwo);
 
-        languageHomePageDTO.setCompany(companyMaxSalaryDTOList);
+        languageHomePageVO.setCompany(companyMaxSalaryDTOList);
 
-        map.put(languageName, languageHomePageDTO);
-        return languageHomePageDTO;
+        map.put(languageName, languageHomePageVO);
+        return languageHomePageVO;
     }
 }

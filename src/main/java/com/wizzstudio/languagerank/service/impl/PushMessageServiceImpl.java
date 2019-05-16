@@ -9,8 +9,8 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaTemplateData;
 import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage;
 import com.wizzstudio.languagerank.constants.Constant;
-import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
-import com.wizzstudio.languagerank.domain.User.User;
+import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
+import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.PushMessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +31,12 @@ public class PushMessageServiceImpl implements PushMessageService, Constant {
     @Override
     public void sendTemplateMsg(PunchReminderTimeEnum reminderTime) {
         WxMaMsgService msgService = wxService.getMsgService();
-        List<User> userList = userDAO.findUsersRemindAtWhen(reminderTime);
+        List<User> userList = userDAO.findUsersNotPunchCardTodayAndRemindAtWhen(reminderTime);
         for (User user : userList) {
             List<WxMaTemplateData> data = Arrays.asList(
                     new WxMaTemplateData("keyword1", "来猿圈打卡，记录你的学习"),
                     // 用户打卡总天数
-                    new WxMaTemplateData("keyword2", user.getTotalPunch().toString()),
+                    new WxMaTemplateData("keyword2", user.getTotalPunchCardDay().toString()),
                     // 用户总积分
                     new WxMaTemplateData("keyword3", user.getTotalScore().toString()),
                     new WxMaTemplateData("keyword4", "12点后打卡积分减半哦"),

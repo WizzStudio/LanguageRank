@@ -5,15 +5,16 @@ Created by Ben Wen on 2019/4/24.
 */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.languagerank.VO.CommentVO;
 import com.wizzstudio.languagerank.constants.Constant;
-import com.wizzstudio.languagerank.dao.ClazzDAO.ClazzCommentDAO;
-import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankCommentDAO;
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedRankCommentDAO;
-import com.wizzstudio.languagerank.domain.Clazz.ClazzComment;
-import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRankComment;
-import com.wizzstudio.languagerank.domain.FixedRank.FixedRankComment;
-import com.wizzstudio.languagerank.dto.CommentDTO;
+import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzCommentDAO;
+import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankCommentDAO;
+import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedRankCommentDAO;
+import com.wizzstudio.languagerank.domain.clazz.ClazzComment;
+import com.wizzstudio.languagerank.domain.employeerank.EmployeeRankComment;
+import com.wizzstudio.languagerank.domain.fixedrank.FixedRankComment;
+import com.wizzstudio.languagerank.DTO.CommentMessageDTO;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class CommentServiceImpl implements CommentService, Constant {
 
     @Override
     @SuppressWarnings("serial")
-    public Map<String, Object> getEmployeeRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
+    public CommentVO getEmployeeRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
         // 使用了JavaDoc注释就不能转换为Lambda表达式
         List<EmployeeRankComment> employeeRankCommentList =  employeeRankCommentDAO.findAll(new Specification<EmployeeRankComment>() {
             /**
@@ -57,92 +58,88 @@ public class CommentServiceImpl implements CommentService, Constant {
                 return criteriaBuilder.equal(root.get("languageName"), languageName);
             }
             // 查询第pageIndex - 1页，查询Constant.PAGE_SIZE条记录，排序顺序为commentDisplayMode.getDirection()，以saveTime字段为基准排序
-        }, PageRequest.of(pageIndex - 1, Constant.PAGE_SIZE, new Sort(commentDisplayMode.getDirection(), "saveTime"))).getContent();
+        }, PageRequest.of(pageIndex - 1, Constant.COMMENT_PAGE_SIZE, new Sort(commentDisplayMode.getDirection(), "saveTime"))).getContent();
 
-        List<CommentDTO> commentDTOList = new ArrayList<>();
+        List<CommentMessageDTO> commentMessageDTOList = new ArrayList<>();
         for (int i = 0; i < employeeRankCommentList.size(); i++) {
             EmployeeRankComment employeeRankComment = employeeRankCommentList.get(i);
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setUserId(employeeRankComment.getUser().getUserId());
-            commentDTO.setSaveTime(employeeRankComment.getSaveTime());
-            commentDTO.setComment(employeeRankComment.getComment());
-            commentDTO.setNickName(employeeRankComment.getUser().getNickName());
-            commentDTO.setAvatarUrl(employeeRankComment.getUser().getAvatarUrl());
-            commentDTO.setFloor((pageIndex - 1) * Constant.PAGE_SIZE + i + 1);
+            CommentMessageDTO commentMessageDTO = new CommentMessageDTO();
+            commentMessageDTO.setUserId(employeeRankComment.getUser().getUserId());
+            commentMessageDTO.setSaveTime(employeeRankComment.getSaveTime());
+            commentMessageDTO.setComment(employeeRankComment.getComment());
+            commentMessageDTO.setNickName(employeeRankComment.getUser().getNickName());
+            commentMessageDTO.setAvatarUrl(employeeRankComment.getUser().getAvatarUrl());
+            commentMessageDTO.setFloor((pageIndex - 1) * Constant.COMMENT_PAGE_SIZE + i + 1);
 
-            commentDTOList.add(commentDTO);
+            commentMessageDTOList.add(commentMessageDTO);
         }
 
-        // 是否是最后一页
-        Boolean isAllComment = (employeeRankCommentDAO.getTheNumberOfComment(languageName)/Constant.PAGE_SIZE == pageIndex-1);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("commentList", commentDTOList);
-        map.put("isAllComment", isAllComment);
-        return map;
+        return new CommentVO(
+                commentMessageDTOList,
+                employeeRankCommentDAO.getTheNumberOfComment(languageName),
+                pageIndex,
+                Constant.COMMENT_PAGE_SIZE);
     }
 
     @Override
     @SuppressWarnings("serial")
-    public Map<String, Object> getFixedRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
+    public CommentVO getFixedRankComment(String languageName, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
         List<FixedRankComment> fixedRankCommentList =  fixedRankCommentDAO.findAll(
                 (Specification<FixedRankComment>) (root, criteriaQuery, criteriaBuilder) ->
                         criteriaBuilder.equal(root.get("languageName"), languageName),
-                        PageRequest.of(pageIndex - 1, Constant.PAGE_SIZE,
+                        PageRequest.of(pageIndex - 1, Constant.COMMENT_PAGE_SIZE,
                         new Sort(commentDisplayMode.getDirection(), "saveTime")))
                 .getContent();
 
-        List<CommentDTO> commentDTOList = new ArrayList<>();
+        List<CommentMessageDTO> commentMessageDTOList = new ArrayList<>();
         for (int i = 0; i < fixedRankCommentList.size(); i++) {
             FixedRankComment fixedRankComment = fixedRankCommentList.get(i);
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setUserId(fixedRankComment.getUser().getUserId());
-            commentDTO.setSaveTime(fixedRankComment.getSaveTime());
-            commentDTO.setComment(fixedRankComment.getComment());
-            commentDTO.setNickName(fixedRankComment.getUser().getNickName());
-            commentDTO.setAvatarUrl(fixedRankComment.getUser().getAvatarUrl());
-            commentDTO.setFloor((pageIndex - 1) * Constant.PAGE_SIZE + i + 1);
+            CommentMessageDTO commentMessageDTO = new CommentMessageDTO();
+            commentMessageDTO.setUserId(fixedRankComment.getUser().getUserId());
+            commentMessageDTO.setSaveTime(fixedRankComment.getSaveTime());
+            commentMessageDTO.setComment(fixedRankComment.getComment());
+            commentMessageDTO.setNickName(fixedRankComment.getUser().getNickName());
+            commentMessageDTO.setAvatarUrl(fixedRankComment.getUser().getAvatarUrl());
+            commentMessageDTO.setFloor((pageIndex - 1) * Constant.COMMENT_PAGE_SIZE + i + 1);
 
-            commentDTOList.add(commentDTO);
+            commentMessageDTOList.add(commentMessageDTO);
         }
 
-        Boolean isAllComment = (fixedRankCommentDAO.getTheNumberOfComment(languageName)/Constant.PAGE_SIZE == pageIndex-1);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("commentList", commentDTOList);
-        map.put("isAllComment", isAllComment);
-        return map;
+        return new CommentVO(
+                commentMessageDTOList,
+                fixedRankCommentDAO.getTheNumberOfComment(languageName),
+                pageIndex,
+                Constant.COMMENT_PAGE_SIZE);
     }
 
     @Override
-    public Map<String, Object> getClazzComment(Integer clazzId, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
+    public CommentVO getClazzComment(Integer clazzId, Integer pageIndex, CommentDisplayModeEnum commentDisplayMode) {
         List<ClazzComment> clazzCommentList =  clazzCommentDAO.findAll(
                 (Specification<ClazzComment>) (root, criteriaQuery, criteriaBuilder) ->
                         criteriaBuilder.equal(root.get("clazzId"), clazzId),
-                PageRequest.of(pageIndex - 1, Constant.PAGE_SIZE,
+                PageRequest.of(pageIndex - 1, Constant.COMMENT_PAGE_SIZE,
                         new Sort(commentDisplayMode.getDirection(), "saveTime")))
                 .getContent();
 
-        List<CommentDTO> commentDTOList = new ArrayList<>();
+        List<CommentMessageDTO> commentMessageDTOList = new ArrayList<>();
         for (int i = 0; i < clazzCommentList.size(); i++) {
             ClazzComment clazzComment = clazzCommentList.get(i);
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setUserId(clazzComment.getUser().getUserId());
-            commentDTO.setSaveTime(clazzComment.getSaveTime());
-            commentDTO.setComment(clazzComment.getComment());
-            commentDTO.setNickName(clazzComment.getUser().getNickName());
-            commentDTO.setAvatarUrl(clazzComment.getUser().getAvatarUrl());
-            commentDTO.setFloor((pageIndex - 1) * Constant.PAGE_SIZE + i + 1);
+            CommentMessageDTO commentMessageDTO = new CommentMessageDTO();
+            commentMessageDTO.setUserId(clazzComment.getUser().getUserId());
+            commentMessageDTO.setSaveTime(clazzComment.getSaveTime());
+            commentMessageDTO.setComment(clazzComment.getComment());
+            commentMessageDTO.setNickName(clazzComment.getUser().getNickName());
+            commentMessageDTO.setAvatarUrl(clazzComment.getUser().getAvatarUrl());
+            commentMessageDTO.setFloor((pageIndex - 1) * Constant.COMMENT_PAGE_SIZE + i + 1);
 
-            commentDTOList.add(commentDTO);
+            commentMessageDTOList.add(commentMessageDTO);
         }
 
-        Boolean isAllComment = (clazzCommentDAO.getTheNumberOfComment(clazzId)/Constant.PAGE_SIZE == pageIndex-1);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("commentList", commentDTOList);
-        map.put("isAllComment", isAllComment);
-        return map;
+        return new CommentVO(
+                commentMessageDTOList,
+                clazzCommentDAO.getTheNumberOfComment(clazzId),
+                pageIndex,
+                Constant.COMMENT_PAGE_SIZE);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.service;
 
-import com.wizzstudio.languagerank.dto.FinalRankDTO;
+import com.wizzstudio.languagerank.VO.FinalRankVO;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface FixedRankService {
     /**
      * 获取语言热度榜四个字段
      */
-    List<FinalRankDTO> getFinalRank();
+    List<FinalRankVO> getFinalRank();
 
     /**
      * 每日更新一次list（缓存用）

@@ -5,6 +5,7 @@ Created by Ben Wen on 2019/4/24.
 */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.languagerank.VO.CommentVO;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
 import com.wizzstudio.languagerank.service.CommentService;
 import com.wizzstudio.languagerank.service.UserService;
@@ -13,6 +14,7 @@ import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,16 +45,16 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-        Map<String, Object> map;
         try {
-             map =  commentService.getEmployeeRankComment(languageName, pageIndex, commentDisplayMode);
+            CommentVO commentVO = commentService.getEmployeeRankComment(languageName, pageIndex, commentDisplayMode);
+
+            log.info("获取雇主需求详情页的评论成功");
+            return ResultUtil.success(commentVO);
         } catch (Exception e) {
             log.error("获取雇主需求详情页的评论失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
-        log.info("获取雇主需求详情页的评论成功");
-        return ResultUtil.success(map);
     }
 
     @PostMapping("getfixedrankcomment")
@@ -68,17 +70,16 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-        Map<String, Object> map;
         try {
-            map = commentService.getFixedRankComment(languageName, pageIndex, commentDisplayMode);
+            CommentVO commentVO = commentService.getFixedRankComment(languageName, pageIndex, commentDisplayMode);
+
+            log.info("获取语言主页的评论成功");
+            return ResultUtil.success(commentVO);
         } catch (Exception e) {
             log.error("获取语言主页的评论失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
-        log.info("获取语言主页的评论成功");
-
-        return ResultUtil.success(map);
     }
 
     @PostMapping("getclazzcomment")
@@ -94,17 +95,16 @@ public class CommentController {
             commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
         }
 
-        Map<String, Object> map;
         try {
-            map = commentService.getClazzComment(clazzId, pageIndex, commentDisplayMode);
+            CommentVO commentVO = commentService.getClazzComment(clazzId, pageIndex, commentDisplayMode);
+
+            log.info("获取班级评论成功");
+            return ResultUtil.success(commentVO);
         } catch (Exception e) {
             log.error("获取班级评论失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
-        log.info("获取班级评论成功");
-
-        return ResultUtil.success(map);
     }
 
     @PostMapping("/updateemployeerankcomment")
@@ -134,6 +134,7 @@ public class CommentController {
     }
 
     @PostMapping("/updateclazzcomment")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity updateClazzComment(@RequestBody JSONObject jsonObject) {
         try {
             commentService.updateClazzComment(jsonObject);
@@ -167,7 +168,7 @@ public class CommentController {
 //        }
 //
 //        log.info("更新用户评论显示顺序成功");
-//        User user = redisUtil.getUser(userId);
+//        user user = redisUtil.getUser(userId);
 //        user.setCommentDisplayMode(commentDisplayMode);
 //        redisUtil.setUser(userId, user);
 //

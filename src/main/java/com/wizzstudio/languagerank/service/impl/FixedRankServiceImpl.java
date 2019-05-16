@@ -1,11 +1,11 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedRankDAO;
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
-import com.wizzstudio.languagerank.domain.FixedRank.FixedFinalExponent;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedRankDAO;
+import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedFinalExponentDAO;
+import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
 import com.wizzstudio.languagerank.domain.Language;
-import com.wizzstudio.languagerank.dto.FinalRankDTO;
+import com.wizzstudio.languagerank.VO.FinalRankVO;
 import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
 import com.wizzstudio.languagerank.util.DateUtil;
@@ -67,36 +67,36 @@ public class FixedRankServiceImpl implements FixedRankService {
     }
 
 
-    private static List<FinalRankDTO> list = new ArrayList<>();
+    private static List<FinalRankVO> list = new ArrayList<>();
 
     @Override
-    public List<FinalRankDTO> getFinalRank() {
+    public List<FinalRankVO> getFinalRank() {
         // 测试用
 //        saveExponent();
         if (!list.isEmpty()) {
             return list;
         }
 
-        List<FinalRankDTO> finalRankDTOList = new ArrayList<>();
+        List<FinalRankVO> finalRankVOList = new ArrayList<>();
 
         List<FixedFinalExponent> fixedFinalExponents = fixedFinalExponentDAO.languageFixedRank();
         for (FixedFinalExponent fixedFinalExponent : fixedFinalExponents){
 
-            FinalRankDTO finalRankDTO = new FinalRankDTO();
+            FinalRankVO finalRankVO = new FinalRankVO();
 //            获取前十的语言名称
             String languageName = fixedFinalExponent.getLanguageName();
 
 //            语言热度榜四个字段
-            finalRankDTO.setLanguageName(languageName);
-            finalRankDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
-            finalRankDTO.setFixedFinalExponent(fixedFinalExponentDAO.findTwoByLanguageName(languageName).get(0).getFixedFinalExponent());
-            finalRankDTO.setLanguageTend(languageTendService.findFixedLanguageTendNumber(languageName));
+            finalRankVO.setLanguageName(languageName);
+            finalRankVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            finalRankVO.setFixedFinalExponent(fixedFinalExponentDAO.findTwoByLanguageName(languageName).get(0).getFixedFinalExponent());
+            finalRankVO.setLanguageTend(languageTendService.findFixedLanguageTendNumber(languageName));
 
-            finalRankDTOList.add(finalRankDTO);
+            finalRankVOList.add(finalRankVO);
         }
 
-        list = finalRankDTOList;
-        return finalRankDTOList;
+        list = finalRankVOList;
+        return finalRankVOList;
     }
 
     @Override

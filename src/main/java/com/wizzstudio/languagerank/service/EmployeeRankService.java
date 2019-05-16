@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.service;
 
-import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
+import com.wizzstudio.languagerank.VO.EmployeeRankVO;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface EmployeeRankService {
     /**
      * 获取雇主需求榜的四个字段
      */
-    List<EmployeeRankDTO> getEmployeeRank();
+    List<EmployeeRankVO> getEmployeeRank();
 
     /**
      * 每周更新一次list（缓存用）

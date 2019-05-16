@@ -4,12 +4,12 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/4/11.
 */
 
-import com.wizzstudio.languagerank.dao.CompanyDAO;
-import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
+import com.wizzstudio.languagerank.DAO.CompanyDAO;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
 import com.wizzstudio.languagerank.service.PosterService;
 import com.wizzstudio.languagerank.util.Graphics2DUtils;
 import lombok.extern.slf4j.Slf4j;

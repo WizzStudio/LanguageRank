@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.config;
 Created by Ben Wen on 2019/3/21.
 */
 
-import com.wizzstudio.languagerank.domain.User.User;
+import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.util.serializer.RedisObjectSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

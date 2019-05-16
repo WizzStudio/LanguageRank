@@ -1,9 +1,9 @@
 package com.wizzstudio.languagerank.service.impl;
 
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
-import com.wizzstudio.languagerank.dao.fixedrankDAO.FixedFinalExponentDAO;
-import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
-import com.wizzstudio.languagerank.domain.FixedRank.FixedFinalExponent;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedFinalExponentDAO;
+import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
+import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
 import com.wizzstudio.languagerank.enums.LanguageTendEnum;
 import com.wizzstudio.languagerank.service.LanguageTendService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,8 +4,8 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/6.
 */
 
-import com.wizzstudio.languagerank.dto.WxInfo;
-import com.wizzstudio.languagerank.dto.WxLogInDTO;
+import com.wizzstudio.languagerank.DTO.WxInfoDTO;
+import com.wizzstudio.languagerank.VO.WxLogInVO;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +27,19 @@ public class LogInController {
     UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity logIn(@RequestBody WxInfo loginData, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity logIn(@RequestBody WxInfoDTO loginData, HttpServletRequest request, HttpServletResponse response) {
         try {
            // 生成cookie
 //            String cookie = CookieUtil.tokenGenerate();
 //            System.out.println(loginData.code);
-//            WxLogInDTO wxLogInDTO = userService.userLogin(loginData, cookie);
+//            WxLogInVO wxLogInVO = userService.userLogin(loginData, cookie);
 
-            WxLogInDTO wxLogInDTO = userService.userLogin(loginData);
+            WxLogInVO wxLogInVO = userService.userLogin(loginData);
 
 //            // 将cookie写入response中返回給前端
 //            CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             log.info("微信登录成功");
-           return ResultUtil.success("微信登录成功", wxLogInDTO);
+           return ResultUtil.success("微信登录成功", wxLogInVO);
         } catch (WxErrorException e) {
             log.error("微信登录失败，e={}",e);
             e.printStackTrace();

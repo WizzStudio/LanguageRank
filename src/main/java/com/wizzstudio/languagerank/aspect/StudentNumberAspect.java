@@ -5,8 +5,8 @@ Created by Ben Wen on 2019/4/26.
 */
 
 import com.alibaba.fastjson.JSONObject;
-import com.wizzstudio.languagerank.dao.ClazzDAO.ClazzDAO;
-import com.wizzstudio.languagerank.domain.Clazz.Clazz;
+import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzDAO;
+import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,10 +22,10 @@ public class StudentNumberAspect {
     ClazzDAO clazzDAO;
 
     @Pointcut("execution(public * com.wizzstudio.languagerank.controller.ClazzController.joinClazz(..))")
-    public void joinClazz() {}
+    private void joinClazz() {}
 
     @Pointcut("execution(public * com.wizzstudio.languagerank.controller.ClazzController.quitClazz(..))")
-    public void quitClazz(){}
+    private void quitClazz() {}
 
     @AfterReturning("joinClazz()")
     @Transactional(rollbackFor = Exception.class)

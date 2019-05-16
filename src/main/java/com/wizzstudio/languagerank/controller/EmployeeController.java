@@ -4,11 +4,11 @@ package com.wizzstudio.languagerank.controller;
 Created by Ben Wen on 2019/3/22.
 */
 
-import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
-import com.wizzstudio.languagerank.dto.LanguagePostDTO;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
+import com.wizzstudio.languagerank.VO.LanguagePostVO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import com.wizzstudio.languagerank.service.PosterService;
@@ -37,16 +37,16 @@ public class EmployeeController {
 
     @GetMapping("/{languageName}/post")
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
-        LanguagePostDTO languagePostDTO = new LanguagePostDTO();
+        LanguagePostVO languagePostVO = new LanguagePostVO();
         try {
-            languagePostDTO.setLanguagePostList(employeeService.getLanguagePost(languageName));
-            languagePostDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            languagePostVO.setLanguagePostList(employeeService.getLanguagePost(languageName));
+            languagePostVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
         } catch (Exception e) {
             log.error("获取与"+ languageName + "相关的热门岗位排行失败");
             return ResultUtil.error("获取与"+ languageName + "相关的热门岗位排行失败");
         }
             log.info("获取与"+ languageName + "相关的热门岗位排行成功");
-            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", languagePostDTO);
+            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", languagePostVO);
     }
 
     @GetMapping("/{languageName}/salary")

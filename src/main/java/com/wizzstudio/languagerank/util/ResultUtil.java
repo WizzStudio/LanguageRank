@@ -4,7 +4,7 @@ package com.wizzstudio.languagerank.util;
 Created by Ben Wen on 2019/3/6.
 */
 
-import com.wizzstudio.languagerank.dto.ResultDTO;
+import com.wizzstudio.languagerank.DTO.ResultDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

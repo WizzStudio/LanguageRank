@@ -4,9 +4,9 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/12.
 */
 
-import com.wizzstudio.languagerank.dao.StudyPlanDAO;
+import com.wizzstudio.languagerank.DAO.StudyPlanDAO;
 import com.wizzstudio.languagerank.domain.StudyPlan;
-import com.wizzstudio.languagerank.dto.StudyPlanImageDTO;
+import com.wizzstudio.languagerank.DTO.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 import com.wizzstudio.languagerank.service.StudyPlanService;
 import org.springframework.beans.factory.annotation.Autowired;

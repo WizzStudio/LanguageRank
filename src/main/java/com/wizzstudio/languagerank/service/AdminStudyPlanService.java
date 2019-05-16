@@ -1,6 +1,6 @@
 package com.wizzstudio.languagerank.service;
 
-import com.wizzstudio.languagerank.dto.AdminStudyPlanDTO;
+import com.wizzstudio.languagerank.DTO.AdminStudyPlanDTO;
 
 import java.util.List;
 

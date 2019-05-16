@@ -4,14 +4,14 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/22.
 */
 
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanyPostDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.LanguageCityDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.LanguagePostDAO;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguagePost;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanyPostDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.LanguageCityDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.LanguagePostDAO;
+import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
+import com.wizzstudio.languagerank.domain.employeerank.LanguagePost;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

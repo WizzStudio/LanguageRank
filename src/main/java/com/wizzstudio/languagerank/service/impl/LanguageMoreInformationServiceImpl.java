@@ -4,17 +4,15 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/4/5.
 */
 
-import com.wizzstudio.languagerank.dao.CompanyDAO;
-import com.wizzstudio.languagerank.dao.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.CompanyDAO;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
 import com.wizzstudio.languagerank.domain.Company;
-import com.wizzstudio.languagerank.dto.MoreLanguageInformationDTO;
+import com.wizzstudio.languagerank.VO.MoreLanguageInformationVO;
 import com.wizzstudio.languagerank.enums.LanguageApplicationFieldsEnum;
 import com.wizzstudio.languagerank.enums.LanguageUseEnum;
 import com.wizzstudio.languagerank.service.LanguageMoreInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
     @Autowired
     private CompanyDAO companyDAO;
 
-    private static Map<String, MoreLanguageInformationDTO> map = new HashMap<>();
+    private static Map<String, MoreLanguageInformationVO> map = new HashMap<>();
 
 //    // 需不需要更新是个问题
 //    @Override
@@ -39,7 +37,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
 //    }
 
     @Override
-    public MoreLanguageInformationDTO getMoreLanguageInformation(String languageName) {
+    public MoreLanguageInformationVO getMoreLanguageInformation(String languageName) {
         if (map.containsKey(languageName)) {
             return map.get(languageName);
         }
@@ -50,7 +48,7 @@ public class LanguageMoreInformationServiceImpl implements LanguageMoreInformati
         List<String> languageAdvantage = new ArrayList<>();
         List<String> languageDisadvantage = new ArrayList<>();
 
-        MoreLanguageInformationDTO moreLanguageInformation = new MoreLanguageInformationDTO();
+        MoreLanguageInformationVO moreLanguageInformation = new MoreLanguageInformationVO();
         moreLanguageInformation.setLanguage(languageDAO.findByLanguageName(languageName));
         switch (languageName) {
             case "Java":

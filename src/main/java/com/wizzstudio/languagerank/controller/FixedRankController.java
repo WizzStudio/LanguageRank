@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.controller;
 
-import com.wizzstudio.languagerank.dto.LanguageHomePageDTO;
-import com.wizzstudio.languagerank.dto.MoreLanguageInformationDTO;
+import com.wizzstudio.languagerank.VO.LanguageHomePageVO;
+import com.wizzstudio.languagerank.VO.MoreLanguageInformationVO;
 import com.wizzstudio.languagerank.service.FixedRankService;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import com.wizzstudio.languagerank.service.LanguageMoreInformationService;
@@ -35,10 +35,10 @@ public class FixedRankController {
 
     @GetMapping("/languagerank/{languageName}")
     public ResponseEntity getLanguageHomePage(@PathVariable("languageName")String languageName) {
-        LanguageHomePageDTO languageHomePageDTO = languageHomePageService.getLanguageHomePage(languageName);
-        if (languageHomePageDTO != null) {
+        LanguageHomePageVO languageHomePageVO = languageHomePageService.getLanguageHomePage(languageName);
+        if (languageHomePageVO != null) {
             log.info("获取" + languageName + "主页成功");
-            return ResultUtil.success("获取" + languageName + "主页成功", languageHomePageDTO);
+            return ResultUtil.success("获取" + languageName + "主页成功", languageHomePageVO);
         } else {
             log.error("获取" + languageName + "主页失败");
             return ResultUtil.error("获取" + languageName + "主页失败");
@@ -47,7 +47,7 @@ public class FixedRankController {
 
     @GetMapping("/languagerank/{languageName}/more")
     public ResponseEntity getMoreLanguageInformation(@PathVariable("languageName")String languageName){
-        MoreLanguageInformationDTO moreLanguageInformation = languageMoreInformationService.getMoreLanguageInformation(languageName);
+        MoreLanguageInformationVO moreLanguageInformation = languageMoreInformationService.getMoreLanguageInformation(languageName);
         if (moreLanguageInformation != null) {
             log.info("获取" + languageName + "介绍页成功");
             return ResultUtil.success("获取" + languageName + "介绍页成功", moreLanguageInformation);

@@ -17,17 +17,35 @@ public interface Constant {
      */
     String[] CLAZZ_TAG = {"Java", "Python", "C", "C++", "JavaScript", "PHP"};
 
-    // code返回值为2表示该语言相关学习计划还未准备好，暂时不可加入学习计划
+    /**
+     * code返回值为2表示该语言相关学习计划还未准备好，暂时不可加入学习计划
+     */
     Integer NOT_READY_LANGUAGE = 2;
 
-    // code返回值为3表示该语言正在学习中，不可重复加入
+    /**
+     * code返回值为3表示该语言正在学习中，不可重复加入
+     */
     Integer STUDYING_NOW = 3;
 
-    // 班级标签非法
+    /**
+     * 班级标签非法
+     */
     Integer ILLEGAL_CLAZZ_TAG = 4;
 
-    // 留言一页显示几条
-    Integer PAGE_SIZE = 20;
+    /**
+     * 用户已加入该班级，不可重复加入
+     */
+    Integer JOINED_CLAZZ = 5;
+
+    /**
+     * 评论一页显示几条
+     */
+    Integer COMMENT_PAGE_SIZE = 20;
+
+    /**
+     * 人气排行、勤奋排行与班级所有成员一页显示几条
+     */
+    Integer RANK_PAGE_SIZE = 20;
 
     /**
      * 微信模板消息Id
@@ -38,4 +56,9 @@ public interface Constant {
      * 点击微信模板跳转的路径
      */
     String PAGE_PATH = "";
+
+    /**
+     * 用户每天可获取积分上限
+     */
+    Integer SCORE_UPPER_LIMIT_TODAY = 300;
 }

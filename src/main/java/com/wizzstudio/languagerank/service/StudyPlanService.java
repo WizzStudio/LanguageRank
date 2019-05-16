@@ -5,7 +5,7 @@ Created by Ben Wen on 2019/3/12.
 */
 
 import com.wizzstudio.languagerank.domain.StudyPlan;
-import com.wizzstudio.languagerank.dto.StudyPlanImageDTO;
+import com.wizzstudio.languagerank.DTO.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.enums.StudyPlanDayEnum;
 
 import java.util.List;

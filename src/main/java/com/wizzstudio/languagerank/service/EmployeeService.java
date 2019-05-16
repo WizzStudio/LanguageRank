@@ -4,10 +4,10 @@ package com.wizzstudio.languagerank.service;
 Created by Ben Wen on 2019/3/22.
 */
 
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguagePost;
+import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
+import com.wizzstudio.languagerank.domain.employeerank.LanguagePost;
 
 import java.util.List;
 

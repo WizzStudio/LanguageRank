@@ -6,10 +6,10 @@ Created by Ben Wen on 2019/3/16.
 
 
 import com.wizzstudio.languagerank.constants.Constant;
-import com.wizzstudio.languagerank.dao.UserDAO.UserDAO;
-import com.wizzstudio.languagerank.dao.UserDAO.UserRelationshipDAO;
-import com.wizzstudio.languagerank.domain.User.User;
-import com.wizzstudio.languagerank.domain.User.UserRelationship;
+import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
+import com.wizzstudio.languagerank.DAO.userDAO.UserRelationshipDAO;
+import com.wizzstudio.languagerank.domain.user.User;
+import com.wizzstudio.languagerank.domain.user.UserRelationship;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

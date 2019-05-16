@@ -1,17 +1,17 @@
 package com.wizzstudio.languagerank.service.impl;
 
 
-import com.wizzstudio.languagerank.dao.LanguageDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanyPostDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.CompanySalaryDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.EmployeeRankDAO;
-import com.wizzstudio.languagerank.dao.employeerankDAO.LanguageCityDAO;
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanyPostDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankDAO;
+import com.wizzstudio.languagerank.DAO.employeerankDAO.LanguageCityDAO;
 import com.wizzstudio.languagerank.domain.*;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanyPost;
-import com.wizzstudio.languagerank.domain.EmployeeRank.CompanySalary;
-import com.wizzstudio.languagerank.domain.EmployeeRank.EmployeeRank;
-import com.wizzstudio.languagerank.domain.EmployeeRank.LanguageCity;
-import com.wizzstudio.languagerank.dto.EmployeeRankDTO;
+import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
+import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
+import com.wizzstudio.languagerank.VO.EmployeeRankVO;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.LanguageTendService;
 import com.wizzstudio.languagerank.util.DateUtil;
@@ -166,36 +166,36 @@ public class EmployeeRankServiceImpl implements EmployeeRankService {
         }
     }
 
-    private static List<EmployeeRankDTO> list = new ArrayList<>();
+    private static List<EmployeeRankVO> list = new ArrayList<>();
 
     @Override
-    public List<EmployeeRankDTO> getEmployeeRank() {
+    public List<EmployeeRankVO> getEmployeeRank() {
 //        // 测试用
 //        saveExponent();
         if (!list.isEmpty()) {
             return list;
         }
 
-        List<EmployeeRankDTO> employeeRankDTOList = new ArrayList<>();
+        List<EmployeeRankVO> employeeRankVOList = new ArrayList<>();
 
         List<EmployeeRank> employeeRanks = employeeRankDAO.findTopTenLanguage();
         for (EmployeeRank employeeRank : employeeRanks){
 
-            EmployeeRankDTO employeeRankDTO = new EmployeeRankDTO();
+            EmployeeRankVO employeeRankVO = new EmployeeRankVO();
 //            获取前十的语言名称
             String languageName = employeeRank.getLanguageName();
 
 //            雇主需求榜四个字段
-            employeeRankDTO.setLanguageName(languageName);
-            employeeRankDTO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
-            employeeRankDTO.setLanguageTend(languageTendService.findEmployeeLanguageTendNumber(languageName));
-            employeeRankDTO.setEmployeeFinalExponent(employeeRankDAO.findByLanguageName(languageName).getEmployeeFinalExponent());
+            employeeRankVO.setLanguageName(languageName);
+            employeeRankVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            employeeRankVO.setLanguageTend(languageTendService.findEmployeeLanguageTendNumber(languageName));
+            employeeRankVO.setEmployeeFinalExponent(employeeRankDAO.findByLanguageName(languageName).getEmployeeFinalExponent());
 
-            employeeRankDTOList.add(employeeRankDTO);
+            employeeRankVOList.add(employeeRankVO);
         }
 
-        list = employeeRankDTOList;
-        return employeeRankDTOList;
+        list = employeeRankVOList;
+        return employeeRankVOList;
     }
 
     @Override

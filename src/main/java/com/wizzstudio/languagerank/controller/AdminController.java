@@ -1,8 +1,7 @@
 package com.wizzstudio.languagerank.controller;
 
-import com.wizzstudio.languagerank.dto.StudyPlanImageDTO;
+import com.wizzstudio.languagerank.DTO.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.service.*;
-import com.wizzstudio.languagerank.service.impl.AdminStudyPlanServiceImpl;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

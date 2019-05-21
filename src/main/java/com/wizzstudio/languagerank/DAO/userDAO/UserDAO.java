@@ -25,6 +25,14 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     User findByUserId(Integer userId);
 
+    User findByNickName(String name);
+//  获取所有用户的部分信息，后台
+    @Query(nativeQuery = true, value = "select userId,nickName,totalScore,totalPunchCardDay,totalPunchCardScore," +
+            "totalWorshipScore from user")
+    List<User> findAllUser();
+//  总膜拜数
+    @Query(nativeQuery = true, value = "select sum(worship) from user")
+    Integer getworkshipnumber();
     /**
      *  查询设置为在reminderTime点时进行消息推送的用户中今日还未打卡的用户
      */

@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.domain;
+package com.wizzstudio.languagerank.domain.admin;
 
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;

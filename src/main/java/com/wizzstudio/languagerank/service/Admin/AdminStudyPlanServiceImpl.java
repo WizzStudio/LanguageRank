@@ -1,9 +1,9 @@
-package com.wizzstudio.languagerank.service.impl;
+package com.wizzstudio.languagerank.service.Admin;
 
 import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
-import com.wizzstudio.languagerank.DTO.AdminStudyPlanDTO;
-import com.wizzstudio.languagerank.service.AdminStudyPlanService;
+import com.wizzstudio.languagerank.DTO.admin.AdminStudyPlanDTO;
+import com.wizzstudio.languagerank.service.Admin.AdminStudyPlanService;
 import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,9 @@
-package com.wizzstudio.languagerank.service;
+package com.wizzstudio.languagerank.service.Admin;
 
-public interface AdminService {
+/**
+ * 暂时不需要
+ */
+public interface AdminExponentService {
 
     /**
      * 修改语言热度榜的最终指数

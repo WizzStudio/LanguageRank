@@ -16,7 +16,7 @@ import com.wizzstudio.languagerank.domain.employeerank.EmployeeRankComment;
 import com.wizzstudio.languagerank.domain.fixedrank.FixedRankComment;
 import com.wizzstudio.languagerank.DTO.CommentMessageDTO;
 import com.wizzstudio.languagerank.enums.CommentDisplayModeEnum;
-import com.wizzstudio.languagerank.service.CommentService;
+import com.wizzstudio.languagerank.service. CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

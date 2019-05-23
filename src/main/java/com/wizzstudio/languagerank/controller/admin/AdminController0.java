@@ -1,7 +1,8 @@
-package com.wizzstudio.languagerank.controller;
+package com.wizzstudio.languagerank.controller.admin;
 
 import com.wizzstudio.languagerank.DTO.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.service.*;
+import com.wizzstudio.languagerank.service.Admin.AdminStudyPlanService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 暂时废弃
+ */
 @RestController
 @RequestMapping("/cms")
 @Slf4j
-public class AdminController {
+public class AdminController0 {
 
     @Autowired
     FixedRankService fixedRankService;

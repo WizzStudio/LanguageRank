@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 public class WxInfoDTO {
-    public String code;
+    private String code;
 
     private String encryptedData;
 

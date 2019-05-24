@@ -22,5 +22,7 @@ public class CreateClazzDTO {
 
     private Integer monitor;
 
+    private String clazzBriefIntroduction;
+
     private List<ClazzStudyPlan> clazzStudyPlanList;
 }

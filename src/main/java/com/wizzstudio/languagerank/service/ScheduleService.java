@@ -30,23 +30,23 @@ public interface ScheduleService {
      */
     void saveEmployeeRankExponent();
 
-    /**
-     * 每日八点向部分用户推送消息
-     */
-    void pushMessageAtEight();
-
-    /**
-     * 每日九点向部分用户推送消息
-     */
-    void pushMessageAtNine();
-
-    /**
-     * 每日十点向部分用户推送消息
-     */
-    void pushMessageAtTen();
-
-    /**
-     * 每日十一点向部分用户推送消息
-     */
-    void pushMessageAtEleven();
+//    /**
+//     * 每日八点向部分用户推送消息
+//     */
+//    void pushMessageAtEight();
+//
+//    /**
+//     * 每日九点向部分用户推送消息
+//     */
+//    void pushMessageAtNine();
+//
+//    /**
+//     * 每日十点向部分用户推送消息
+//     */
+//    void pushMessageAtTen();
+//
+//    /**
+//     * 每日十一点向部分用户推送消息
+//     */
+//    void pushMessageAtEleven();
 }

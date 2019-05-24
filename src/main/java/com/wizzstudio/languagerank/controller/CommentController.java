@@ -146,32 +146,4 @@ public class CommentController {
         log.info("更新班级评论成功");
         return ResultUtil.success();
     }
-
-//    @PostMapping("/updatecommentdisplaymode")
-//    public ResponseEntity updateCommentDisplayMode(@RequestBody JSONObject jsonObject) {
-//        Integer commentDisplayModeInteger = jsonObject.getInteger("commentDisplayMode");
-//        Integer userId = jsonObject.getInteger("userId");
-//        CommentDisplayModeEnum commentDisplayMode;
-//
-//        // 1表示优先显示最新评论，2表示优先显示最先评论
-//        if (commentDisplayModeInteger == 1) {
-//            commentDisplayMode = CommentDisplayModeEnum.NEW_COMMENT_PRIORITIZED;
-//        } else {
-//            commentDisplayMode = CommentDisplayModeEnum.OLD_COMMENT_PRIORITIZED;
-//        }
-//        try {
-//            userService.updateCommentDisplayMode(commentDisplayMode, userId);
-//        } catch (Exception e) {
-//            log.error("更新用户评论显示顺序失败");
-//            e.printStackTrace();
-//            return ResultUtil.error();
-//        }
-//
-//        log.info("更新用户评论显示顺序成功");
-//        user user = redisUtil.getUser(userId);
-//        user.setCommentDisplayMode(commentDisplayMode);
-//        redisUtil.setUser(userId, user);
-//
-//        return ResultUtil.success();
-//    }
 }

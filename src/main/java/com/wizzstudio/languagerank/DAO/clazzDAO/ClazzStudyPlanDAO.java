@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.DAO.clazzDAO;
 Created by Ben Wen on 2019/4/26.
 */
 
+import com.wizzstudio.languagerank.VO.CollectionVO;
 import com.wizzstudio.languagerank.domain.clazz.ClazzStudyPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,8 @@ public interface ClazzStudyPlanDAO extends JpaRepository<ClazzStudyPlan, Integer
 
     @Query("select c.qrCode from ClazzStudyPlan c where c.clazzId = :clazzId and c.studyPlanDay = :studyPlanDay")
     String findQRCodeToday(@Param("clazzId") Integer clazzId, @Param("studyPlanDay")Integer studyPlanDay);
+
+    @Query("select new com.wizzstudio.languagerank.VO.CollectionVO(c.clazzId, c.studyPlanDay, c.link, c.extractedCode, c.briefIntroduction, c.content)" +
+            " from ClazzStudyPlan c where c.clazzId = :clazzId and c.studyPlanDay = :studyPlanDay")
+    CollectionVO findUserCollection(@Param("clazzId") Integer clazzId, @Param("studyPlanDay")Integer studyPlanDay);
 }

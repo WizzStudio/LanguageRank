@@ -22,36 +22,20 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @Slf4j
 public class LogInController {
-
     @Autowired
     UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity logIn(@RequestBody WxInfoDTO loginData, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity logIn(@RequestBody WxInfoDTO loginData) {
         try {
-           // 生成cookie
-//            String cookie = CookieUtil.tokenGenerate();
-//            System.out.println(loginData.code);
-//            WxLogInVO wxLogInVO = userService.userLogin(loginData, cookie);
-
             WxLogInVO wxLogInVO = userService.userLogin(loginData);
 
-//            // 将cookie写入response中返回給前端
-//            CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             log.info("微信登录成功");
            return ResultUtil.success("微信登录成功", wxLogInVO);
         } catch (WxErrorException e) {
-            log.error("微信登录失败，e={}",e);
+            log.error("微信登录失败");
             e.printStackTrace();
             return ResultUtil.error("微信登录失败");
         }
     }
-
-//    @PostMapping("/logout")
-//    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        Cookie cookie = CookieUtil.getCookie(request);
-//        if (cookie != null) redisUtil.delete(cookie.getValue());
-//        response.sendRedirect("/login/admin");
-//        log.info("用户已退出登录");
-//    }
 }

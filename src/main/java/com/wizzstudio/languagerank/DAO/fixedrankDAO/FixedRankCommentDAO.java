@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface FixedRankCommentDAO extends JpaRepository<FixedRankComment, Integer>, JpaSpecificationExecutor<FixedRankComment> {
-    @Query("select count(f) from FixedRankComment f where f.languageName = languageName")
+    @Query("select count(f) from FixedRankComment f where f.languageName = :languageName")
     Integer getTheNumberOfComment(@Param("languageName") String languageName);
 }

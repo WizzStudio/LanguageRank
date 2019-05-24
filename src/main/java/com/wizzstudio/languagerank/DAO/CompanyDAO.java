@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
 public interface CompanyDAO extends JpaRepository<Company, Integer> {
-    Company findByCompanyName(@Param("companyName") String companyName);
+    Company findByCompanyName(String companyName);
 }

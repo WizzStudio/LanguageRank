@@ -35,14 +35,26 @@ public class ClazzStudyPlan {
     private String link;
 
     /**
+     * 提取码
+     */
+    @NotNull
+    private String extractedCode;
+
+    /**
      * 每日学习计划的百度网盘小程序码
      */
     @NotNull
     private String qrCode;
 
+    /**
+     * 每日学习计划内容
+     */
     @NotNull
     private String content;
 
+    /**
+     * 学习计划天数
+     */
     @NotNull
     private Integer studyPlanDay;
 }

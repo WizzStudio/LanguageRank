@@ -5,16 +5,16 @@ Created by Ben Wen on 2019/3/24.
 */
 
 import com.wizzstudio.languagerank.DAO.CompanyDAO;
+import com.wizzstudio.languagerank.DAO.GithubPopularProjectDAO;
 import com.wizzstudio.languagerank.DAO.LanguageDAO;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.DAO.fixedrankDAO.FixedFinalExponentDAO;
-import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
-import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
 import com.wizzstudio.languagerank.DTO.CompanyMaxSalaryDTO;
 import com.wizzstudio.languagerank.VO.LanguageHomePageVO;
-import com.wizzstudio.languagerank.service.LanguageHomePageService;
+import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
+import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
 import com.wizzstudio.languagerank.service.LanguageCountService;
-import com.wizzstudio.languagerank.util.DoubleUtil;
+import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +37,8 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     LanguageDAO languageDAO;
     @Autowired
     CompanyDAO companyDAO;
+    @Autowired
+    GithubPopularProjectDAO githubPopularProjectDAO;
 
     private static Map<String, LanguageHomePageVO> map = new HashMap<>();
 
@@ -49,19 +51,19 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     @Override
     public LanguageHomePageVO getLanguageHomePage(String languageName) {
         if (map.containsKey(languageName)) {
-            map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
+//            map.get(languageName).setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
             return map.get(languageName);
         }
 
         LanguageHomePageVO languageHomePageVO = new LanguageHomePageVO();
 
         List<FixedFinalExponent> list = fixedFinalExponentDAO.findTwoByLanguageName(languageName);
-        languageHomePageVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
-        languageHomePageVO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
-        languageHomePageVO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
-        languageHomePageVO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
-        languageHomePageVO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
-        languageHomePageVO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
+//        languageHomePageVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+//        languageHomePageVO.setJoinedNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
+//        languageHomePageVO.setFixedFinalExponent(list.get(0).getFixedFinalExponent());
+//        languageHomePageVO.setLanguageDifficultyIndex(languageDAO.findByLanguageName(languageName).getLanguageDifficultyIndex());
+//        languageHomePageVO.setLanguageDevelopmentHistory(languageDAO.findByLanguageName(languageName).getLanguageDevelopmentHistory());
+//        languageHomePageVO.setFixedFinalExponentIncreasing(DoubleUtil.getDecimalFormat(list.get(0).getFixedFinalExponent() - list.get(1).getFixedFinalExponent()));
         languageHomePageVO.setExponentOfLastSevenDays(fixedFinalExponentDAO.findLastSevenDaysByLanguageName(languageName));
 
         List<CompanySalary> companySalaryList = companySalaryDAO.findTopTwoByLanguageName(languageName);
@@ -82,6 +84,7 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
         companyMaxSalaryDTOList.add(companyTwo);
 
         languageHomePageVO.setCompany(companyMaxSalaryDTOList);
+        languageHomePageVO.setGithubPopularProjectList(githubPopularProjectDAO.findByProjectTag(languageName));
 
         map.put(languageName, languageHomePageVO);
         return languageHomePageVO;

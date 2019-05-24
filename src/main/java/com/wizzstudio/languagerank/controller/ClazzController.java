@@ -7,12 +7,16 @@ Created by Ben Wen on 2019/4/26.
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.VO.AllClazzVO;
 import com.wizzstudio.languagerank.VO.ClazzMessageVO;
+import com.wizzstudio.languagerank.VO.CollectionVO;
 import com.wizzstudio.languagerank.VO.UserPunchCardMessageTodayVO;
 import com.wizzstudio.languagerank.constants.Constant;
+import com.wizzstudio.languagerank.constants.Errors;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.domain.clazz.ClazzStudyPlan;
 import com.wizzstudio.languagerank.DTO.*;
+import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.ClazzService;
+import com.wizzstudio.languagerank.service.PosterService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +24,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @Slf4j
-public class ClazzController implements Constant {
+public class ClazzController implements Constant, Errors {
     @Autowired
     ClazzService clazzService;
+    @Autowired
+    PosterService posterService;
 
     /**
      * 创建班级的接口
@@ -43,7 +51,7 @@ public class ClazzController implements Constant {
                 }
             }
             if (!isLegalClazzTag) {
-                return ResultUtil.error(Constant.ILLEGAL_CLAZZ_TAG);
+                return ResultUtil.error(Errors.ILLEGAL_CLAZZ_TAG);
             }
 
             Clazz clazz = clazzService.createClazz(createClazzDTO);
@@ -77,6 +85,25 @@ public class ClazzController implements Constant {
     }
 
     /**
+     * 刷新用户已加入班级列表的接口(给前端频繁调用刷新缓存)
+     */
+    @PostMapping("/refreshuserclazzlist")
+    public ResponseEntity refreshUserClazzList(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+
+        try {
+            List<Integer> clazzList = clazzService.refreshUserClazzList(userId);
+
+            log.info("刷新" + userId + "号用户已加入班级的列表成功");
+            return ResultUtil.success(clazzList);
+        } catch (Exception e) {
+            log.error("刷新" + userId + "号用户已加入班级的列表失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
      * 获取全部班级列表接口
      */
     @GetMapping("/getclazzlist")
@@ -102,10 +129,10 @@ public class ClazzController implements Constant {
         Integer userId = jsonObject.getInteger("userId");
         Integer clazzId = jsonObject.getInteger("clazzId");
 
-        List<Integer> userClazzList = clazzService.findUserJoinedClazz(userId);
-        if (userClazzList.contains(clazzId)) {
-            return ResultUtil.error(Constant.JOINED_CLAZZ);
-        }
+//        List<Integer> userClazzList = clazzService.refreshUserClazzList(userId);
+//        if (userClazzList.contains(clazzId)) {
+//            return ResultUtil.error(Errors.JOINED_CLAZZ);
+//        }
 
         try {
             clazzService.joinClazz(userId, clazzId);
@@ -141,7 +168,7 @@ public class ClazzController implements Constant {
     }
 
     /**
-     * 查询某班级基本信息
+     * 查询某班级基本信息的接口
      */
     @PostMapping("/getclazzmessage")
     public ResponseEntity getClazzMessage(@RequestBody JSONObject jsonObject) {
@@ -161,17 +188,17 @@ public class ClazzController implements Constant {
     }
 
     /**
-     * 查询某班级全部学习计划简介的接口
+     * 查询某班级课程详情的接口
      */
     @PostMapping("/getclazzstudyplan")
     public ResponseEntity getClazzStudyPlan(@RequestBody JSONObject jsonObject) {
         Integer clazzId = jsonObject.getInteger("clazzId");
 
         try {
-            List<String> clazzStudyPlanList = clazzService.getClazzStudyPlan(clazzId);
+            Map<String, Object> briefIntroductionMap = clazzService.getClazzStudyPlanBriefIntroduction(clazzId);
 
             log.info("获取" + clazzId + "号班级课程简介成功");
-            return ResultUtil.success(clazzStudyPlanList);
+            return ResultUtil.success(briefIntroductionMap);
         } catch (Exception e) {
             log.error("获取" + clazzId + "号班级课程简介失败");
             e.printStackTrace();
@@ -200,7 +227,7 @@ public class ClazzController implements Constant {
     }
 
     /**
-     * 查询用户在某班级今日学习计划的百度网盘小程序码图片
+     * 查询用户在某班级今日学习计划的百度网盘小程序码图片的接口
      */
     @PostMapping("/getuserclazzstudyplantoday")
     public ResponseEntity getUserClazzStudyPlanToday(@RequestBody JSONObject jsonObject) {
@@ -208,10 +235,11 @@ public class ClazzController implements Constant {
         Integer clazzId = jsonObject.getInteger("clazzId");
 
         try {
-             String userClazzStudyPlanQRCode = clazzService.getUserClazzStudyPlanToday(userId, clazzId);
+             Map<String, String> userClazzStudyPlanQRCodeMap = new HashMap<>();
+             userClazzStudyPlanQRCodeMap.put("qrCode", clazzService.getUserClazzStudyPlanToday(userId, clazzId));
 
             log.info("获取" + userId + "号用户在" + clazzId + "号班级今日学习计划成功");
-            return ResultUtil.success(userClazzStudyPlanQRCode);
+            return ResultUtil.success(userClazzStudyPlanQRCodeMap);
         } catch (Exception e) {
             log.error("获取" + userId + "号用户在" + clazzId + "号班级今日学习计划失败");
             e.printStackTrace();
@@ -281,6 +309,67 @@ public class ClazzController implements Constant {
     }
 
     /**
+     * 获取用户打卡提醒时间接口
+     */
+    @PostMapping("/getpunchcardremindertime")
+    public ResponseEntity getPunchCardReminderTime(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+
+        try {
+            Map<String, Integer> punchCardReminderTimeMap = new HashMap<>();
+            punchCardReminderTimeMap.put("reminderTime", clazzService.getPunchCardReminderTime(userId));
+
+            log.info("获取" + userId + "号用户打卡提醒时间成功");
+            return ResultUtil.success(punchCardReminderTimeMap);
+        } catch (Exception e) {
+            log.error("获取" + userId + "号用户打卡提醒时间失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 更新用户打卡提醒时间接口
+     */
+    @PostMapping("/updatepunchcardremindertime")
+    public ResponseEntity updatePunchCardReminderTime(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer reminderTime = jsonObject.getInteger("reminderTime");
+
+        PunchReminderTimeEnum punchReminderTime;
+        switch (reminderTime) {
+            case 0:
+                punchReminderTime = PunchReminderTimeEnum.NOT_REMIND;
+                break;
+            case 8:
+                punchReminderTime = PunchReminderTimeEnum.EIGHT;
+                break;
+            case 9:
+                punchReminderTime = PunchReminderTimeEnum.NINE;
+                break;
+            case 10:
+                punchReminderTime = PunchReminderTimeEnum.TEN;
+                break;
+            case 11:
+                punchReminderTime = PunchReminderTimeEnum.ELEVEN;
+                break;
+            default:
+                return ResultUtil.error(Errors.ILLEGAL_ARGUMENT_IN_UPDATE_PUNCHCARD_REMINDER_TIME);
+        }
+
+        try {
+            clazzService.updatePunchCardReminderTime(userId, punchReminderTime);
+
+            log.info("更新" + userId + "号用户打卡提醒时间成功");
+            return ResultUtil.success();
+        } catch (Exception e) {
+            log.error("更新" + userId + "号用户打卡提醒时间失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
      * 获取用户在某班级今日打卡信息接口
      */
     @PostMapping("/getuserpunchcardmessagetoday")
@@ -300,6 +389,9 @@ public class ClazzController implements Constant {
         }
     }
 
+    /**
+     * 获取班级勤奋排行榜接口
+     */
     @PostMapping("/gethardworkingrank")
     public ResponseEntity getHardWorkingRank(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
@@ -318,6 +410,9 @@ public class ClazzController implements Constant {
         }
     }
 
+    /**
+     * 获取班级人气排行榜接口
+     */
     @PostMapping("/getpopularityrank")
     public ResponseEntity getPopularityRank(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
@@ -336,20 +431,149 @@ public class ClazzController implements Constant {
         }
     }
 
-    @PostMapping
+    /**
+     * 膜拜接口
+     */
+    @PostMapping("/worship")
     public ResponseEntity worship(@RequestBody JSONObject jsonObject) {
-        Integer worshippingUser = jsonObject.getInteger("woeshippingUser");
+        Integer worshippingUser = jsonObject.getInteger("worshippingUser");
         Integer worshippedUser = jsonObject.getInteger("worshippedUser");
 
         try {
-//            Map<String, Object> map = clazzService.(worshippingUser, worshippedUser);
-
-            log.info(worshippingUser + "号用户膜拜" + worshippedUser + "号用户成功");
-            return ResultUtil.success();
+            if (clazzService.worship(worshippingUser, worshippedUser)) {
+                log.info(worshippingUser + "号用户膜拜" + worshippedUser + "号用户成功");
+                return ResultUtil.success();
+            } else {
+                log.error(worshippingUser + "号用户今日已膜拜过" + worshippedUser + "号用户");
+                return ResultUtil.error(Errors.WORSHIPPED_TODAY);
+            }
         } catch (Exception e) {
             log.error(worshippingUser + "号用户膜拜" + worshippedUser + "号用户失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
     }
+
+    /**
+     * 收藏接口
+     */
+    @PostMapping("/collect")
+    public ResponseEntity collect(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer clazzId = jsonObject.getInteger("clazzId");
+        Integer studyPlanDay = jsonObject.getInteger("studyPlanDay");
+        String clazzName = jsonObject.getString("clazzName");
+
+        try {
+            if (clazzService.collect(userId, clazzId, clazzName, studyPlanDay)) {
+                log.info(userId + "号用户收藏班级" + clazzId + "第" + studyPlanDay + "天学习计划成功");
+                return ResultUtil.success();
+            } else {
+                log.error(userId + "号用户已收藏过班级" + clazzId + "第" + studyPlanDay + "天学习计划");
+                return ResultUtil.error(Errors.COLLECTED_STUDY_PLAN);
+            }
+        } catch (Exception e) {
+            log.error(userId + "号用户收藏班级" + clazzId + "第" + studyPlanDay + "天学习计划失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 取消收藏接口
+     */
+    @PostMapping("cancelcollection")
+    public ResponseEntity cancelCollection(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer clazzId = jsonObject.getInteger("clazzId");
+        Integer studyPlanDay = jsonObject.getInteger("studyPlanDay");
+
+        try {
+            clazzService.cancelCollection(userId, clazzId, studyPlanDay);
+            log.info(userId + "号用户取消收藏班级" + clazzId + "第" + studyPlanDay + "天学习计划成功");
+            return ResultUtil.success();
+        } catch (Exception e) {
+            log.error(userId + "号用户取消收藏班级" + clazzId + "第" + studyPlanDay + "天学习计划失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 获取我的收藏接口
+     */
+    @PostMapping("/getcollection")
+    public ResponseEntity getCollection(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+
+        try {
+            List<CollectionVO> list = clazzService.getCollection(userId);
+
+            log.info("获取" + userId + "号用户我的收藏成功");
+            return ResultUtil.success(list);
+        } catch (Exception e) {
+            log.error("获取" + userId + "号用户我的收藏失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 获取微信小程序码接口
+     */
+    @PostMapping("/getqrcode")
+    public ResponseEntity getQrCode(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer clazzId = jsonObject.getInteger("clazzId");
+
+        try {
+            Map<String, String> qrCodeMap = new HashMap<>();
+            qrCodeMap.put("qrCode", clazzService.getQrCode(userId, clazzId));
+
+            log.info("获取" + clazzId + "号班级主页微信小程序码成功");
+            return ResultUtil.success(qrCodeMap);
+        } catch (Exception e) {
+            log.error("获取" + clazzId + "号班级主页微信小程序码失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+//    /**
+//     * 生成邀请卡接口
+//     */
+//    @PostMapping("/invitationcard")
+//    public ResponseEntity invitationCard(@RequestBody JSONObject jsonObject) throws Exception{
+//        Integer userId = jsonObject.getInteger("userId");
+//        Integer clazzId = jsonObject.getInteger("clazzId");
+//
+//        try {
+//            String poster =  posterService.invitationCard(userId, clazzId);
+//            log.info(userId + "号用户生成班级" + clazzId + "邀请卡成功");
+//            return ResultUtil.success(poster);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            log.error(userId + "号用户生成班级" + clazzId + "邀请卡失败");
+//            return ResultUtil.error();
+//        }
+//    }
+//
+//    /**
+//     * 生成成就卡接口
+//     */
+//    @PostMapping("/achievementcard")
+//    public ResponseEntity achievementCard(@RequestBody JSONObject jsonObject) throws Exception{
+//        Integer userId = jsonObject.getInteger("userId");
+//        Integer clazzId = jsonObject.getInteger("clazzId");
+//
+//        try {
+//            String poster =  posterService.achievementCard(userId, clazzId);
+//            log.info(userId + "号用户生成班级" + clazzId + "成就卡成功");
+//            return ResultUtil.success(poster);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            log.error(userId + "号用户生成班级" + clazzId + "成就卡失败");
+//            return ResultUtil.error();
+//        }
+//    }
 }

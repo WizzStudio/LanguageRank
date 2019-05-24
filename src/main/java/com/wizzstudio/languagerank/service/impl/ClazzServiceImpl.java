@@ -4,24 +4,30 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/4/26.
 */
 
+import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
+import com.wizzstudio.languagerank.DAO.clazzDAO.*;
+import com.wizzstudio.languagerank.DAO.userDAO.UserCollectionDAO;
+import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
+import com.wizzstudio.languagerank.DTO.*;
 import com.wizzstudio.languagerank.VO.AllClazzVO;
-import com.wizzstudio.languagerank.DTO.ClazzMemberDTO;
 import com.wizzstudio.languagerank.VO.ClazzMessageVO;
+import com.wizzstudio.languagerank.VO.CollectionVO;
 import com.wizzstudio.languagerank.VO.UserPunchCardMessageTodayVO;
 import com.wizzstudio.languagerank.constants.Constant;
-import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzDAO;
-import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzStudyPlanDAO;
-import com.wizzstudio.languagerank.DAO.clazzDAO.UserClazzDAO;
-import com.wizzstudio.languagerank.DAO.clazzDAO.UserJoinedClazzDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.domain.clazz.ClazzStudyPlan;
 import com.wizzstudio.languagerank.domain.clazz.UserClazz;
+import com.wizzstudio.languagerank.domain.clazz.Worship;
 import com.wizzstudio.languagerank.domain.user.User;
-import com.wizzstudio.languagerank.DTO.*;
+import com.wizzstudio.languagerank.domain.user.UserCollection;
+import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.ClazzService;
 import com.wizzstudio.languagerank.util.DateUtil;
 import com.wizzstudio.languagerank.util.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,10 +37,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ClazzServiceImpl implements ClazzService {
     @Autowired
     ClazzDAO clazzDAO;
@@ -45,9 +54,15 @@ public class ClazzServiceImpl implements ClazzService {
     @Autowired
     UserJoinedClazzDAO userJoinedClazzDAO;
     @Autowired
+    UserCollectionDAO userCollectionDAO;
+    @Autowired
     ClazzStudyPlanDAO clazzStudyPlanDAO;
     @Autowired
+    WorshipDAO worshipDAO;
+    @Autowired
     RedisUtil redisUtil;
+    @Autowired
+    WxMaService wxService;
 
     @Override
     public Clazz createClazz(CreateClazzDTO createClazzDTO) {
@@ -56,6 +71,7 @@ public class ClazzServiceImpl implements ClazzService {
         clazz.setMonitor(createClazzDTO.getMonitor());
         clazz.setClazzTag(createClazzDTO.getClazzTag());
         clazz.setClazzImage(createClazzDTO.getClazzImage());
+        clazz.setClazzBriefIntroduction(createClazzDTO.getClazzBriefIntroduction());
         clazz.setStudentNumber(1);
         clazz.setCommentNumber(0);
 
@@ -76,12 +92,11 @@ public class ClazzServiceImpl implements ClazzService {
     public List<UserClazzDTO> getUserClazzList(Integer userId) {
         List<Clazz> clazzList = userDAO.findUserClazz(userId);
         List<UserClazzDTO> userClazzListDTOList = new ArrayList<>();
-        // 更大的网络包与更长的执行时间如何选择
         for (Clazz clazz : clazzList) {
             UserClazzDTO userClazzDTO = new UserClazzDTO();
             userClazzDTO.setClazzImage(clazz.getClazzImage());
             userClazzDTO.setClazzName(clazz.getClazzName());
-            userClazzDTO.setMonitor(clazz.getMonitor());
+            userClazzDTO.setMonitorNickName(userDAO.findNickNameByUserId(clazz.getMonitor()));
             userClazzDTO.setClazzId(clazz.getClazzId());
 
             userClazzListDTOList.add(userClazzDTO);
@@ -90,7 +105,7 @@ public class ClazzServiceImpl implements ClazzService {
     }
 
     @Override
-    public List<Integer> findUserJoinedClazz(Integer userId) {
+    public List<Integer> refreshUserClazzList(Integer userId) {
         return userClazzDAO.findUserJoinedClazz(userId);
     }
 
@@ -106,7 +121,7 @@ public class ClazzServiceImpl implements ClazzService {
         userClazz.setUserId(userId);
         userClazz.setClazzId(clazzId);
         userClazz.setJoinedTime(new Date());
-        userClazz.setAllStudyPlanDay(1);
+        userClazz.setAllStudyPlanDay(0);
         // 还有问题，当用户一天重复加入某一班级时;
         userClazz.setUninterruptedStudyPlanDay(0);
         userClazz.setStudyTime(null);
@@ -132,19 +147,30 @@ public class ClazzServiceImpl implements ClazzService {
     @Override
     public ClazzMessageVO getClazzMessage(Integer userId, Integer clazzId) {
         ClazzMessageVO clazzMessage = clazzDAO.getClazzMessage(clazzId);
-        List<Integer> userClazzList = findUserJoinedClazz(userId);
-        if (userClazzList.contains(clazzId)) {
-            clazzMessage.setIsInClazz(true);
+//        List<Integer> userClazzList = refreshUserClazzList(userId);
+//        if (userClazzList.contains(clazzId)) {
+//            clazzMessage.setIsInClazz(true);
+//        } else {
+//            clazzMessage.setIsInClazz(false);
+//        }
+
+        if (userClazzDAO.findIsStudyToday(clazzId, userId)) {
+            clazzMessage.setIsPunchCard(true);
         } else {
-            clazzMessage.setIsInClazz(false);
+            clazzMessage.setIsPunchCard(false);
         }
 
         return clazzMessage;
     }
 
     @Override
-    public List<String> getClazzStudyPlan(Integer clazzId) {
-        return clazzStudyPlanDAO.getAllBriefIntroduction(clazzId);
+    public Map<String, Object> getClazzStudyPlanBriefIntroduction(Integer clazzId) {
+        Map<String, Object> briefIntroductionMap = new HashMap<>();
+
+        briefIntroductionMap.put("clazzBriefIntroduction", clazzDAO.findClazzBriefIntroduction(clazzId));
+        briefIntroductionMap.put("studyPlanBriefIntroductionList", clazzStudyPlanDAO.getAllBriefIntroduction(clazzId));
+
+        return briefIntroductionMap;
     }
 
     @Override
@@ -170,8 +196,7 @@ public class ClazzServiceImpl implements ClazzService {
         monitor.setAvatarUrl(monitorDomain.getAvatarUrl());
         clazzMemberMap.put("monitor", monitor);
 
-        List<String> stringList = new ArrayList<>(redisUtil.getUserRelationship(userId));
-        List<Integer> friendIdList = stringList.stream().map(Integer::parseInt).collect(Collectors.toList());
+        List<Integer> friendIdList = redisUtil.getUserRelationship(userId);
         // 求用户好友List与班级学员List的交集
         // 用户数较大时性能降低严重，考虑用将班级学员写入redis再求交集
         friendIdList.retainAll(userClazzDAO.findAllUserIdInClazz(clazzId));
@@ -222,8 +247,8 @@ public class ClazzServiceImpl implements ClazzService {
         return clazzMemberMap;
     }
 
-    // 每天重置isStudyPlanToday，每天根据isStudyPlanToday决定是否重置uninterruptedStudyPlanDay
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void punchCard(Integer userId, Integer clazzId, String formId) {
         UserClazz userClazz = userClazzDAO.findByClazzIdAndUserId(clazzId, userId);
 
@@ -251,11 +276,23 @@ public class ClazzServiceImpl implements ClazzService {
             user.setTodayPunchCardScore(user.getTotalPunchCardScore() + todayPunchCardScore);
             user.setTodayScore(user.getTodayScore() + todayPunchCardScore);
             user.setTotalPunchCardScore(user.getTotalPunchCardScore() + todayPunchCardScore);
-            user.setTotalScore(user.getTotalScore());
+            user.setTotalScore(user.getTotalScore() + todayPunchCardScore);
+            user.setAvailableScore(user.getAvailableScore() + todayPunchCardScore);
         }
 
-        // 设置新的模板消息推送formId
-        user.setFormId(formId);
+//        // 设置新的模板消息推送formId
+//        user.setFormId(formId);
+    }
+
+    @Override
+    public Integer getPunchCardReminderTime(Integer userId) {
+        return userDAO.getPunchCardReminderTime(userId).getReminderTime();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePunchCardReminderTime(Integer userId, PunchReminderTimeEnum punchReminderTime) {
+        userDAO.updatePunchCardReminderTime(userId, punchReminderTime);
     }
 
     @Override
@@ -295,6 +332,90 @@ public class ClazzServiceImpl implements ClazzService {
         popularityRankMap.put("pageSize", Constant.RANK_PAGE_SIZE);
 
         return popularityRankMap;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean worship(Integer worshippingUser, Integer worshippedUser) {
+        List<Worship> worshipList = worshipDAO.findByWorshippingUserAndWorshippedUserOrderByWorshipTimeDesc(worshippingUser, worshippedUser);
+        if (!worshipList.isEmpty() && DateUtil.isToday(worshipList.get(0).getWorshipTime())) {
+            return false;
+        }
+
+        Worship worship = new Worship();
+        worship.setWorshippingUser(worshippingUser);
+        worship.setWorshippedUser(worshippedUser);
+        worship.setWorshipTime(new Date());
+        worshipDAO.save(worship);
+
+        User user =  userDAO.findByUserId(worshippedUser);
+        user.setWorship(user.getWorship() + 1);
+        user.setTodayWorshipScore(user.getTotalWorshipScore() + 10);
+        user.setTotalWorshipScore(user.getTotalWorshipScore() + 10);
+        user.setTodayScore(user.getTodayScore() + 10);
+        user.setTotalScore(user.getTotalScore() + 10);
+        user.setAvailableScore(user.getAvailableScore() + 10);
+
+        return true;
+    }
+
+    @Override
+    public Boolean collect(Integer userId, Integer clazzId, String clazzName, Integer studyPlanDay) {
+        if (userCollectionDAO.findByUserIdAndClazzIdAndStudyPlanDay(userId, clazzId, studyPlanDay) != null) {
+            return false;
+        }
+
+        UserCollection userCollection = new UserCollection();
+        userCollection.setUserId(userId);
+        userCollection.setClazzId(clazzId);
+        userCollection.setClazzName(clazzName);
+        userCollection.setStudyPlanDay(studyPlanDay);
+
+        userCollectionDAO.save(userCollection);
+        return true;
+    }
+
+    @Override
+    public void cancelCollection(Integer userId, Integer clazzId, Integer studyPlanDay) {
+        UserCollection userCollection = userCollectionDAO.findByUserIdAndClazzIdAndStudyPlanDay(userId, clazzId, studyPlanDay);
+        userCollectionDAO.delete(userCollection);
+    }
+
+    @Override
+    public List<CollectionVO> getCollection(Integer userId) {
+        List<CollectionVO> collectionList = new ArrayList<>();
+        List<UserCollection> userCollectionList = userCollectionDAO.findByUserId(userId);
+
+        for (UserCollection userCollection : userCollectionList) {
+            CollectionVO collection = clazzStudyPlanDAO.findUserCollection(userCollection.getClazzId(), userCollection.getStudyPlanDay());
+            collection.setClazzName(userCollection.getClazzName());
+
+            collectionList.add(collection);
+        }
+
+        return collectionList;
+    }
+
+    @Override
+    public String getQrCode(Integer userId, Integer clazzId) throws Exception {
+//        String path = "/pages/class/classHome?clazzId=" + clazzId + "&shareId=" + userId;
+        String path = "";
+
+        try {
+            // 获取小程序二维码生成实例
+            WxMaQrcodeService wxMaQrcodeService = wxService.getQrcodeService();
+            // 设置小程序二维码线条颜色为黑色
+            WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+
+            File qrCodeFile = wxMaQrcodeService.createWxaCode(path, 430, true, lineColor, true);
+            log.info("生成小程序码成功");
+//            return ImageIO.read(new FileInputStream(qrCodeFile));
+            return null;
+        } catch (WxErrorException e) {
+            log.error("生成小程序码失败");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

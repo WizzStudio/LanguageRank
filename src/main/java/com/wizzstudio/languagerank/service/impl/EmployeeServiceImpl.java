@@ -4,15 +4,20 @@ package com.wizzstudio.languagerank.service.impl;
 Created by Ben Wen on 2019/3/22.
 */
 
+import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzDAO;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanyPostDAO;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.CompanySalaryDAO;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.LanguageCityDAO;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.LanguagePostDAO;
+import com.wizzstudio.languagerank.VO.LanguageMessageVO;
+import com.wizzstudio.languagerank.domain.Language;
 import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
 import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
 import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
 import com.wizzstudio.languagerank.domain.employeerank.LanguagePost;
 import com.wizzstudio.languagerank.service.EmployeeService;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +28,6 @@ import java.util.Map;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
     @Autowired
     private LanguagePostDAO languagePostDAO;
     @Autowired
@@ -32,11 +36,29 @@ public class EmployeeServiceImpl implements EmployeeService {
     private CompanyPostDAO companyPostDAO;
     @Autowired
     private LanguageCityDAO languageCityDAO;
+    @Autowired
+    private LanguageDAO languageDAO;
+    @Autowired
+    private ClazzDAO clazzDAO;
 
     private static Map<String, List<LanguagePost>> languagePostMap = new HashMap<>();
     private static Map<String, List<CompanySalary>> companySalaryMap = new HashMap<>();
     private static Map<String, List<CompanyPost>> companyPostMap = new HashMap<>();
     private static Map<String, List<LanguageCity>> languageCityMap = new HashMap<>();
+
+    @Override
+    public LanguageMessageVO getLanguageMessage(String languageName) {
+        LanguageMessageVO languageMessage = new LanguageMessageVO();
+        languageMessage.setLanguageSymbol(languageDAO.findLanguageSymbolByLanguageName(languageName));
+        Integer languageFans = clazzDAO.findClazzStudentNumberByClazzTag(languageName);
+        if (languageFans != null) {
+            languageMessage.setLanguageFans(languageFans);
+        } else {
+            languageMessage.setLanguageFans(RandomUtils.nextInt(0, 200));
+        }
+
+        return languageMessage;
+    }
 
     @Override
     public List<LanguagePost> getLanguagePost(String languageName) {
@@ -65,6 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<LanguageCity> getLanguageCity(String languageName) {
         if (!languageCityMap.containsKey(languageName)) {
+
             List<LanguageCity> languageCityList = languageCityDAO.findLanguageCityTopFiveByLanguageName(languageName);
             List<LanguageCity> languageCityTemporaryList = languageCityDAO.findLanguageCityOutOfFiveByLanguageName(languageName);
             int otherCityPostNumber = 0;

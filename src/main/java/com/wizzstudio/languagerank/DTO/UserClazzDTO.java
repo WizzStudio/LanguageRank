@@ -15,7 +15,7 @@ public class UserClazzDTO {
 
     private String clazzName;
 
-    private Integer monitor;
+    private String monitorNickName;
 
     private String clazzImage;
 }

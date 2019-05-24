@@ -26,6 +26,12 @@ public interface ClazzDAO extends JpaRepository<Clazz, Integer> {
             "c.clazzImage, c.clazzName, c.studentNumber, c.commentNumber) from Clazz c where c.clazzId = :clazzId")
     ClazzMessageVO getClazzMessage(@Param("clazzId") Integer clazzId);
 
+    @Query("select c.clazzBriefIntroduction from Clazz c where c.clazzId = :clazzId")
+    String findClazzBriefIntroduction(@Param("clazzId") Integer clazzId);
+
+    @Query("select sum(c.studentNumber) from Clazz c where c.clazzTag = :clazzTag")
+    Integer findClazzStudentNumberByClazzTag(@Param("clazzTag")String clazzTag);
+
 //    @Query("select c.userList from clazz c")
 //    List<user> findAllUser();
 }

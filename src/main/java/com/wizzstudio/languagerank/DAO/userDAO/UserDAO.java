@@ -4,6 +4,8 @@ package com.wizzstudio.languagerank.DAO.userDAO;
 Created by Ben Wen on 2019/3/16.
 */
 
+import com.wizzstudio.languagerank.DTO.NickNameAndAvatarUrlDTO;
+import com.wizzstudio.languagerank.VO.UserRelationshipRankVO;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.DTO.HardworkingRankDTO;
@@ -25,15 +27,27 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     User findByUserId(Integer userId);
 
+    @Query("select u.nickName from User u where u.userId = :userId")
+    String findNickNameByUserId(@Param("userId") Integer userId);
+
+    @Query("select new com.wizzstudio.languagerank.DTO.NickNameAndAvatarUrlDTO(u.nickName, u.avatarUrl) from User u where u.userId = :userId")
+    NickNameAndAvatarUrlDTO findNickNameAndAvatarUrlByUserId(@Param("userId") Integer userId);
     /**
      *  查询设置为在reminderTime点时进行消息推送的用户中今日还未打卡的用户
      */
     @Query("select u from User u where u.reminderTime = :reminderTime and u.isPunchCardToday = false")
     List<User> findUsersNotPunchCardTodayAndRemindAtWhen(@Param("reminderTime")PunchReminderTimeEnum reminderTime);
 
+    @Query("select u.totalScore from User u where u.userId = :userId")
+    Integer findUserTotalScore(@Param("userId")Integer userId);
+
     @Modifying
     @Query("update User u set u.isLogInToday = false")
     void resetIsLogInToday();
+
+    @Modifying
+    @Query("update User u set u.isPunchCardToday = false")
+    void resetIsPunchCardToday();
 
     @Modifying
     @Query("update User u set u.isLogInToday = true where u.userId = :userId")
@@ -62,6 +76,22 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 //    @Query("update user u set u.commentDisplayMode = :commentDisplayMode where u.userId = :userId")
 //    void updateCommentDisplayMode(@Param("commentDisplayMode")CommentDisplayModeEnum commentDisplayMode, @Param("userId") Integer userId);
 
+    /**
+     * 获取用户打卡提醒时间
+     */
+    @Query("select u.reminderTime from User u where u.userId = :userId")
+    PunchReminderTimeEnum getPunchCardReminderTime(@Param("userId") Integer userId);
+
+    /**
+     * 更新用户打卡提醒时间
+     */
+    @Modifying
+    @Query("update User u set u.reminderTime = :reminderTime where u.userId = :userId")
+    void updatePunchCardReminderTime(@Param("userId") Integer userId, @Param("reminderTime")PunchReminderTimeEnum reminderTime);
+
+    /**
+     * 查询用户今日打卡信息
+     */
     @Query("select new com.wizzstudio.languagerank.VO.UserPunchCardMessageTodayVO" +
             "(u.avatarUrl, u.totalScore, u.totalPunchCardDay, u.todayScore) from User u where  u.userId = :userId")
     UserPunchCardMessageTodayVO findUserPunchCardMessageToday(@Param("userId") Integer userId);
@@ -89,4 +119,11 @@ public interface UserDAO extends JpaRepository<User, Integer> {
      */
     @Query("select new com.wizzstudio.languagerank.DTO.PopularityRankDTO(u.userId, u.nickName, u.avatarUrl, u.worship) from User u where u.userId in (:userIdList)")
     Page<PopularityRankDTO> findPopularityRank(Pageable pageable, @Param("userIdList")List<Integer> userIdList);
+
+    /**
+     * 查询并按顺序显示好友排行
+     */
+    @Query("select new com.wizzstudio.languagerank.VO.UserRelationshipRankVO(u.userId, u.nickName, u.avatarUrl, u.totalScore)" +
+            " from User u where u.userId in :friendList order by u.totalScore DESC ")
+    List<UserRelationshipRankVO> findUserRelationshipRank(@Param("friendList")List<Integer> friendList);
 }

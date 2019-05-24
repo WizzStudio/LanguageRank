@@ -5,10 +5,12 @@ Created by Ben Wen on 2019/3/22.
 */
 
 import com.wizzstudio.languagerank.DAO.LanguageDAO;
+import com.wizzstudio.languagerank.VO.LanguageMessageVO;
 import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
 import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
 import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
 import com.wizzstudio.languagerank.VO.LanguagePostVO;
+import com.wizzstudio.languagerank.domain.employeerank.LanguagePost;
 import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import com.wizzstudio.languagerank.service.PosterService;
@@ -31,22 +33,37 @@ public class EmployeeController {
     @Autowired
     EmployeeRankService employeeRankService;
     @Autowired
-    LanguageDAO languageDAO;
-    @Autowired
     PosterService posterService;
+
+    /**
+     * 查询与该语言相关的基本信息接口(两榜共用)
+     */
+    @GetMapping("/{languageName}/message")
+    public ResponseEntity getLanguageMessage(@PathVariable("languageName")String languageName) {
+        try {
+            LanguageMessageVO languageMessage = employeeService.getLanguageMessage(languageName);
+
+            log.info("获取与"+ languageName + "相关的基本信息成功");
+            return ResultUtil.success(languageMessage);
+        } catch (Exception e) {
+            log.error("获取与"+ languageName + "相关的基本信息失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
 
     @GetMapping("/{languageName}/post")
     public ResponseEntity getLanguagePost(@PathVariable("languageName")String languageName) {
-        LanguagePostVO languagePostVO = new LanguagePostVO();
         try {
-            languagePostVO.setLanguagePostList(employeeService.getLanguagePost(languageName));
-            languagePostVO.setLanguageSymbol(languageDAO.findByLanguageName(languageName).getLanguageSymbol());
+            List<LanguagePost> languagePostList = employeeService.getLanguagePost(languageName);
+
+            log.info("获取与"+ languageName + "相关的热门岗位排行成功");
+            return ResultUtil.success(languagePostList);
         } catch (Exception e) {
             log.error("获取与"+ languageName + "相关的热门岗位排行失败");
-            return ResultUtil.error("获取与"+ languageName + "相关的热门岗位排行失败");
+            e.printStackTrace();
+            return ResultUtil.error();
         }
-            log.info("获取与"+ languageName + "相关的热门岗位排行成功");
-            return ResultUtil.success("获取与"+ languageName + "相关的热门岗位排行成功", languagePostVO);
     }
 
     @GetMapping("/{languageName}/salary")
@@ -89,11 +106,5 @@ public class EmployeeController {
     public ResponseEntity getEmployeeRank(){
         log.info("获取雇主需求榜榜单页成功");
         return ResultUtil.success(employeeRankService.getEmployeeRank());
-    }
-
-    // 生成雇主需求详情页海报
-    @GetMapping("/poster/{languageName}")
-    public String a(@PathVariable("languageName")String languageName) throws Exception{
-        return posterService.createPoster(languageName);
     }
 }

@@ -1,12 +1,12 @@
-package com.wizzstudio.languagerank.service.impl;
+package com.wizzstudio.languagerank.service.Admin;
 
 import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
 import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
-import com.wizzstudio.languagerank.service.AdminService;
+import com.wizzstudio.languagerank.service.Admin.AdminExponentService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class AdminExponentServiceImpl implements AdminExponentService {
 
     // 有问题，还没处理
     private FixedFinalExponent fixedFinalExponent;

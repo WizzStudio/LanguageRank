@@ -13,14 +13,11 @@ import com.wizzstudio.languagerank.VO.WxLogInVO;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.DAO.*;
 import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserStudyedLanguageDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserTranspondDAO;
 import com.wizzstudio.languagerank.domain.AwardStore;
 import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.DTO.WxInfoDTO;
 import com.wizzstudio.languagerank.domain.user.UserExchangedAward;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
-import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +40,6 @@ public class UserServiceImpl implements UserService, Constant {
     AwardStoreDAO awardStoreDAO;
     @Autowired
     UserExchangedAwardDAO userExchangedAwardDAO;
-    @Autowired
-    StudyPlanService studyPlanService;
     @Autowired
     RedisUtil redisUtil;
 

@@ -13,7 +13,6 @@ import com.wizzstudio.languagerank.DTO.CompanyMaxSalaryDTO;
 import com.wizzstudio.languagerank.VO.LanguageHomePageVO;
 import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
 import com.wizzstudio.languagerank.domain.fixedrank.FixedFinalExponent;
-import com.wizzstudio.languagerank.service.LanguageCountService;
 import com.wizzstudio.languagerank.service.LanguageHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +30,6 @@ public class LanguageHomePageServiceImpl implements LanguageHomePageService {
     private FixedFinalExponentDAO fixedFinalExponentDAO;
     @Autowired
     private CompanySalaryDAO companySalaryDAO;
-    @Autowired
-    private LanguageCountService languageCountService;
     @Autowired
     LanguageDAO languageDAO;
     @Autowired

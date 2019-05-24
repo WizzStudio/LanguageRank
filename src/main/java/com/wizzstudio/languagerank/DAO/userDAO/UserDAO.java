@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.DAO.userDAO;
 Created by Ben Wen on 2019/3/16.
 */
 
+import com.wizzstudio.languagerank.DTO.admin.AdminUserInfoDTO;
 import com.wizzstudio.languagerank.DTO.NickNameAndAvatarUrlDTO;
 import com.wizzstudio.languagerank.VO.UserRelationshipRankVO;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
@@ -13,6 +14,7 @@ import com.wizzstudio.languagerank.DTO.PopularityRankDTO;
 import com.wizzstudio.languagerank.VO.UserPunchCardMessageTodayVO;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,6 +34,17 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query("select new com.wizzstudio.languagerank.DTO.NickNameAndAvatarUrlDTO(u.nickName, u.avatarUrl) from User u where u.userId = :userId")
     NickNameAndAvatarUrlDTO findNickNameAndAvatarUrlByUserId(@Param("userId") Integer userId);
+    User findByNickName(String name);
+//  获取所有用户的部分信息，后台
+    @Query(nativeQuery = true, value = "select userId,nickName,totalScore,totalPunchCardDay,totalPunchCardScore," +
+            "totalWorshipScore from user")
+    List<AdminUserInfoDTO> findAllUser(PageRequest pageRequest);
+//  总膜拜数
+    @Query(nativeQuery = true, value = "select sum(worship) from user")
+    Integer getworkshipnumber();
+
+    @Query(nativeQuery = true, value = "select userId from user")
+    Integer getTotalNumber();
     /**
      *  查询设置为在reminderTime点时进行消息推送的用户中今日还未打卡的用户
      */

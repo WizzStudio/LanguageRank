@@ -31,14 +31,6 @@ public class UserController implements Constant {
     @Autowired
     UserService userService;
     @Autowired
-    LanguageCountService languageCountService;
-    @Autowired
-    StudyPlanService studyPlanService;
-    @Autowired
-    ShareDimensionCodeService shareDimensionCodeService;
-    @Autowired
-    AwardService awardService;
-    @Autowired
     RedisUtil redisUtil;
 
     /**

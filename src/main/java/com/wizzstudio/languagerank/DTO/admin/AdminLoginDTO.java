@@ -1,4 +1,4 @@
-package com.wizzstudio.languagerank.DTO;
+package com.wizzstudio.languagerank.DTO.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

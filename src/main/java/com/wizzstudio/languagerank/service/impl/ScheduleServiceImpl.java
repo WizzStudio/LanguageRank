@@ -6,7 +6,6 @@ Created by Ben Wen on 2019/4/17.
 
 import com.wizzstudio.languagerank.DAO.clazzDAO.UserClazzDAO;
 import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserStudyedLanguageDAO;
 import com.wizzstudio.languagerank.service.*;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     UserDAO userDAO;
     @Autowired
-    UserStudyedLanguageDAO userStudyedLanguageDAO;
-    @Autowired
     UserClazzDAO userClazzDAO;
     @Autowired
     RedisUtil redisUtil;
-    @Autowired
-    LanguageCountService languageCountService;
     @Autowired
     FixedRankService fixedRankService;
     @Autowired

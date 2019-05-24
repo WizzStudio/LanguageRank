@@ -27,7 +27,9 @@ public class FixedFinalExponent {
     @NotNull
     private Double fixedFinalExponent;
 
-    //    后台修改指数，可以为null
+    /**
+     * 后台修改指数，可以为null
+     */
     private Double fArtificialExponent;
 
     @NotNull

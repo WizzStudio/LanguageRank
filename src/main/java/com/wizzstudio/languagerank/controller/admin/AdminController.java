@@ -1,7 +1,8 @@
-package com.wizzstudio.languagerank.controller;
+package com.wizzstudio.languagerank.controller.admin;
 
 import com.wizzstudio.languagerank.DTO.StudyPlanImageDTO;
 import com.wizzstudio.languagerank.service.*;
+import com.wizzstudio.languagerank.service.Admin.AdminStudyPlanService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 暂时废弃
+ */
 @RestController
 @RequestMapping("/cms")
 @Slf4j
@@ -21,8 +25,6 @@ public class AdminController {
     FixedRankService fixedRankService;
     @Autowired
     EmployeeRankService employeeRankService;
-    @Autowired
-    StudyPlanService studyPlanService;
     @Autowired
     AdminStudyPlanService adminStudyPlanService;
     @Autowired
@@ -46,12 +48,6 @@ public class AdminController {
         return ResultUtil.success(adminStudyPlanService.getAdminStudyPlan());
     }
 
-//    返回给后台某语言的所有的学习计划
-    @GetMapping("/study/{languageName}")
-    public ResponseEntity getStudyAllPlan(@PathVariable("languageName")String languageName) {
-        return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName));
-    }
-
     // 将学习计划/奖励图片上传至七牛云并存储至数据库
     // 返回图片URL路径
     @PostMapping("storestudyplanimage")
@@ -64,7 +60,7 @@ public class AdminController {
             log.error("上传文件失败");
             throw new IOException();
         }
-        studyPlanService.saveStudyPlan(filePath, studyPlanImageDTO);
+//        studyPlanService.saveStudyPlan(filePath, studyPlanImageDTO);
 
         Map<String, String> map = new HashMap<>();
         map.put("filePath", filePath);

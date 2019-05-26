@@ -7,8 +7,10 @@ Created by Ben Wen on 2019/4/26.
 import com.wizzstudio.languagerank.domain.clazz.UserClazz;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,4 +39,12 @@ public interface UserClazzDAO extends JpaRepository<UserClazz, Integer>, JpaSpec
      */
     @Query("select u.clazzId from UserClazz u where u.userId = :userId")
     List<Integer> findUserJoinedClazz(@Param("userId")Integer userId);
+
+    /**
+     * 删除班级
+     */
+    @Modifying
+    @Transactional
+    @Query("delete from UserClazz u where u.clazzId=:clazzId")
+    void deleteUserClazz(@Param("clazzId") Integer clazzId);
 }

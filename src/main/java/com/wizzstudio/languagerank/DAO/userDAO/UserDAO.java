@@ -28,9 +28,10 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     User findByUserId(Integer userId);
 
     User findByNickName(String name);
-//  获取所有用户的部分信息，后台
-    @Query(nativeQuery = true, value = "select userId,nickName,totalScore,totalPunchCardDay,totalPunchCardScore," +
-            "totalWorshipScore from user")
+    /**
+     *     获取所有用户的部分信息，后台
+     */
+    @Query("select new com.wizzstudio.languagerank.DTO.admin.AdminUserInfoDTO(u.userId, u.nickName, u.totalScore,u.totalPunchCardDay ,u.todayPunchCardScore, u.todayWorshipScore)  from User as u ")
     List<AdminUserInfoDTO> findAllUser(PageRequest pageRequest);
 //  总膜拜数
     @Query(nativeQuery = true, value = "select sum(worship) from user")
@@ -38,6 +39,7 @@ public interface UserDAO extends JpaRepository<User, Integer> {
 
     @Query(nativeQuery = true, value = "select userId from user")
     Integer getTotalNumber();
+
     /**
      *  查询设置为在reminderTime点时进行消息推送的用户中今日还未打卡的用户
      */

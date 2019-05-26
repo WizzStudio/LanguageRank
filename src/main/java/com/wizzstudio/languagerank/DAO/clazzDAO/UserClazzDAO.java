@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,4 +53,12 @@ public interface UserClazzDAO extends JpaRepository<UserClazz, Integer>, JpaSpec
     @Modifying
     @Query("update UserClazz u set u.uninterruptedStudyPlanDay = 0 where u.isStudyToday = false")
     void resetUninterruptedStudyPlanDay();
+
+    /**
+     * 删除班级
+     */
+    @Modifying
+    @Transactional
+    @Query("delete from UserClazz u where u.clazzId=:clazzId")
+    void deleteUserClazz(@Param("clazzId") Integer clazzId);
 }

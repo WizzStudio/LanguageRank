@@ -28,15 +28,16 @@ public class AdminProjectServiceImpl implements AdminProjectService{
 
     @Override
     public AdminProjectListVO getAllProject(Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page,size);
-        List<AdminProjectDTO> adminProjectDTOPage = clazzDAO.findAllClazzBack(pageRequest);
-
-        AdminProjectListVO adminProjectListVO = null;
-        adminProjectListVO.setAdminProjectDTOList(adminProjectDTOPage);
-        adminProjectListVO.setTotal(adminProjectDTOPage.size());
-        adminProjectListVO.setPageIndex(page);
-        adminProjectListVO.setPageSize(size);
-        return adminProjectListVO;
+//        PageRequest pageRequest = PageRequest.of(page,size);
+//        List<AdminProjectDTO> adminProjectDTOPage = clazzDAO.findAllClazzBack(pageRequest);
+//
+//        AdminProjectListVO adminProjectListVO = null;
+//        adminProjectListVO.setAdminProjectDTOList(adminProjectDTOPage);
+//        adminProjectListVO.setTotal(adminProjectDTOPage.size());
+//        adminProjectListVO.setPageIndex(page);
+//        adminProjectListVO.setPageSize(size);
+//        return adminProjectListVO;
+        return null;
     }
 
     @Override

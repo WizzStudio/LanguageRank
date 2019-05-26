@@ -20,9 +20,14 @@ public class ClazzMessageVO {
     private Integer commentNumber;
 
     /**
-     * 该用户是否已加入该班级
+     * 该用户今日在该班级是否打卡
      */
-    private Boolean isInClazz;
+    private Boolean isPunchCard;
+
+    //    /**
+//     * 该用户是否已加入该班级
+//     */
+//    private Boolean isInClazz;
 
     public ClazzMessageVO(String clazzImage, String clazzName, Integer studentNumber, Integer commentNumber) {
         this.clazzImage = clazzImage;

@@ -7,16 +7,17 @@ Created by Ben Wen on 2019/3/9.
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.wizzstudio.languagerank.DAO.userDAO.UserExchangedAwardDAO;
+import com.wizzstudio.languagerank.VO.UserRelationshipRankVO;
 import com.wizzstudio.languagerank.VO.WxLogInVO;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.DAO.*;
 import com.wizzstudio.languagerank.DAO.userDAO.UserDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserStudyedLanguageDAO;
-import com.wizzstudio.languagerank.DAO.userDAO.UserTranspondDAO;
+import com.wizzstudio.languagerank.domain.AwardStore;
 import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.DTO.WxInfoDTO;
+import com.wizzstudio.languagerank.domain.user.UserExchangedAward;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
-import com.wizzstudio.languagerank.service.StudyPlanService;
 import com.wizzstudio.languagerank.service.UserService;
 import com.wizzstudio.languagerank.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -36,20 +37,17 @@ public class UserServiceImpl implements UserService, Constant {
     @Autowired
     UserDAO userDAO;
     @Autowired
-    UserStudyedLanguageDAO userStudyedLanguageDAO;
+    AwardStoreDAO awardStoreDAO;
     @Autowired
-    StudyPlanDAO studyPlanDAO;
-    @Autowired
-    UserTranspondDAO userTranspondDAO;
-    @Autowired
-    StudyPlanService studyPlanService;
-    @Autowired
-    AwardDAO awardDAO;
+    UserExchangedAwardDAO userExchangedAwardDAO;
     @Autowired
     RedisUtil redisUtil;
 
     @Override
     public WxLogInVO userLogin(WxInfoDTO loginData) throws WxErrorException {
+        System.out.println(loginData.getCode());
+        System.out.println(loginData.getEncryptedData());
+        System.out.println(loginData.getIv());
 
         // 通过code获取用户openId与session_key
         WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
@@ -73,6 +71,7 @@ public class UserServiceImpl implements UserService, Constant {
     // 只通过openId新增用户，myLanguage默认为空，studyPlanDay默认为FIRST_DAY
     // 只在login中调用，调用时表示正在注册，isLoginToday设置为true
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public User saveUser(String openId, String nickName, String avatarUrl) {
         User user = new User();
         Date date = new Date();
@@ -82,11 +81,13 @@ public class UserServiceImpl implements UserService, Constant {
 //        user.setStudyPlanDay(StudyPlanDayEnum.NULL);
 //        user.setMyLanguage("未加入");
         user.setTotalScore(0);
+        user.setAvailableScore(0);
         user.setTotalWorshipScore(0);
         user.setTotalPunchCardScore(0);
         user.setTodayScore(0);
         user.setTodayPunchCardScore(0);
         user.setTodayWorshipScore(0);
+        user.setWorship(0);
         user.setTotalPunchCardDay(0);
         user.setIsPunchCardToday(false);
         // 默认10点提醒用户打卡
@@ -111,7 +112,65 @@ public class UserServiceImpl implements UserService, Constant {
         return userDAO.findByUserId(userId);
     }
 
-//    @Override
+    @Override
+    public Integer findUserTotalScore(Integer userId) {
+        return userDAO.findUserTotalScore(userId);
+    }
+
+    @Override
+    public Map<String, Object> getScoreStore(User user) {
+        Map<String, Object> scoreStoreMap = new HashMap<>();
+        scoreStoreMap.put("myTotalScore", user.getTotalScore());
+        scoreStoreMap.put("myAvailableScore", user.getAvailableScore());
+
+        List<AwardStore> awardStoreList = new ArrayList<>();
+        List<Integer> userAwardIdList = userExchangedAwardDAO.findAwardIdByUserId(user.getUserId());
+
+        ListIterator listIterator = awardStoreDAO.findAll().listIterator();
+        while (listIterator.hasNext()) {
+            AwardStore awardStore = (AwardStore)listIterator.next();
+            if (userAwardIdList.contains(awardStore.getAwardId())) {
+                awardStore.setIsExchanged(true);
+            } else {
+                awardStore.setIsExchanged(false);
+            }
+
+            awardStoreList.add(awardStore);
+        }
+
+        scoreStoreMap.put("awardStoreList", awardStoreList);
+        return scoreStoreMap;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean exchangedAward(User user, Integer awardId) {
+        AwardStore awardStore = awardStoreDAO.findByAwardId(awardId);
+        if (awardStore.getScore() > user.getAvailableScore()) {
+            return false;
+        }
+        user.setAvailableScore(user.getAvailableScore() - awardStore.getScore());
+        redisUtil.setUser(user.getUserId(), user);
+
+        UserExchangedAward userExchangedAward = new UserExchangedAward();
+        userExchangedAward.setUserId(user.getUserId());
+        userExchangedAward.setAwardId(awardId);
+        userExchangedAward.setExchangedTime(new Date());
+        userExchangedAwardDAO.save(userExchangedAward);
+
+        return true;
+    }
+
+    @Override
+    public List<UserRelationshipRankVO> getUserRelationshipRank(Integer userId) {
+        List<Integer> friendList = redisUtil.getUserRelationship(userId);
+        // 用户本人也要参与排行
+        friendList.add(userId);
+
+        return userDAO.findUserRelationshipRank(friendList);
+    }
+
+    //    @Override
 //    @Transactional(rollbackFor = Exception.class)
 //    public StudyPlanDayEnum updateStudyPlanDay(user user) {
 //        StudyPlanDayEnum studyPlanDayEnum = StudyPlanDayEnum.getStudyPlanDayByInteger(user.getStudyPlanDay().getStudyPlanDay() + 1);

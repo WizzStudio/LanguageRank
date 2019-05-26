@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
  * 获取全部班级列表接口返回列表内的对象类型
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class AllClazzVO {
     private Integer clazzId;
@@ -24,4 +23,15 @@ public class AllClazzVO {
 //    private Integer monitor;
 
     private Integer studentNumber;
+//
+//    /**
+//     * 用户是否加入了该班级
+//     */
+//    private Boolean isInClazz;
+
+    public AllClazzVO(Integer clazzId, String clazzName, Integer studentNumber) {
+        this.clazzId = clazzId;
+        this.clazzName = clazzName;
+        this.studentNumber = studentNumber;
+    }
 }

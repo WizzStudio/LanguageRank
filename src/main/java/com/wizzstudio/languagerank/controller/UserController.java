@@ -5,7 +5,9 @@ Created by Ben Wen on 2019/3/9.
 */
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.languagerank.VO.UserRelationshipRankVO;
 import com.wizzstudio.languagerank.constants.Constant;
+import com.wizzstudio.languagerank.constants.Errors;
 import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.service.*;
 import com.wizzstudio.languagerank.util.RedisUtil;
@@ -18,169 +20,94 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
 public class UserController implements Constant {
-
     @Autowired
     UserService userService;
     @Autowired
-    LanguageCountService languageCountService;
-    @Autowired
-    StudyPlanService studyPlanService;
-    @Autowired
-    ShareDimensionCodeService shareDimensionCodeService;
-    @Autowired
-    AwardService awardService;
-    @Autowired
     RedisUtil redisUtil;
 
-//    @PostMapping("/userinfo")
-//    public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject) {
-//        Integer userId = jsonObject.getInteger("userId");
-//
-////        user user =  userService.findByUserId(userId);
-//        user user = redisUtil.getUser(userId);
-////        System.out.println(user);
-//        String myLanguage = user.getMyLanguage();
-//        UserDTO userDTO = new UserDTO();
-//
-//        // 先新增用户学习计划天数，核心思想是数据库中存储的学习计划天数是用户可见的天数
-//        if (!"未加入".equals(myLanguage)) {
-//            if (!user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED) && user.getIsLogInToday().equals(false)) {
-//                StudyPlanDayEnum newStudyPlanDay =  userService.updateStudyPlanDay(user);
-//                userDTO.setIsViewedStudyPlan(true);
-//
-//                // 当用户今天登录后studyPlanDay与isLogInToday要变化，修改后存入redis(isLogInToday要手动修改)
-//                user.setStudyPlanDay(newStudyPlanDay);
-//            } else {
-//                userDTO.setIsViewedStudyPlan(false);
-//            }
-//
-//            Integer[] languageCountArrays = languageCountService.findJoinedNumberByLanguage(myLanguage);
-//            userDTO.setMyLanguage(myLanguage);
-//            userDTO.setJoinedNumber(languageCountArrays[0]);
-//            userDTO.setJoinedToday(languageCountArrays[1]);
-//            userDTO.setStudyPlanDay(user.getStudyPlanDay().getStudyPlanDay());
-//            userDTO.setIsViewedJoinMyApplet(user.getIsViewedJoinMyApplet());
-//        }
-//        // 用户今天已登录
-//        if (user.getIsLogInToday().equals(false)) {
-//            userService.updateIsLogInToday(userId);
-//            user.setIsLogInToday(true);
-//        }
-//
-//        redisUtil.setUser(userId, user);
-//        log.info("获取"+ userId + "号用户信息成功");
-//        return ResultUtil.success(userDTO);
-//    }
-//
-//    @PostMapping("/myaward")
-//    public ResponseEntity getMyAward(@RequestBody JSONObject jsonObject) {
-//        Integer userId = jsonObject.getInteger("userId");
-//
-////        user user =  userService.findByUserId(userId);
-//        user user = redisUtil.getUser(userId);
-//        Map<String, Object> myAward = new HashMap<>();
-//
-//        Award studyingLanguage = awardService.findAwardByLanguageName(user.getMyLanguage());
-//        // 将该语言的奖励返回，但只有完成了学习计划才能显示
-//        if (user.getStudyPlanDay().equals(StudyPlanDayEnum.ACCOMPLISHED)) {
-//            studyingLanguage.setIsViewed(true);
-//        } else {
-//            studyingLanguage.setIsViewed(false);
-//        }
-//
-//        List<Award> studyedLanguage = userService.findStudyedLanguageAwardByUserId(user);
-//
-//        try {
-//            myAward.put("studyingLanguage", studyingLanguage);
-//            myAward.put("studyedLanguage", studyedLanguage);
-//        } catch (NullPointerException e) {
-//            log.error("获取"+ userId + "号用户我的奖励失败");
-//            e.printStackTrace();
-//            return ResultUtil.error("获取"+ userId + "号用户我的奖励失败");
-//        }
-//        log.info("获取"+ userId + "号用户我的奖励成功");
-//        return ResultUtil.success("获取"+ userId + "号用户我的奖励成功", myAward);
-//    }
-//
-//    @PostMapping("/updatelanguage")
-//    @Transactional(rollbackFor = Exception.class)
-//    public ResponseEntity updateLanguage(@RequestBody JSONObject jsonObject){
-//        Integer userId = jsonObject.getInteger("userId");
-//        String languageName = jsonObject.getString("languageName");
-//
-//        Boolean isInStudyPlanLanguage = false;
-//        for (String language : Constant.STUDY_PLAN_LANGUAGE) {
-//            if (language.equals(languageName)) {
-//                isInStudyPlanLanguage = true;
-//                break;
-//            }
-//        }
-//        if (!isInStudyPlanLanguage) {
-//            return ResultUtil.error(Constant.NOT_READY_LANGUAGE);
-//        }
-//
-////        user user = userService.findByUserId(userId);
-//        user user = redisUtil.getUser(userId);
-//        if (languageName.equals(user.getMyLanguage())) {
-//            return ResultUtil.error(Constant.STUDYING_NOW);
-//        }
-//
-//        try {
-//            userService.updateMyLanguage(user, languageName);
-//        } catch (Exception e) {
-//            log.error(userId + "号用户更新语言失败");
-//            e.printStackTrace();
-//            return ResultUtil.error();
-//        }
-//        log.info(userId + "号更新语言成功");
-//        return ResultUtil.success();
-//    }
-//
-//    @PostMapping("/studyplan")
-//    public ResponseEntity getStudyPlan(@RequestBody JSONObject jsonObject){
-//        Integer userId = jsonObject.getInteger("userId");
-//
-////        user user =  userService.findByUserId(userId);
-//        user user = redisUtil.getUser(userId);
-//        if (user != null) {
-//            String languageName = user.getMyLanguage();
-//            Integer studyPlanDay = user.getStudyPlanDay().getStudyPlanDay();
-//
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("studyPlan", studyPlanService.getStudyedStudyPlanDay(languageName,studyPlanDay));
-//            map.put("isTranspondedList", userService.getUseTranspond(languageName, userId));
-//
-//            log.info("获取"+ userId + "号用户学习计划成功");
-//            return ResultUtil.success(map);
-//        }else {
-//            log.error("获取"+ userId + "号用户学习计划失败");
-//            return ResultUtil.error();
-//        }
-//    }
-//
-//    @PostMapping("/updatetranspond")
-//    public ResponseEntity updateUserTranspond(@RequestBody JSONObject jsonObject) {
-//        Integer studyPlanDay = jsonObject.getInteger("studyPlanDay");
-//        Integer userId = jsonObject.getInteger("userId");
-//
-//        try {
-////            user user =  userService.findByUserId(userId);
-//            user user = redisUtil.getUser(userId);
-//            userService.updateUserTranspondTable(user, studyPlanDay);
-//        } catch (Exception e) {
-//            log.error("更新"+ userId + "号用户转发表失败");
-//            return ResultUtil.error();
-//        }
-//        log.info("更新"+ userId + "号用户转发表成功");
-//        return ResultUtil.success();
-//    }
+    /**
+     * 获取用户主页的接口
+     */
+    @PostMapping("/userinfo")
+    public ResponseEntity getUserInfo(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
 
+        try {
+            User user = redisUtil.getUser(userId);
+            if (user.getIsLogInToday().equals(false)) {
+                userService.updateIsLogInToday(userId);
+                user.setIsLogInToday(true);
+                redisUtil.setUser(userId, user);
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("avatarUrl", user.getAvatarUrl());
+            map.put("nickName", user.getNickName());
+            map.put("totalScore", userService.findUserTotalScore(userId));
+
+            log.info("获取"+ userId + "号用户信息成功");
+            return ResultUtil.success(map);
+        } catch (Exception e) {
+            log.error("获取"+ userId + "号用户信息失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 获取积分商城的接口
+     */
+    @PostMapping("/scorestore")
+    public ResponseEntity scoreStore(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+
+        try {
+            User user = redisUtil.getUser(userId);
+            Map<String, Object> scoreStoreMap = userService.getScoreStore(user);
+
+            log.info(userId + "号用户获取积分商城成功");
+            return ResultUtil.success(scoreStoreMap);
+        } catch (Exception e) {
+            log.error(userId + "号用户获取积分商城失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 兑换奖品的接口
+     */
+    @PostMapping("/exchangedaward")
+    public ResponseEntity exchangedAward(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        Integer awardId = jsonObject.getInteger("awardId");
+
+        try {
+            User user = redisUtil.getUser(userId);
+            if (userService.exchangedAward(user, awardId)) {
+                log.info(userId + "号用户兑换" + awardId + "号奖品成功");
+                return ResultUtil.success();
+            } else {
+                log.error(userId + "号用户兑换" + awardId + "号奖品积分不足");
+                return ResultUtil.error(Errors.NOT_ENOUGH_SCORE);
+            }
+        } catch (Exception e) {
+            log.error(userId + "号用户兑换" + awardId + "号奖品失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
+
+    /**
+     * 关闭加入我的小程序弹窗接口
+     */
     @PostMapping("/updateisviewedjoinmyapplet")
     public ResponseEntity updateIsViewedJoinMyApplet(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
@@ -193,6 +120,9 @@ public class UserController implements Constant {
         return ResultUtil.success();
     }
 
+    /**
+     * 新增好友关系接口
+     */
     @PostMapping("/updateuserrelationship")
     public ResponseEntity updateUserRelationship(@RequestBody JSONObject jsonObject) {
         Integer userOne = jsonObject.getInteger("userOne");
@@ -208,38 +138,41 @@ public class UserController implements Constant {
         return ResultUtil.success();
     }
 
+    /**
+     * 获取好友关系接口
+     */
     @PostMapping("/getuserrelationship")
     public ResponseEntity getUserRelationship(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
 
-        List<String> stringList = new ArrayList<>(redisUtil.getUserRelationship(userId));
-        List<Integer> integerList = null;
-
-        // Java8 stream流式计算
         try {
-            integerList = stringList.stream().map(Integer::parseInt).collect(Collectors.toList());
+            List<Integer> friendList = redisUtil.getUserRelationship(userId);
+
+            log.info("获取"+ userId + "号用户好友关系成功");
+            return ResultUtil.success(friendList);
         } catch (Exception e) {
             log.error("获取"+ userId + "号用户好友关系失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
-        log.info("获取"+ userId + "号用户好友关系成功");
-        return ResultUtil.success(integerList);
     }
 
-////      获得分享的二维码图片
-//    @GetMapping("/dimensioncode")
-//    public ResponseEntity shareDimensionCode(){
-//        log.info("获取小程序码成功");
-//        return ResultUtil.success(shareDimensionCodeService.getDimensionCode());
-//    }
+    /**
+     * 获取好友排行接口
+     */
+    @PostMapping("/getuserrelationshiprank")
+    public ResponseEntity getUserRelationshipRank(@RequestBody JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
 
-//    @PostMapping("/test")
-//    public ResponseEntity testSetUser(@RequestBody JSONObject jsonObject) {
-//        Integer userId = jsonObject.getInteger("userId");
-//        user user = userService.findByUserId(userId);
-//        user user = redisUtil.getUser(userId);
-//        redisUtil.setUser(userId, user);
-//        return ResultUtil.success(redisUtil.getUser(userId));
-//    }
+        try {
+            List<UserRelationshipRankVO> userRelationshipRank = userService.getUserRelationshipRank(userId);
+
+            log.info("获取"+ userId + "号用户好友排行成功");
+            return ResultUtil.success(userRelationshipRank);
+        } catch (Exception e) {
+            log.error("获取"+ userId + "号用户好友排行失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+    }
 }

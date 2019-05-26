@@ -6,7 +6,9 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-// 雇主需求详情页面第一部分
+/**
+ * 雇主需求详情页面第一部分
+ */
 @Data
 @Entity
 public class LanguagePost {

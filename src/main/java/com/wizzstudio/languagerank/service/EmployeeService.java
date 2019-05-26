@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.service;
 Created by Ben Wen on 2019/3/22.
 */
 
+import com.wizzstudio.languagerank.VO.LanguageMessageVO;
 import com.wizzstudio.languagerank.domain.employeerank.CompanyPost;
 import com.wizzstudio.languagerank.domain.employeerank.CompanySalary;
 import com.wizzstudio.languagerank.domain.employeerank.LanguageCity;
@@ -12,6 +13,11 @@ import com.wizzstudio.languagerank.domain.employeerank.LanguagePost;
 import java.util.List;
 
 public interface EmployeeService {
+    /**
+     * 查询与该语言相关的基本信息
+     */
+    LanguageMessageVO getLanguageMessage(String languageName);
+
     /**
      * 查询与该语言相关的热门岗位排行
      */

@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ClazzCommentDAO extends JpaRepository<ClazzComment, Integer>, JpaSpecificationExecutor<ClazzComment> {
-    @Query("select count(c) from ClazzComment c where c.clazzId = clazzId")
+    @Query("select count(c) from ClazzComment c where c.clazzId = :clazzId")
     Integer getTheNumberOfComment(@Param("clazzId") Integer clazzId);
 }

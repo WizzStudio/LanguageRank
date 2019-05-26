@@ -37,7 +37,10 @@ public class EmployeeRank {
     @NotNull
     private Double employeeFinalExponent;
 
-//    后台修改指数，可以为null
+
+    /**
+     * 后台修改指数，可以为null
+     */
     private Double eArtificialExponent;
 
     // 更新时间

@@ -3,8 +3,6 @@ package com.wizzstudio.languagerank.service.Admin;
 import com.wizzstudio.languagerank.DAO.employeerankDAO.EmployeeRankDAO;
 import com.wizzstudio.languagerank.domain.employeerank.EmployeeRank;
 import com.wizzstudio.languagerank.DTO.admin.AdminStudyPlanDTO;
-import com.wizzstudio.languagerank.service.Admin.AdminStudyPlanService;
-import com.wizzstudio.languagerank.service.LanguageCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +12,6 @@ import java.util.List;
 @Service
 public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
 
-    @Autowired
-    LanguageCountService languageCountService;
     @Autowired
     EmployeeRankDAO employeeRankDAO;
 
@@ -30,8 +26,8 @@ public class AdminStudyPlanServiceImpl implements AdminStudyPlanService {
             String languageName = employeeRank.getLanguageName();
 
             adminStudyPlanDTO.setLanguageName(languageName);
-            adminStudyPlanDTO.setIncreaseNumber(languageCountService.findJoinedNumberByLanguage(languageName)[1]);
-            adminStudyPlanDTO.setNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
+//            adminStudyPlanDTO.setIncreaseNumber(languageCountService.findJoinedNumberByLanguage(languageName)[1]);
+//            adminStudyPlanDTO.setNumber(languageCountService.findJoinedNumberByLanguage(languageName)[0]);
 
             adminStudyPlanDTOList.add(adminStudyPlanDTO);
         }

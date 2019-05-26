@@ -19,14 +19,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/cms")
 @Slf4j
-public class AdminController0 {
+public class AdminController {
 
     @Autowired
     FixedRankService fixedRankService;
     @Autowired
     EmployeeRankService employeeRankService;
-    @Autowired
-    StudyPlanService studyPlanService;
     @Autowired
     AdminStudyPlanService adminStudyPlanService;
     @Autowired
@@ -50,12 +48,6 @@ public class AdminController0 {
         return ResultUtil.success(adminStudyPlanService.getAdminStudyPlan());
     }
 
-//    返回给后台某语言的所有的学习计划
-    @GetMapping("/study/{languageName}")
-    public ResponseEntity getStudyAllPlan(@PathVariable("languageName")String languageName) {
-        return ResultUtil.success(studyPlanService.getAllStudyPlanDay(languageName));
-    }
-
     // 将学习计划/奖励图片上传至七牛云并存储至数据库
     // 返回图片URL路径
     @PostMapping("storestudyplanimage")
@@ -68,7 +60,7 @@ public class AdminController0 {
             log.error("上传文件失败");
             throw new IOException();
         }
-        studyPlanService.saveStudyPlan(filePath, studyPlanImageDTO);
+//        studyPlanService.saveStudyPlan(filePath, studyPlanImageDTO);
 
         Map<String, String> map = new HashMap<>();
         map.put("filePath", filePath);

@@ -46,6 +46,12 @@ public class Clazz {
     @NotNull
     private Integer commentNumber;
 
+    /**
+     * 班级简介
+     */
+    @NotNull
+    private String clazzBriefIntroduction;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = "clazzList")
     @JoinTable(

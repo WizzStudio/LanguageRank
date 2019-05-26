@@ -1,7 +1,7 @@
 package com.wizzstudio.languagerank.domain.clazz;
 
 /*
-Created by Ben Wen on 2019/4/25.
+Created by Ben Wen on 2019/5/17.
 */
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -17,44 +17,28 @@ import java.util.Date;
 
 @Data
 @Entity
-public class UserClazz {
+public class Worship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * 膜拜者userId
+     */
     @NotNull
-    private Integer userId;
+    private Integer worshippingUser;
 
+    /**
+     * 被膜拜者userId
+     */
     @NotNull
-    private Integer clazzId;
+    private Integer worshippedUser;
 
+    /**
+     * 膜拜时间
+     */
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date joinedTime;
-
-    /**
-     * 用户在该班级的学习天数
-     */
-    @NotNull
-    private Integer allStudyPlanDay;
-
-    /**
-     * 用户连续打卡天数
-     */
-    @NotNull
-    private Integer uninterruptedStudyPlanDay;
-
-    /**
-     * 用户今天是否学习
-     */
-    @NotNull
-    private Boolean isStudyToday;
-
-    /**
-     * 用户打卡时间(从未打卡时打卡时间为空)
-     */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date studyTime;
+    private Date worshipTime;
 }

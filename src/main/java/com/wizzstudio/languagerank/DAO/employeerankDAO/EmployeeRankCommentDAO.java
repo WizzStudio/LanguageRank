@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface EmployeeRankCommentDAO extends JpaRepository<EmployeeRankComment, Integer>, JpaSpecificationExecutor<EmployeeRankComment> {
-    @Query("select count(e) from EmployeeRankComment e where e.languageName = languageName")
+    @Query("select count(e) from EmployeeRankComment e where e.languageName = :languageName")
     Integer getTheNumberOfComment(@Param("languageName") String languageName);
 }

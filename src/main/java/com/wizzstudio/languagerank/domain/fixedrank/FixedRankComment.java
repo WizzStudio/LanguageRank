@@ -4,10 +4,11 @@ package com.wizzstudio.languagerank.domain.fixedrank;
 Created by Ben Wen on 2019/4/24.
 */
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wizzstudio.languagerank.domain.Comment;
 import com.wizzstudio.languagerank.domain.user.User;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class FixedRankComment implements Comment {
+public class FixedRankComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,5 +34,7 @@ public class FixedRankComment implements Comment {
     private String comment;
 
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date saveTime;
 }

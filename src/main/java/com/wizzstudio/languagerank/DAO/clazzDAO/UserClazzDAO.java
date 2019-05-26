@@ -40,6 +40,17 @@ public interface UserClazzDAO extends JpaRepository<UserClazz, Integer>, JpaSpec
     @Query("select u.clazzId from UserClazz u where u.userId = :userId")
     List<Integer> findUserJoinedClazz(@Param("userId")Integer userId);
 
+    @Query("select u.isStudyToday from UserClazz u where u.clazzId = :clazzId and u.userId = :userId")
+    Boolean findIsStudyToday(@Param("clazzId")Integer clazzId, @Param("userId")Integer userId);
+
+    @Modifying
+    @Query("update UserClazz u set u.isStudyToday = false")
+    void resetIsStudyToday();
+
+    @Modifying
+    @Query("update UserClazz u set u.uninterruptedStudyPlanDay = 0 where u.isStudyToday = false")
+    void resetUninterruptedStudyPlanDay();
+
     /**
      * 删除班级
      */

@@ -16,9 +16,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -34,6 +37,7 @@ public class RedisUtil {
 
     // 以userId值为key，user对象为value存入redis中，30分钟(1800秒)后过期，时间单位为秒
     // 如果redis中没有该用户则新增，有该用户则更新数据
+    @Transactional(rollbackFor = Exception.class)
     public void setUser(Integer userId, User user) {
         userCacheRedisTemplate.opsForValue().set(Integer.toString(userId), user, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
     }
@@ -48,13 +52,15 @@ public class RedisUtil {
             userDAO.updateLogInLastTime(new Date(), userId);
         }
         return user;
-    }
+}
 
     // 清空redis中的key
+    @Transactional(rollbackFor = Exception.class)
     public void flushUserCacheRedis() {
         userCacheRedisTemplate.delete(userCacheRedisTemplate.keys("*"));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void setUserRelationship(Integer userOne, Integer userTwo) {
         // 互相加入对方好友集合中，用set集合可以不用考虑重复的问题
         userRelationshipRedisTemplate.opsForSet().add(Integer.toString(userOne), Integer.toString(userTwo));
@@ -69,7 +75,9 @@ public class RedisUtil {
         }
     }
 
-    public Set<String> getUserRelationship(Integer userId) {
-        return userRelationshipRedisTemplate.opsForSet().members(Integer.toString(userId));
+    // Java8 stream流式计算
+    public List<Integer> getUserRelationship(Integer userId) {
+        List<String> stringList = new ArrayList<>(userRelationshipRedisTemplate.opsForSet().members(Integer.toString(userId)));
+        return stringList.stream().map(Integer::parseInt).collect(Collectors.toList());
     }
 }

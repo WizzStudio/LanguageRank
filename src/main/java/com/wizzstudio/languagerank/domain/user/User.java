@@ -1,5 +1,6 @@
 package com.wizzstudio.languagerank.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.domain.clazz.ClazzComment;
@@ -7,6 +8,7 @@ import com.wizzstudio.languagerank.domain.employeerank.EmployeeRankComment;
 import com.wizzstudio.languagerank.domain.fixedrank.FixedRankComment;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -49,6 +51,12 @@ public class User implements Serializable {
      */
     @NotNull
     private Integer totalScore;
+
+    /**
+     * 用户可用积分
+     */
+    @NotNull
+    private Integer availableScore;
 
     /**
      * 用户通过打卡获得的总积分
@@ -115,12 +123,16 @@ public class User implements Serializable {
      * 用户注册时间
      */
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date logInTime;
 
     /**
      * 用户上次登录时间
      */
     @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date logInLastTime;
 
     @OneToMany(cascade = CascadeType.ALL)

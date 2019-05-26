@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminProjectDTO {
-
     private Integer id;
 
     private String projectName;

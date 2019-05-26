@@ -43,14 +43,16 @@ public class UserController implements Constant {
         try {
             User user = redisUtil.getUser(userId);
             if (user.getIsLogInToday().equals(false)) {
-                userService.updateIsLogInToday(userId);
+//                userService.updateIsLogInToday(userId);
                 user.setIsLogInToday(true);
                 redisUtil.setUser(userId, user);
             }
             Map<String, Object> map = new HashMap<>();
             map.put("avatarUrl", user.getAvatarUrl());
             map.put("nickName", user.getNickName());
-            map.put("totalScore", userService.findUserTotalScore(userId));
+//            map.put("totalScore", userService.findUserTotalScore(userId));
+            map.put("totalScore", user.getTotalScore());
+
 
             log.info("获取"+ userId + "号用户信息成功");
             return ResultUtil.success(map);
@@ -111,7 +113,7 @@ public class UserController implements Constant {
     @PostMapping("/updateisviewedjoinmyapplet")
     public ResponseEntity updateIsViewedJoinMyApplet(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
-        userService.updateIsViewedJoinMyApplet(userId);
+//        userService.updateIsViewedJoinMyApplet(userId);
         User user = redisUtil.getUser(userId);
         user.setIsViewedJoinMyApplet(false);
         redisUtil.setUser(userId, user);

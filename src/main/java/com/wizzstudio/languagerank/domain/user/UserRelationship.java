@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Data
@@ -24,4 +25,10 @@ public class UserRelationship {
 
     @NotNull
     private Integer userTwo;
+
+    /**
+     * 两人建立关系的时间
+     */
+    @NotNull
+    private Date joinedTime;
 }

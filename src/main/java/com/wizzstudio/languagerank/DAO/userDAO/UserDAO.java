@@ -51,6 +51,12 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Query("select u from User u where u.reminderTime = :reminderTime and u.isPunchCardToday = false")
     List<User> findUsersNotPunchCardTodayAndRemindAtWhen(@Param("reminderTime")PunchReminderTimeEnum reminderTime);
 
+    /**
+     *  查询设置为在reminderTime点时进行消息推送的用户
+     */
+    @Query("select u from User u where u.reminderTime = :reminderTime")
+    List<User> findUsersRemindAtWhen(@Param("reminderTime")PunchReminderTimeEnum reminderTime);
+
     @Query("select u.totalScore from User u where u.userId = :userId")
     Integer findUserTotalScore(@Param("userId")Integer userId);
 
@@ -61,6 +67,10 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.isPunchCardToday = false")
     void resetIsPunchCardToday();
+
+    @Modifying
+    @Query("update User u set u.todayScore = 0, u.todayPunchCardScore = 0, u.todayWorshipScore = 0")
+    void resetScoreToday();
 
     @Modifying
     @Query("update User u set u.isLogInToday = true where u.userId = :userId")

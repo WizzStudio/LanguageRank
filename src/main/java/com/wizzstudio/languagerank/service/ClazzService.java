@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.service;
 Created by Ben Wen on 2019/4/26.
 */
 
+import com.wizzstudio.languagerank.DTO.ClazzMemberDTO;
 import com.wizzstudio.languagerank.DTO.CreateClazzDTO;
 import com.wizzstudio.languagerank.DTO.UserClazzDTO;
 import com.wizzstudio.languagerank.VO.AllClazzVO;
@@ -69,9 +70,9 @@ public interface ClazzService {
     String getUserClazzStudyPlanToday(Integer userId, Integer clazzId);
 
     /**
-     * 获取班级特殊成员(班长和好友)的昵称与头像
+     * 获取该班级中用户好友信息
      */
-    Map<String, Object> getSpecialClazzMember(Integer userId, Integer clazzId);
+    List<ClazzMemberDTO> getUserRelationshipMember(Integer userId, Integer clazzId);
 
     /**
      *  获取班级成员列表

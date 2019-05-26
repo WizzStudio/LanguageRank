@@ -30,6 +30,6 @@ public class ClazzCommentNumberAspect {
         Integer clazzId = ((JSONObject)joinPoint.getArgs()[0]).getInteger("clazzId");
 
         Clazz clazz = clazzDAO.findByClazzId(clazzId);
-        clazz.setCommentNumber(clazz.getStudentNumber() + 1);
+        clazz.setCommentNumber(clazz.getCommentNumber() + 1);
     }
 }

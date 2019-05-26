@@ -32,6 +32,7 @@ public class PushMessageServiceImpl implements PushMessageService, Constant {
     public void sendTemplateMsg(PunchReminderTimeEnum reminderTime) {
         WxMaMsgService msgService = wxService.getMsgService();
         List<User> userList = userDAO.findUsersNotPunchCardTodayAndRemindAtWhen(reminderTime);
+//        List<User> userList = userDAO.findUsersRemindAtWhen(reminderTime);
         if (userList.isEmpty()) {
             return;
         }

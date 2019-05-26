@@ -17,6 +17,7 @@ import com.wizzstudio.languagerank.DTO.*;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.ClazzService;
 import com.wizzstudio.languagerank.service.PosterService;
+import com.wizzstudio.languagerank.service.PushMessageService;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +36,8 @@ public class ClazzController implements Constant, Errors {
     ClazzService clazzService;
     @Autowired
     PosterService posterService;
+    @Autowired
+    PushMessageService pushMessageService;
 
     /**
      * 创建班级的接口
@@ -248,20 +250,20 @@ public class ClazzController implements Constant, Errors {
     }
 
     /**
-     * 查询某班级的班长及该班级中某用户全部好友的接口
+     * 查询该班级中用户好友信息的接口
      */
     @PostMapping("/getspecialclazzmember")
-    public ResponseEntity getSpecialClazzMember(@RequestBody JSONObject jsonObject) {
+    public ResponseEntity getUserRelationshipMember(@RequestBody JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
         Integer clazzId = jsonObject.getInteger("clazzId");
 
         try {
-            Map<String, Object> specialClazzMember = clazzService.getSpecialClazzMember(userId, clazzId);
+            List<ClazzMemberDTO> userRelationshipMember = clazzService.getUserRelationshipMember(userId, clazzId);
 
-            log.info("获取班级特殊成员成功");
-            return ResultUtil.success(specialClazzMember);
+            log.info("获取" + userId + "号用户在班级" + clazzId + "中的好友信息成功");
+            return ResultUtil.success(userRelationshipMember);
         } catch (Exception e) {
-            log.error("获取班级特殊成员失败");
+            log.error("获取" + userId + "号用户在班级" + clazzId + "中的好友信息失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -537,6 +539,39 @@ public class ClazzController implements Constant, Errors {
             e.printStackTrace();
             return ResultUtil.error();
         }
+    }
+
+    @PostMapping("/testpushmessage")
+    public ResponseEntity testPushMessage(@RequestBody JSONObject jsonObject) {
+        Integer reminderTime = jsonObject.getInteger("reminderTime");
+
+        PunchReminderTimeEnum punchReminderTime;
+        switch (reminderTime) {
+            case 8:
+                punchReminderTime = PunchReminderTimeEnum.EIGHT;
+                break;
+            case 9:
+                punchReminderTime = PunchReminderTimeEnum.NINE;
+                break;
+            case 10:
+                punchReminderTime = PunchReminderTimeEnum.TEN;
+                break;
+            case 11:
+                punchReminderTime = PunchReminderTimeEnum.ELEVEN;
+                break;
+            default:
+                return ResultUtil.error(Errors.ILLEGAL_ARGUMENT_IN_UPDATE_PUNCHCARD_REMINDER_TIME);
+        }
+        try {
+            pushMessageService.sendTemplateMsg(punchReminderTime);
+            log.info("测试推送模板消息成功");
+            return ResultUtil.success();
+        } catch (Exception e) {
+            log.error("测试推送模板消息失败");
+            e.printStackTrace();
+            return ResultUtil.error();
+        }
+
     }
 
 //    /**

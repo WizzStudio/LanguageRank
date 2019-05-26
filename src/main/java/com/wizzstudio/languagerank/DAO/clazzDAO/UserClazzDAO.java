@@ -33,6 +33,9 @@ public interface UserClazzDAO extends JpaRepository<UserClazz, Integer>, JpaSpec
     @Query("select count(u) from UserClazz u where u.clazzId = :clazzId")
     Integer getTheNumberOfStudents(@Param("clazzId")Integer clazzId);
 
+    @Query("select u from UserClazz u where u.clazzId = :clazzId and u.userId in (:friendList) order by u.uninterruptedStudyPlanDay DESC ")
+    List<UserClazz> findUserRelationshipInClazzByUninterruptedStudyPlanDay(@Param("clazzId")Integer clazzId, @Param("friendList")List<Integer> friendList);
+
     /**
      * 查询用户已加入的班级的clazzId
      */

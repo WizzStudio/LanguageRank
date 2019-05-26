@@ -37,9 +37,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.*;
 
 @Service
@@ -91,12 +89,13 @@ public class ClazzServiceImpl implements ClazzService {
     @Override
     public List<UserClazzDTO> getUserClazzList(Integer userId) {
         List<Clazz> clazzList = userDAO.findUserClazz(userId);
+//        List<Clazz> clazzList = redisUtil.getUser(userId).getClazzList();
         List<UserClazzDTO> userClazzListDTOList = new ArrayList<>();
         for (Clazz clazz : clazzList) {
             UserClazzDTO userClazzDTO = new UserClazzDTO();
             userClazzDTO.setClazzImage(clazz.getClazzImage());
             userClazzDTO.setClazzName(clazz.getClazzName());
-            userClazzDTO.setMonitorNickName(userDAO.findNickNameByUserId(clazz.getMonitor()));
+            userClazzDTO.setMonitorNickName(redisUtil.getUser(clazz.getMonitor()).getNickName());
             userClazzDTO.setClazzId(clazz.getClazzId());
 
             userClazzListDTOList.add(userClazzDTO);
@@ -117,31 +116,22 @@ public class ClazzServiceImpl implements ClazzService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void joinClazz(Integer userId, Integer clazzId) {
-        UserClazz userClazz = new UserClazz();
-        userClazz.setUserId(userId);
-        userClazz.setClazzId(clazzId);
-        userClazz.setJoinedTime(new Date());
-        userClazz.setAllStudyPlanDay(0);
-        // 还有问题，当用户一天重复加入某一班级时;
-        userClazz.setUninterruptedStudyPlanDay(0);
-        userClazz.setStudyTime(null);
-        userClazz.setIsStudyToday(false);
-
-        userClazzDAO.save(userClazz);
+        redisUtil.joinClazz(userId, clazzId);
     }
 
     // 重复加入班级的一串逻辑最后再加
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void quitClazz(Integer userId, Integer clazzId) {
-        UserClazz userClazz = userClazzDAO.findByClazzIdAndUserId(clazzId, userId);
-//        UserJoinedClazz userJoinedClazz = new UserJoinedClazz();
-//        userJoinedClazz.setUserId(userId);
-//        userJoinedClazz.setJoinedClazzId(clazzId);
-//        userJoinedClazz.setIsJoinedToday(true);
-//        userJoinedClazz.setStudyPlanDay(userClazz.getAllStudyPlanDay());
-//        userJoinedClazzDAO.save(userJoinedClazz);
-        userClazzDAO.delete(userClazz);
+//        UserClazz userClazz = userClazzDAO.findByClazzIdAndUserId(clazzId, userId);
+////        UserJoinedClazz userJoinedClazz = new UserJoinedClazz();
+////        userJoinedClazz.setUserId(userId);
+////        userJoinedClazz.setJoinedClazzId(clazzId);
+////        userJoinedClazz.setIsJoinedToday(true);
+////        userJoinedClazz.setStudyPlanDay(userClazz.getAllStudyPlanDay());
+////        userJoinedClazzDAO.save(userJoinedClazz);
+//        userClazzDAO.delete(userClazz);
+        redisUtil.quitClazz(userId, clazzId);
     }
 
     @Override
@@ -154,7 +144,8 @@ public class ClazzServiceImpl implements ClazzService {
 //            clazzMessage.setIsInClazz(false);
 //        }
 
-        if (userClazzDAO.findIsStudyToday(clazzId, userId)) {
+        Boolean isStudyToday = userClazzDAO.findIsStudyToday(clazzId, userId);
+        if (isStudyToday != null && isStudyToday) {
             clazzMessage.setIsPunchCard(true);
         } else {
             clazzMessage.setIsPunchCard(false);
@@ -186,32 +177,39 @@ public class ClazzServiceImpl implements ClazzService {
     }
 
     @Override
-    public Map<String, Object> getSpecialClazzMember(Integer userId, Integer clazzId) {
-        Map<String, Object> clazzMemberMap = new HashMap<>();
+    public List<ClazzMemberDTO> getUserRelationshipMember(Integer userId, Integer clazzId) {
+//        Map<String, Object> clazzMemberMap = new HashMap<>();
 
-        ClazzMemberDTO monitor = new ClazzMemberDTO();
-        User monitorDomain = userDAO.findByUserId(clazzDAO.findMonitorByClazzId(clazzId));
-        monitor.setUserId(monitorDomain.getUserId());
-        monitor.setNickName(monitorDomain.getNickName());
-        monitor.setAvatarUrl(monitorDomain.getAvatarUrl());
-        clazzMemberMap.put("monitor", monitor);
+//        ClazzMemberDTO monitor = new ClazzMemberDTO();
+//        Integer monitorId = clazzDAO.findMonitorByClazzId(clazzId);
+//        NickNameAndAvatarUrlDTO monitorDomain = userDAO.findNickNameAndAvatarUrlByUserId(monitorId);
+//        monitor.setUserId(monitorId);
+//        monitor.setNickName(monitorDomain.getNickName());
+//        monitor.setAvatarUrl(monitorDomain.getAvatarUrl());
+//        clazzMemberMap.put("monitor", monitor);
 
-        List<Integer> friendIdList = redisUtil.getUserRelationship(userId);
+//        List<Integer> friendIdList = redisUtil.getUserRelationship(userId);
         // 求用户好友List与班级学员List的交集
         // 用户数较大时性能降低严重，考虑用将班级学员写入redis再求交集
-        friendIdList.retainAll(userClazzDAO.findAllUserIdInClazz(clazzId));
+//        friendIdList.retainAll(redisUtil.getClazzMember(clazzId));
+        List<Integer> friendIdList = redisUtil.getUserRelationshipInClazz(userId, clazzId);
+        if (friendIdList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<UserClazz> userRelationshipInClazz = userClazzDAO.findUserRelationshipInClazzByUninterruptedStudyPlanDay(clazzId, friendIdList);
         List<ClazzMemberDTO> friendList = new ArrayList<>();
-        for (Integer friendId : friendIdList) {
+        for (UserClazz userClazz : userRelationshipInClazz) {
             ClazzMemberDTO friend = new ClazzMemberDTO();
-            User friendDomain = userDAO.findByUserId(friendId);
-            friend.setUserId(friendDomain.getUserId());
+            User friendDomain = redisUtil.getUser(userClazz.getUserId());
+            friend.setUserId(userClazz.getUserId());
             friend.setAvatarUrl(friendDomain.getAvatarUrl());
             friend.setNickName(friendDomain.getNickName());
+            friend.setUninterruptedStudyPlanDay(userClazz.getUninterruptedStudyPlanDay());
             friendList.add(friend);
         }
-        clazzMemberMap.put("friend", friendList);
+//        clazzMemberMap.put("friend", friendList);
 
-        return clazzMemberMap;
+        return friendList;
     }
 
     @Override
@@ -226,12 +224,12 @@ public class ClazzServiceImpl implements ClazzService {
 
         List<ClazzMemberDTO> clazzMemberDTOList = new ArrayList<>();
         for (UserClazz userClazz : memberList) {
-            User user = userDAO.findByUserId(userClazz.getUserId());
+            User user = redisUtil.getUser(userClazz.getUserId());
             ClazzMemberDTO clazzMemberDTO = new ClazzMemberDTO();
 
             clazzMemberDTO.setJoinedTime(userClazz.getJoinedTime());
             clazzMemberDTO.setUninterruptedStudyPlanDay(userClazz.getUninterruptedStudyPlanDay());
-            clazzMemberDTO.setUserId(user.getUserId());
+            clazzMemberDTO.setUserId(userClazz.getUserId());
             clazzMemberDTO.setNickName(user.getNickName());
             clazzMemberDTO.setAvatarUrl(user.getAvatarUrl());
 
@@ -240,7 +238,7 @@ public class ClazzServiceImpl implements ClazzService {
 
         Map<String, Object> clazzMemberMap = new HashMap<>();
         clazzMemberMap.put("members", clazzMemberDTOList);
-        clazzMemberMap.put("total", userClazzDAO.getTheNumberOfStudents(clazzId));
+        clazzMemberMap.put("total", redisUtil.getTheNumberOfStudents(clazzId));
         clazzMemberMap.put("pageIndex", pageIndex);
         clazzMemberMap.put("pageSize", Constant.RANK_PAGE_SIZE);
 
@@ -258,7 +256,7 @@ public class ClazzServiceImpl implements ClazzService {
         userClazz.setAllStudyPlanDay(userClazz.getAllStudyPlanDay() + 1);
         userClazz.setUninterruptedStudyPlanDay(userClazz.getUninterruptedStudyPlanDay() + 1);
 
-        User user = userDAO.findByUserId(userId);
+        User user = redisUtil.getUser(userId);
         // 修改用户总体打卡情况
         if (!user.getIsPunchCardToday()) {
             user.setIsPunchCardToday(true);
@@ -273,45 +271,58 @@ public class ClazzServiceImpl implements ClazzService {
             } else {
                 todayPunchCardScore = userClazz.getUninterruptedStudyPlanDay() * 5;
             }
-            user.setTodayPunchCardScore(user.getTotalPunchCardScore() + todayPunchCardScore);
+            user.setTodayPunchCardScore(user.getTodayPunchCardScore() + todayPunchCardScore);
             user.setTodayScore(user.getTodayScore() + todayPunchCardScore);
             user.setTotalPunchCardScore(user.getTotalPunchCardScore() + todayPunchCardScore);
             user.setTotalScore(user.getTotalScore() + todayPunchCardScore);
             user.setAvailableScore(user.getAvailableScore() + todayPunchCardScore);
         }
-
-//        // 设置新的模板消息推送formId
-//        user.setFormId(formId);
+        // 设置新的模板消息推送formId
+        user.setFormId(formId);
+        redisUtil.setUser(userId, user);
     }
 
     @Override
     public Integer getPunchCardReminderTime(Integer userId) {
-        return userDAO.getPunchCardReminderTime(userId).getReminderTime();
+//        return userDAO.getPunchCardReminderTime(userId).getReminderTime();
+        return redisUtil.getUser(userId).getReminderTime().getReminderTime();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePunchCardReminderTime(Integer userId, PunchReminderTimeEnum punchReminderTime) {
-        userDAO.updatePunchCardReminderTime(userId, punchReminderTime);
+//        userDAO.updatePunchCardReminderTime(userId, punchReminderTime);
+        User user = redisUtil.getUser(userId);
+        user.setReminderTime(punchReminderTime);
+        redisUtil.setUser(userId, user);
     }
 
     @Override
     public UserPunchCardMessageTodayVO getUserPunchCardMessageToday(Integer userId, Integer clazzId) {
-        UserPunchCardMessageTodayVO message = userDAO.findUserPunchCardMessageToday(userId);
-        message.setUninterruptedStudyPlanDay(userClazzDAO.findByClazzIdAndUserId(clazzId, userId).getUninterruptedStudyPlanDay());
-        return message;
+//        UserPunchCardMessageTodayVO message = userDAO.findUserPunchCardMessageToday(userId);
+        UserPunchCardMessageTodayVO userPunchCardMessageToday = new UserPunchCardMessageTodayVO();
+        User user = redisUtil.getUser(userId);
+        userPunchCardMessageToday.setAvatarUrl(user.getAvatarUrl());
+        userPunchCardMessageToday.setTodayScore(user.getTodayScore());
+        userPunchCardMessageToday.setTotalPunchCardDay(user.getTotalPunchCardDay());
+        userPunchCardMessageToday.setTotalScore(user.getTotalScore());
+        userPunchCardMessageToday.setUninterruptedStudyPlanDay(userClazzDAO.findByClazzIdAndUserId(clazzId, userId).getUninterruptedStudyPlanDay());
+        return userPunchCardMessageToday;
     }
 
     @Override
     public Map<String, Object> getHardWorkingRank(Integer userId, Integer clazzId, Integer pageIndex) {
         Map<String, Object> hardworkingRankMap = new HashMap<>();
-        hardworkingRankMap.put("me", userDAO.findMyHardworking(userId));
+
+        User user = redisUtil.getUser(userId);
+        HardworkingRankDTO myHardworking = new HardworkingRankDTO(userId, user.getNickName(), user.getAvatarUrl(), user.getTodayScore());
+        hardworkingRankMap.put("me", myHardworking);
 
         Pageable pageable = PageRequest.of(pageIndex - 1, Constant.RANK_PAGE_SIZE, Sort.Direction.DESC, "todayScore");
-        Page<HardworkingRankDTO> page = userDAO.findHardingworkingRank(pageable, userClazzDAO.findAllUserIdInClazz(clazzId));
+        Page<HardworkingRankDTO> page = userDAO.findHardingworkingRank(pageable, redisUtil.getClazzMember(clazzId));
 
         hardworkingRankMap.put("members", page.getContent());
-        hardworkingRankMap.put("total", userClazzDAO.getTheNumberOfStudents(clazzId));
+        hardworkingRankMap.put("total", redisUtil.getTheNumberOfStudents(clazzId));
         hardworkingRankMap.put("pageIndex", pageIndex);
         hardworkingRankMap.put("pageSize", Constant.RANK_PAGE_SIZE);
 
@@ -321,13 +332,15 @@ public class ClazzServiceImpl implements ClazzService {
     @Override
     public Map<String, Object> getPopularityRank(Integer userId, Integer clazzId, Integer pageIndex) {
         Map<String, Object> popularityRankMap = new HashMap<>();
-        popularityRankMap.put("me", userDAO.findMyPopularity(userId));
+        User user = redisUtil.getUser(userId);
+        PopularityRankDTO myPopularity = new PopularityRankDTO(userId, user.getNickName(), user.getAvatarUrl(), user.getWorship());
+        popularityRankMap.put("me", myPopularity);
 
         Pageable pageable = PageRequest.of(pageIndex - 1, Constant.RANK_PAGE_SIZE, Sort.Direction.DESC, "worship");
-        Page<PopularityRankDTO> page = userDAO.findPopularityRank(pageable, userClazzDAO.findAllUserIdInClazz(clazzId));
+        Page<PopularityRankDTO> page = userDAO.findPopularityRank(pageable, redisUtil.getClazzMember(clazzId));
 
         popularityRankMap.put("members", page.getContent());
-        popularityRankMap.put("total", userClazzDAO.getTheNumberOfStudents(clazzId));
+        popularityRankMap.put("total", redisUtil.getTheNumberOfStudents(clazzId));
         popularityRankMap.put("pageIndex", pageIndex);
         popularityRankMap.put("pageSize", Constant.RANK_PAGE_SIZE);
 
@@ -348,13 +361,14 @@ public class ClazzServiceImpl implements ClazzService {
         worship.setWorshipTime(new Date());
         worshipDAO.save(worship);
 
-        User user =  userDAO.findByUserId(worshippedUser);
+        User user =  redisUtil.getUser(worshippedUser);
         user.setWorship(user.getWorship() + 1);
-        user.setTodayWorshipScore(user.getTotalWorshipScore() + 10);
+        user.setTodayWorshipScore(user.getTodayWorshipScore() + 10);
         user.setTotalWorshipScore(user.getTotalWorshipScore() + 10);
         user.setTodayScore(user.getTodayScore() + 10);
         user.setTotalScore(user.getTotalScore() + 10);
         user.setAvailableScore(user.getAvailableScore() + 10);
+        redisUtil.setUser(worshippedUser, user);
 
         return true;
     }

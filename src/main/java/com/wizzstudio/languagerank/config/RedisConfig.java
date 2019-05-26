@@ -32,6 +32,9 @@ public class RedisConfig {
     @Value("${spring.redis.database.userRelationship}")
     private int userRelationshipDatabase;
 
+//    @Value("${spring.redis.database.clazzMember}")
+//    private int clazzMemberDatabase;
+
     @Bean
     public RedisTemplate<String, User> cacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
@@ -49,7 +52,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, String> userRelationshipRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, String> userRelationshipAndUserClazzRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPassword(password);
@@ -63,6 +66,21 @@ public class RedisConfig {
         template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
+
+//    @Bean
+//    public RedisTemplate<String, String> clazzMemberRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+//        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+//        redisStandaloneConfiguration.setHostName(host);
+//        redisStandaloneConfiguration.setPassword(password);
+//        redisStandaloneConfiguration.setDatabase(clazzMemberDatabase);
+//        redisStandaloneConfiguration.setPort(port);
+//
+//        RedisTemplate<String, String> template = new RedisTemplate<>();
+//        template.setConnectionFactory(new JedisConnectionFactory(redisStandaloneConfiguration));
+//        template.setKeySerializer(new StringRedisSerializer());
+//        template.setValueSerializer(new StringRedisSerializer());
+//        return template;
+//    }
 
 //    @Bean
 //    public JedisPoolConfig jedisPoolConfig() {

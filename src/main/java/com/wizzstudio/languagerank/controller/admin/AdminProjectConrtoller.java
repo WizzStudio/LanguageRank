@@ -3,6 +3,7 @@ package com.wizzstudio.languagerank.controller.admin;
 import com.wizzstudio.languagerank.DTO.CreateClazzDTO;
 import com.wizzstudio.languagerank.VO.AdminProjectStudyPlanVO;
 import com.wizzstudio.languagerank.constants.Constant;
+import com.wizzstudio.languagerank.constants.Errors;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.service.Admin.AdminProjectService;
 import com.wizzstudio.languagerank.service.ClazzService;
@@ -82,7 +83,7 @@ public class AdminProjectConrtoller {
                 }
             }
             if (!isLegalClazzTag) {
-                return ResultUtil.error(Constant.ILLEGAL_CLAZZ_TAG);
+                return ResultUtil.error(Errors.ILLEGAL_CLAZZ_TAG);
             }
             Clazz clazz = clazzService.createClazz(createClazzDTO);
 

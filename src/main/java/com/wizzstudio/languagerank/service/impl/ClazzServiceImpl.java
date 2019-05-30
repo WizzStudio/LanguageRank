@@ -37,6 +37,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.util.*;
 
@@ -73,7 +77,9 @@ public class ClazzServiceImpl implements ClazzService {
         clazz.setStudentNumber(1);
         clazz.setCommentNumber(0);
 
-        clazzDAO.save(clazz);
+        Clazz clazzWithId = clazzDAO.save(clazz);
+        redisUtil.setClazz(clazzWithId.getClazzId(), clazzWithId);
+
         ListIterator listIterator = createClazzDTO.getClazzStudyPlanList().listIterator();
         while (listIterator.hasNext()) {
             ClazzStudyPlan clazzStudyPlan = (ClazzStudyPlan)listIterator.next();
@@ -88,11 +94,12 @@ public class ClazzServiceImpl implements ClazzService {
 
     @Override
     public List<UserClazzDTO> getUserClazzList(Integer userId) {
-        List<Clazz> clazzList = userDAO.findUserClazz(userId);
+        List<Integer> clazzList = refreshUserClazzList(userId);
 //        List<Clazz> clazzList = redisUtil.getUser(userId).getClazzList();
         List<UserClazzDTO> userClazzListDTOList = new ArrayList<>();
-        for (Clazz clazz : clazzList) {
+        for (Integer clazzId : clazzList) {
             UserClazzDTO userClazzDTO = new UserClazzDTO();
+            Clazz clazz = redisUtil.getClazz(clazzId);
             userClazzDTO.setClazzImage(clazz.getClazzImage());
             userClazzDTO.setClazzName(clazz.getClazzName());
             userClazzDTO.setMonitorNickName(redisUtil.getUser(clazz.getMonitor()).getNickName());
@@ -136,7 +143,8 @@ public class ClazzServiceImpl implements ClazzService {
 
     @Override
     public ClazzMessageVO getClazzMessage(Integer userId, Integer clazzId) {
-        ClazzMessageVO clazzMessage = clazzDAO.getClazzMessage(clazzId);
+        Clazz clazz = redisUtil.getClazz(clazzId);
+        ClazzMessageVO clazzMessage = new ClazzMessageVO(clazz.getClazzImage(), clazz.getClazzName(), clazz.getStudentNumber(), clazz.getCommentNumber());
 //        List<Integer> userClazzList = refreshUserClazzList(userId);
 //        if (userClazzList.contains(clazzId)) {
 //            clazzMessage.setIsInClazz(true);
@@ -216,10 +224,9 @@ public class ClazzServiceImpl implements ClazzService {
     public Map<String, Object> getClazzMember(Integer clazzId, Integer pageIndex) {
         // 按连续打卡天数降序排列
         List<UserClazz> memberList =  userClazzDAO.findAll(
-                (Specification<UserClazz>) (root, criteriaQuery, criteriaBuilder) ->
-                        criteriaBuilder.equal(root.get("clazzId"), clazzId),
+                (Specification<UserClazz>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("clazzId"), clazzId),
                 PageRequest.of(pageIndex - 1, Constant.COMMENT_PAGE_SIZE,
-                       Sort.Direction.DESC, "uninterruptedStudyPlanDay"))
+                       Sort.Direction.DESC, "uninterruptedStudyPlanDay", "joinedTime"))
                 .getContent();
 
         List<ClazzMemberDTO> clazzMemberDTOList = new ArrayList<>();

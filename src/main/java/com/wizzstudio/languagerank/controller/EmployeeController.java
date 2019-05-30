@@ -15,6 +15,7 @@ import com.wizzstudio.languagerank.service.EmployeeRankService;
 import com.wizzstudio.languagerank.service.EmployeeService;
 import com.wizzstudio.languagerank.service.PosterService;
 import com.wizzstudio.languagerank.util.ResultUtil;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -106,5 +107,11 @@ public class EmployeeController {
     public ResponseEntity getEmployeeRank(){
         log.info("获取雇主需求榜榜单页成功");
         return ResultUtil.success(employeeRankService.getEmployeeRank());
+    }
+
+    @GetMapping("/saveexponent")
+    public ResponseEntity saveExponent() {
+        employeeRankService.saveExponent();
+        return ResultUtil.success();
     }
 }

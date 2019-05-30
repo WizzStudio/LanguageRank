@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -27,7 +28,7 @@ public class FixedRankComment {
     @NotNull
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "userId")
-    @JsonIgnoreProperties(value = "fixedRankCommentList")
+//    @JsonIgnoreProperties(value = "fixedRankCommentList")
     private User user;
 
     @NotNull

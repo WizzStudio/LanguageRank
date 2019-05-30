@@ -4,6 +4,7 @@ package com.wizzstudio.languagerank.config;
 Created by Ben Wen on 2019/3/21.
 */
 
+import com.wizzstudio.languagerank.domain.clazz.Clazz;
 import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.util.serializer.RedisObjectSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +33,8 @@ public class RedisConfig {
     @Value("${spring.redis.database.userRelationship}")
     private int userRelationshipDatabase;
 
-//    @Value("${spring.redis.database.clazzMember}")
-//    private int clazzMemberDatabase;
+    @Value("${spring.redis.database.clazzMessage}")
+    private int clazzMessageDatabase;
 
     @Bean
     public RedisTemplate<String, User> cacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -67,20 +68,20 @@ public class RedisConfig {
         return template;
     }
 
-//    @Bean
-//    public RedisTemplate<String, String> clazzMemberRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-//        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-//        redisStandaloneConfiguration.setHostName(host);
-//        redisStandaloneConfiguration.setPassword(password);
-//        redisStandaloneConfiguration.setDatabase(clazzMemberDatabase);
-//        redisStandaloneConfiguration.setPort(port);
-//
-//        RedisTemplate<String, String> template = new RedisTemplate<>();
-//        template.setConnectionFactory(new JedisConnectionFactory(redisStandaloneConfiguration));
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setValueSerializer(new StringRedisSerializer());
-//        return template;
-//    }
+    @Bean
+    public RedisTemplate<String, Clazz> clazzMessageRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPassword(password);
+        redisStandaloneConfiguration.setDatabase(clazzMessageDatabase);
+        redisStandaloneConfiguration.setPort(port);
+
+        RedisTemplate<String, Clazz> template = new RedisTemplate<>();
+        template.setConnectionFactory(new JedisConnectionFactory(redisStandaloneConfiguration));
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new RedisObjectSerializer());
+        return template;
+    }
 
 //    @Bean
 //    public JedisPoolConfig jedisPoolConfig() {

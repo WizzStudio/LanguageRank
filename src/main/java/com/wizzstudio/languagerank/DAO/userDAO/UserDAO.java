@@ -94,9 +94,6 @@ public interface UserDAO extends JpaRepository<User, Integer> {
     @Query("update User u set u.logInLastTime = :logInLastTime where u.userId = :userId")
     void updateLogInLastTime(@Param("logInLastTime") Date logInLastTime, @Param("userId") Integer userId);
 
-    @Query("select u.clazzList from User u where u.userId = :userId")
-    List<Clazz> findUserClazz(@Param("userId") Integer userId);
-
 //    @Modifying
 //    @Query("update user u set u.commentDisplayMode = :commentDisplayMode where u.userId = :userId")
 //    void updateCommentDisplayMode(@Param("commentDisplayMode")CommentDisplayModeEnum commentDisplayMode, @Param("userId") Integer userId);

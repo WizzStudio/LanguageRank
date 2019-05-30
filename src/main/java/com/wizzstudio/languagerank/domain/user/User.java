@@ -19,7 +19,6 @@ import java.util.List;
 @Entity
 @Data
 public class User implements Serializable {
-
     private static final long serialVersionUID = 6034578093269769052L;
 
     @Id
@@ -135,32 +134,32 @@ public class User implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date logInLastTime;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId")
-    @JsonIgnoreProperties(value = "user")
-    List<EmployeeRankComment> employeeRankCommentList;
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "userId")
+//    @JsonIgnoreProperties(value = "user")
+//    List<EmployeeRankComment> employeeRankCommentList;
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "userId")
+//    @JsonIgnoreProperties(value = "user")
+//    List<FixedRankComment> fixedRankCommentList;
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "userId")
+//    @JsonIgnoreProperties(value = "user")
+//    List<ClazzComment> clazzCommentList;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId")
-    @JsonIgnoreProperties(value = "user")
-    List<FixedRankComment> fixedRankCommentList;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId")
-    @JsonIgnoreProperties(value = "user")
-    List<ClazzComment> clazzCommentList;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "userList")
-    @JoinTable(
-            // 连接表的表名
-            name = "UserClazz",
-            // 当前实体对应表的主键列
-            joinColumns = {@JoinColumn(name = "userId")},
-            // 当前实体的关联实体对应表的主键列
-            inverseJoinColumns = {@JoinColumn(name = "clazzId")}
-    )
-    private List<Clazz> clazzList;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties(value = "userList")
+//    @JoinTable(
+//            // 连接表的表名
+//            name = "UserClazz",
+//            // 当前实体对应表的主键列
+//            joinColumns = {@JoinColumn(name = "userId")},
+//            // 当前实体的关联实体对应表的主键列
+//            inverseJoinColumns = {@JoinColumn(name = "clazzId")}
+//    )
+//    private List<Clazz> clazzList;
 
 
     //    @NotNull

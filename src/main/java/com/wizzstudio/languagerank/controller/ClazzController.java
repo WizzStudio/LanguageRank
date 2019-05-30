@@ -12,15 +12,19 @@ import com.wizzstudio.languagerank.VO.UserPunchCardMessageTodayVO;
 import com.wizzstudio.languagerank.constants.Constant;
 import com.wizzstudio.languagerank.constants.Errors;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
+import com.wizzstudio.languagerank.domain.clazz.ClazzComment;
 import com.wizzstudio.languagerank.domain.clazz.ClazzStudyPlan;
 import com.wizzstudio.languagerank.DTO.*;
+import com.wizzstudio.languagerank.domain.user.User;
 import com.wizzstudio.languagerank.enums.PunchReminderTimeEnum;
 import com.wizzstudio.languagerank.service.ClazzService;
 import com.wizzstudio.languagerank.service.PosterService;
 import com.wizzstudio.languagerank.service.PushMessageService;
+import com.wizzstudio.languagerank.util.RedisUtil;
 import com.wizzstudio.languagerank.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +42,8 @@ public class ClazzController implements Constant, Errors {
     PosterService posterService;
     @Autowired
     PushMessageService pushMessageService;
+//    @Autowired
+//    RedisUtil redisUtil;
 
     /**
      * 创建班级的接口
@@ -113,10 +119,10 @@ public class ClazzController implements Constant, Errors {
         try {
             List<AllClazzVO> clazzList = clazzService.getAllClazzList();
 
-            log.info("获取班级列表成功");
+            log.info("获取全部班级列表成功");
             return ResultUtil.success(clazzList);
         } catch (Exception e) {
-            log.error("获取班级列表失败");
+            log.error("获取全部班级列表失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -180,10 +186,10 @@ public class ClazzController implements Constant, Errors {
         try {
             ClazzMessageVO clazzMessage = clazzService.getClazzMessage(userId, clazzId);
 
-            log.info("查询班级" + clazzId + "基本信息成功");
+            log.info(userId + "号用户查询班级" + clazzId + "基本信息成功");
             return ResultUtil.success(clazzMessage);
         } catch (Exception e) {
-            log.error("查询班级" + clazzId + "基本信息失败");
+            log.error(userId + "号用户查询班级" + clazzId + "基本信息失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -280,10 +286,10 @@ public class ClazzController implements Constant, Errors {
         try {
             Map<String, Object> clazzMemberMap = clazzService.getClazzMember(clazzId, pageIndex);
 
-            log.info("获取班级成员列表成功");
+            log.info("获取" + clazzId + "号班级成员列表成功");
             return ResultUtil.success(clazzMemberMap);
         } catch (Exception e) {
-            log.error("获取班级成员列表失败");
+            log.error("获取" + clazzId + "号班级成员列表失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -297,6 +303,7 @@ public class ClazzController implements Constant, Errors {
         Integer userId = jsonObject.getInteger("userId");
         Integer clazzId = jsonObject.getInteger("clazzId");
         String formId = jsonObject.getString("formId");
+        System.out.println(formId);
 
         try {
             clazzService.punchCard(userId, clazzId, formId);
@@ -403,10 +410,10 @@ public class ClazzController implements Constant, Errors {
         try {
              Map<String, Object> map = clazzService.getHardWorkingRank(userId, clazzId, pageIndex);
 
-            log.info("获取班级" + clazzId + "勤奋排行榜成功");
+            log.info(userId + "号用户获取班级" + clazzId + "勤奋排行榜成功");
             return ResultUtil.success(map);
         } catch (Exception e) {
-            log.error("获取班级" + clazzId + "勤奋排行榜失败");
+            log.error(userId + "号用户获取班级" + clazzId + "勤奋排行榜失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -424,10 +431,10 @@ public class ClazzController implements Constant, Errors {
         try {
             Map<String, Object> map = clazzService.getPopularityRank(userId, clazzId, pageIndex);
 
-            log.info("获取班级" + clazzId + "人气排行榜成功");
+            log.info(userId + "号用户获取班级" + clazzId + "人气排行榜成功");
             return ResultUtil.success(map);
         } catch (Exception e) {
-            log.error("获取班级" + clazzId + "人气排行榜失败");
+            log.error(userId + "号用户获取班级" + clazzId + "人气排行榜失败");
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -571,9 +578,13 @@ public class ClazzController implements Constant, Errors {
             e.printStackTrace();
             return ResultUtil.error();
         }
-
     }
-
+//
+//    @PostMapping("/test")
+//    public String test(@RequestBody JSONObject jsonObject) {
+//        Integer clazzId = jsonObject.getInteger("clazzId");
+//        return redisUtil.getClazz(clazzId).getClazzImage();
+//    }
 //    /**
 //     * 生成邀请卡接口
 //     */

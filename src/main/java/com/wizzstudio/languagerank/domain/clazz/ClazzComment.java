@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -28,7 +29,7 @@ public class ClazzComment {
     @NotNull
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "userId")
-    @JsonIgnoreProperties(value = "clazzCommentList")
+//    @JsonIgnoreProperties(value = "clazzCommentList")
     private User user;
 
     @NotNull

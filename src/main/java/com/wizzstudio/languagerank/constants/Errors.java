@@ -44,4 +44,9 @@ public interface Errors {
      * 用户已收藏过该学习计划，不可重复收藏
      */
     Integer COLLECTED_STUDY_PLAN = 9;
+
+    /**
+     * 0号用户试图与用户成为好友
+     */
+    Integer ZERO_USERID_IN_USER_RELATIONSHIP = 10;
 }

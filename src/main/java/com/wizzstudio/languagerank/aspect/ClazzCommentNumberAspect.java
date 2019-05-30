@@ -7,6 +7,7 @@ Created by Ben Wen on 2019/5/17.
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.languagerank.DAO.clazzDAO.ClazzDAO;
 import com.wizzstudio.languagerank.domain.clazz.Clazz;
+import com.wizzstudio.languagerank.util.RedisUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClazzCommentNumberAspect {
     @Autowired
     ClazzDAO clazzDAO;
+    @Autowired
+    RedisUtil redisUtil;
 
     @Pointcut("execution(public * com.wizzstudio.languagerank.controller.CommentController.updateClazzComment(..))")
     private void newComment() {}
@@ -31,5 +34,6 @@ public class ClazzCommentNumberAspect {
 
         Clazz clazz = clazzDAO.findByClazzId(clazzId);
         clazz.setCommentNumber(clazz.getCommentNumber() + 1);
+        redisUtil.incrComment(clazzId);
     }
 }

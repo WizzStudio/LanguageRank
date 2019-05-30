@@ -10,11 +10,14 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
-public class Clazz {
+public class Clazz implements Serializable {
+    private static final long serialVersionUID = 3122923652325429854L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer clazzId;
@@ -52,12 +55,12 @@ public class Clazz {
     @NotNull
     private String clazzBriefIntroduction;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "clazzList")
-    @JoinTable(
-            name = "UserClazz",
-            joinColumns = {@JoinColumn(name = "clazzId")},
-            inverseJoinColumns = {@JoinColumn(name = "userId")}
-    )
-    private List<User> userList;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties(value = "clazzList")
+//    @JoinTable(
+//            name = "UserClazz",
+//            joinColumns = {@JoinColumn(name = "clazzId")},
+//            inverseJoinColumns = {@JoinColumn(name = "userId")}
+//    )
+//    private List<User> userList;
 }

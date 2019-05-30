@@ -130,6 +130,10 @@ public class UserController implements Constant {
         Integer userOne = jsonObject.getInteger("userOne");
         Integer userTwo = jsonObject.getInteger("userTwo");
 
+        if (userOne == 0) {
+            log.error("0号用户与"+ userTwo + "号用户新增好友关系失败");
+            return ResultUtil.error(Errors.ZERO_USERID_IN_USER_RELATIONSHIP);
+        }
         try {
             redisUtil.setUserRelationship(userOne, userTwo);
         } catch (Exception e) {

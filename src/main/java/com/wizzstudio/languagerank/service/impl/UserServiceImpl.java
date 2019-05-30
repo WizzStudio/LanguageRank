@@ -45,6 +45,10 @@ public class UserServiceImpl implements UserService, Constant {
 
     @Override
     public WxLogInVO userLogin(WxInfoDTO loginData) throws WxErrorException {
+        System.out.println(loginData.getCode());
+        System.out.println(loginData.getEncryptedData());
+        System.out.println(loginData.getIv());
+
         // 通过code获取用户openId与session_key
         WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
         // 通过openId在数据库中寻找是否存在该用户，不存在则写入数据库

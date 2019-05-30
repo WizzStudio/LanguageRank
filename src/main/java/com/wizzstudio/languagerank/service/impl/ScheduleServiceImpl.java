@@ -69,9 +69,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         employeeRankService.resetList();
     }
 
-    // 5月27晚更新完后把时间提前一天
     @Override
-    @Scheduled(cron = "0 55 23 * * 1")
+    @Scheduled(cron = "0 55 23 * * 7")
     @Transactional(rollbackFor = Exception.class)
     public void saveEmployeeRankExponent() {
         employeeRankService.saveExponent();
